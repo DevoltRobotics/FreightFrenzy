@@ -1,4 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
-class Hardware {
+import com.github.serivesmejia.deltasimple.SimpleHardware
+
+class Hardware : SimpleHardware() {
+
 }

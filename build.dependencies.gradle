@@ -3,6 +3,10 @@ repositories {
     mavenCentral()
     google() // Needed for androidx
     jcenter()  // Needed for tensorflow-lite
+
+    maven { url = 'https://maven.brott.dev/' }
+    maven { url = 'https://jitpack.io' }
+
     flatDir {
         dirs rootProject.file('libs')
     }
@@ -19,5 +23,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:tfod:1.0.2'
     implementation 'org.tensorflow:tensorflow-lite:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.2'
+    implementation "com.github.NoahBres:jotai:1.0.3"
 }
 
