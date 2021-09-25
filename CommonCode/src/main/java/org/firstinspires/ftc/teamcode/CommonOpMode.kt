@@ -16,6 +16,8 @@ abstract class CommonOpMode(val usingRR: Boolean = false) : DeltaOpMode() {
         deltaScheduler.reset()
         hardware.initHardware(hardwareMap)
 
+        deltaHardware = hardware.deltaHardware
+
         if(!usingRR) {
             deltaScheduler.addSubsystem(mecanum)
         }
