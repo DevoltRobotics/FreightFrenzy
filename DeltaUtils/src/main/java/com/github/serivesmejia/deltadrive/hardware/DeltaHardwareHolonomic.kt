@@ -29,7 +29,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 @Suppress("UNUSED")
-class DeltaHardwareHolonomic(hardwareMap: HardwareMap, private val positionP: Double) : DeltaHardware(hardwareMap) {
+class DeltaHardwareHolonomic(hardwareMap: HardwareMap, private val positionP: Double = 0.0) : DeltaHardware(hardwareMap) {
 
     lateinit var wheelFrontLeft: DcMotorEx
         private set

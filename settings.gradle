@@ -1,5 +1,6 @@
 include ':FtcRobotController'
 include ':DeimosCode'
 include ':PhobosCode'
+include ':CommonCode'
 
 include ':DeltaUtils'
