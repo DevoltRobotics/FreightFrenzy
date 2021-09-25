@@ -22,7 +22,6 @@
 
 package com.github.serivesmejia.deltadrive.hardware
 
-import com.arcrobotics.ftclib.hardware.motors.MotorEx
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
@@ -38,15 +37,6 @@ class DeltaHardwareHolonomic(hardwareMap: HardwareMap, private val positionP: Do
     lateinit var wheelBackLeft: DcMotorEx
         private set
     lateinit var wheelBackRight: DcMotorEx
-        private set
-
-    lateinit var ftclibFL: MotorEx
-        private set
-    lateinit var ftclibFR: MotorEx
-        private set
-    lateinit var ftclibBL: MotorEx
-        private set
-    lateinit var ftclibBR: MotorEx
         private set
 
     private var initialized = false
@@ -69,26 +59,10 @@ class DeltaHardwareHolonomic(hardwareMap: HardwareMap, private val positionP: Do
             return
         }
 
-        for((name, motor) in hardwareMap.dcMotor.entrySet()) {
-            if(motor == frontleft)
-                ftclibFL = MotorEx(hardwareMap, name)
-            else if(motor == frontright)
-                ftclibFR = MotorEx(hardwareMap, name)
-            else if(motor == backleft)
-                ftclibBL = MotorEx(hardwareMap, name)
-            else if(motor == backright)
-                ftclibBR = MotorEx(hardwareMap, name)
-        }
-
         wheelFrontLeft = frontleft as DcMotorEx
         wheelFrontRight = frontright as DcMotorEx
         wheelBackLeft = backleft as DcMotorEx
         wheelBackRight = backright as DcMotorEx
-
-        ftclibFL.positionCoefficient = positionP
-        ftclibFR.positionCoefficient = positionP
-        ftclibBL.positionCoefficient = positionP
-        ftclibBR.positionCoefficient = positionP
 
         updateChassisMotorsArray()
          

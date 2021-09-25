@@ -22,7 +22,6 @@
 
 package com.github.serivesmejia.deltadrive.drive.holonomic
 
-import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.github.serivesmejia.deltacontrol.MotorPIDFController
 import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 import com.github.serivesmejia.deltadrive.parameters.EncoderDriveParameters
@@ -106,17 +105,6 @@ class EncoderDriveHolonomic
                 newBackLeftTarget = (hdw.wheelBackLeft.currentPosition + (bl * ticksPerInch)).roundToInt()
                 newBackRightTarget = (hdw.wheelBackRight.currentPosition + (br * ticksPerInch)).roundToInt()
 
-                hdw.ftclibFL.setTargetPosition(newFrontLeftTarget)
-                hdw.ftclibFR.setTargetPosition(newFrontRightTarget)
-                hdw.ftclibBL.setTargetPosition(newBackLeftTarget)
-                hdw.ftclibBR.setTargetPosition(newBackRightTarget)
-
-                // Turn On RUN_TO_POSITION
-                hdw.ftclibFL.setRunMode(Motor.RunMode.PositionControl)
-                hdw.ftclibFR.setRunMode(Motor.RunMode.PositionControl)
-                hdw.ftclibBL.setRunMode(Motor.RunMode.PositionControl)
-                hdw.ftclibBR.setRunMode(Motor.RunMode.PositionControl)
-
                 // reset the timeout time and start motion.
                 runtime.reset()
 
@@ -176,28 +164,13 @@ class EncoderDriveHolonomic
                 telemetry?.addData("[Power]", "$powerFLeft, $powerFRight")
             }
 
-            hdw.ftclibFL.set(flPow)
-            hdw.ftclibFR.set(frPow)
-            hdw.ftclibBL.set(blPow)
-            hdw.ftclibBR.set(brPow)
-
             telemetry?.update()
-
-            val flBusy = if(fl != 0.0) !hdw.ftclibFL.atTargetPosition() else true
-            val frBusy = if(fr != 0.0) !hdw.ftclibFR.atTargetPosition() else true
-            val blBusy = if(bl != 0.0) !hdw.ftclibBL.atTargetPosition() else true
-            val brBusy = if(br != 0.0) !hdw.ftclibBR.atTargetPosition() else true
 
             // finish task until there's is no time left or no motors are running.
             // Note: We use (isBusy() && isBusy()) in the repeat test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
             // always end the motion as soon as possible.
-            if(runtime.seconds() >= timeoutS ||
-                (!flBusy ||
-                !frBusy ||
-                !blBusy ||
-                !brBusy)
-            ) { //when it's finished
+            if(runtime.seconds() >= timeoutS) { //when it's finished
                 // println("helo ending $fl $fr $bl $br") //lol
                 telemetry?.update() //clear telemetry
 

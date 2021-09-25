@@ -24,6 +24,5 @@ apply from: '../build.dependencies.gradle'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation 'org.ftclib.ftclib:core:1.2.0' // core
     testImplementation 'junit:junit:4.12'
 }

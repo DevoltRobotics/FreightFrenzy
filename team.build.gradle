@@ -14,6 +14,7 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'kotlin-android'
 
 dependencies {
     implementation project(':FtcRobotController')
@@ -23,6 +24,4 @@ dependencies {
     implementation 'com.acmerobotics.roadrunner:core:0.5.3'
 
     implementation project(":DeltaUtils")
-
-    implementation 'org.ftclib.ftclib:core:1.2.0' // core
 }
