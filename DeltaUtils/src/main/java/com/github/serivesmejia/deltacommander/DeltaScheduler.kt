@@ -144,7 +144,7 @@ class DeltaScheduler internal constructor() {
     fun update() {
         if(!enabled) return //if the schedulers is disabled then abort
 
-        for(subsystem in addedSubsystems.keys) { subsystem.loop() } //run the loop method of all the subsystems
+        for(subsystem in addedSubsystems.keys) { subsystem.internalUpdate() } //run the loop method of all the subsystems
 
         queuedCommandsLoop@
         for(queuedCommand in commandScheduleQueue.toTypedArray()) {
