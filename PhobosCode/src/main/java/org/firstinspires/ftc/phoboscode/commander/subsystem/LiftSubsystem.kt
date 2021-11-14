@@ -26,6 +26,13 @@ class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
 
 }
 
+enum class LiftPosition(val position: () -> Int) {
+    ZERO({ Lift.zeroPosition }),
+    LOW({ Lift.lowPosition }),
+    MID({ Lift.middlePosition }),
+    HIGH({ Lift.highPosition }),
+}
+
 @Config
 object Lift {
     @JvmStatic val pid = PIDFCoefficients()

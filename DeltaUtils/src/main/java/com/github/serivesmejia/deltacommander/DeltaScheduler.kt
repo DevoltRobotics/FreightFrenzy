@@ -36,6 +36,7 @@ class DeltaScheduler internal constructor() {
      */
     fun schedule(cmd: DeltaCommand, isInterruptible: Boolean = true): Boolean {
         if(!enabled) return false
+        if(scheduledCommands.contains(cmd)) return false
 
         val cmdReqs = cmd.requirements
         var reqsCurrentlyInUse = false

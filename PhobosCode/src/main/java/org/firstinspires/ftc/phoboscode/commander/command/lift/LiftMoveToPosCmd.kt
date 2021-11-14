@@ -3,6 +3,7 @@ package org.firstinspires.ftc.phoboscode.commander.command.lift
 import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.github.serivesmejia.deltacontrol.MotorPIDFController
 import org.firstinspires.ftc.phoboscode.commander.subsystem.Lift
+import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
 import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftSubsystem
 
 open class LiftMoveToPosCmd(val positionSupplier: () -> Int) : DeltaCommand() {
@@ -15,6 +16,8 @@ open class LiftMoveToPosCmd(val positionSupplier: () -> Int) : DeltaCommand() {
             .setErrorTolerance(5.0)
 
     constructor(position: Int) : this({ position })
+
+    constructor(pos: LiftPosition) : this(pos.position)
 
     override fun init() {
         controller.reset()
