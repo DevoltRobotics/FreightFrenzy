@@ -12,15 +12,13 @@ import org.firstinspires.ftc.deimoscode.commander.command.arm.ArmMoveCmd
 @TeleOp(name = "TeleOp")
 class DeimosTeleOp : DeimosOpMode() {
 
-    override fun initialize() {
-        super.initialize()
-
+    override fun setup() {
         + MecanumDriveCommand(gamepad1) // manejar las llantas mecanum con el gamepad 1
 
         + ArmMoveCmd(
                 { gamepad2.right_stick_x.toDouble() }, // mover el brazo de izquierda a derecha con el eje x del jostick derecho
                 { -gamepad2.left_stick_y.toDouble() }, // mover el brazo de arriba a abajo con el eje y de joystick izquierdo
-                0.1, // nos moveremos al 20% de velocidad
+                0.1, // nos moveremos al 10% de velocidad
                 0.2 // el minimo en los joysticks para que el brazo se mueva
         )
 

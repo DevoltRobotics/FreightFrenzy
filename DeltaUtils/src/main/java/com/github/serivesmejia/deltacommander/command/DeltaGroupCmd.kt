@@ -18,6 +18,13 @@ open class DeltaGroupCmd(private val executionMode: ExecutionMode = ExecutionMod
         //and add all the commands from the vararg to the arraylist
         for(cmd in commands) {
             this.commands.add(cmd)
+
+            // add their requirements too
+            for(requirement in cmd.requirements) {
+                if(!requirements.contains(requirement)) {
+                    require(requirement)
+                }
+            }
         }
 
         if(executionMode == ExecutionMode.PARALLEL) {

@@ -9,11 +9,20 @@ abstract class DeimosOpMode(usingRR: Boolean = false) : CommonOpMode(usingRR) {
 
     override val hardware = Hardware()
 
+    lateinit var armSub: ArmSubsystem
+        private set
+    lateinit var armClawSub: ArmClawSubystem
+        private set
+
     override fun initialize() {
         super.initialize()
 
-        deltaScheduler.addSubsystem(ArmSubsystem(hardware.motorClawVertical, hardware.motorClawRotate))
-        deltaScheduler.addSubsystem(ArmClawSubystem(hardware.servoClaw))
+        armSub = ArmSubsystem(hardware.motorClawVertical, hardware.motorClawRotate)
+        armClawSub = ArmClawSubystem(hardware.servoClaw)
+
+        setup()
     }
+
+    abstract fun setup()
 
 }

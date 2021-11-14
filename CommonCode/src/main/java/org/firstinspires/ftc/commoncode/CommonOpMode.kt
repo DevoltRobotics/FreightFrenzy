@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.commoncode
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.github.serivesmejia.deltacommander.deltaScheduler
 import com.github.serivesmejia.deltacommander.reset
 import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
@@ -10,16 +12,18 @@ abstract class CommonOpMode(val usingRR: Boolean = false) : DeltaOpMode() {
 
     abstract val hardware: CommonHardware
 
-    val mecanum by lazy { MecanumSubsystem(hardware.deltaHardware) }
+    val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
 
     override fun initialize() {
+        telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
+
         deltaScheduler.reset()
         hardware.initHardware(hardwareMap)
 
         deltaHardware = hardware.deltaHardware
 
         if(!usingRR) {
-            deltaScheduler.addSubsystem(mecanum)
+            deltaScheduler.addSubsystem(mecanumSub)
         }
     }
 

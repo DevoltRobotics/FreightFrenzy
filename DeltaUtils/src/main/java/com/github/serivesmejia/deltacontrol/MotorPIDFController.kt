@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.util.ElapsedTime
 
 class MotorPIDFController(private var coeffs: PIDFCoefficients) {
 
+    constructor(coeffs: com.qualcomm.robotcore.hardware.PIDFCoefficients) : this(
+            PIDFCoefficients(coeffs.p, coeffs.i, coeffs.d, coeffs.f)
+    )
+
     private var inverse = false
 
     //temp values params
