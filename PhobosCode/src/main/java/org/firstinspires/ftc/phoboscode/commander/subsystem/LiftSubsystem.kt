@@ -4,8 +4,13 @@ import com.acmerobotics.dashboard.config.Config
 import com.github.serivesmejia.deltacommander.DeltaSubsystem
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
+import org.firstinspires.ftc.phoboscode.commander.command.lift.LiftMoveToPosCmd
 
 class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
+
+    init {
+        defaultCommand = LiftMoveToPosCmd(LiftPosition.ZERO)
+    }
 
     val positionPid = Lift.pid
 
