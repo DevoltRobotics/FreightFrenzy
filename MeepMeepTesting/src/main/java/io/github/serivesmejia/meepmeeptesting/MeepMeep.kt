@@ -18,39 +18,75 @@ fun main() {
             .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 15.0)
             .setStartPose(Pose2d(11.0, -55.0, Math.toRadians(90.0)))
             .followTrajectorySequence { drive: DriveShim ->
-                drive.trajectorySequenceBuilder(Pose2d(-35.0, -55.0, Math.toRadians(90.0)))
-                        // big wobble goal
-                        .lineToLinearHeading(Pose2d(-11.0, -43.0, Math.toRadians(-90.0)))
-                        // duck spinny boi
-                        .lineToLinearHeading(Pose2d(-60.0, -60.0, Math.toRadians(170.0)))
-
-                        // to the warehouse
-                        .lineTo(Vector2d(-56.0, -56.0))
-                        .lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
-                        .splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
-                        // grab freight
-                        .lineTo(Vector2d(50.0, -64.0))
-                        // out of the warehouse
-                        .lineTo(Vector2d(10.0, -64.0))
-                        // put freight in big wobble
-                        .lineToLinearHeading(Pose2d(-11.0, -43.0, Math.toRadians(-90.0)))
-
-                        // to the warehouse again
-                        .splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
-                        // grab freight
-                        .lineTo(Vector2d(50.0, -64.0))
-                        // out of the warehouse
-                        .lineTo(Vector2d(10.0, -64.0))
-                        // put freight in big wobble
-                        .lineToLinearHeading(Pose2d(-11.0, -43.0, Math.toRadians(-90.0)))
-
-                        // to the warehouse to park
-                        .splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
-                        // park fully
-                        .lineTo(Vector2d(40.0, -64.0))
-
-                        .build()
+                sequence(drive)
             }
             .start()
 
 }
+
+val startPosition = Pose2d(-35.0, -62.0, Math.toRadians(90.0))
+val bigWobblePose = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
+
+val doDucks = false
+val cycles = 2
+
+fun sequence(drive: DriveShim) = drive.trajectorySequenceBuilder(startPosition).run {
+    // put X cube in big wobble
+    UNSTABLE_addTemporalMarkerOffset(0.0) {
+        println("lift up")
+    }
+    UNSTABLE_addTemporalMarkerOffset(0.5) {
+        println("drop and lift down")
+    }
+    lineToLinearHeading(bigWobblePose)
+    waitSeconds(2.0)
+
+    if(doDucks) {
+        // duck spinny boi
+        lineToLinearHeading(Pose2d(-60.0, -60.0, Math.toRadians(170.0)))
+        UNSTABLE_addTemporalMarkerOffset(0.0) {
+            println("carousel rotate")
+        }
+        waitSeconds(3.0)
+        UNSTABLE_addTemporalMarkerOffset(0.0) {
+            println("carousel stop")
+        }
+    }
+
+    if(cycles >= 1) {
+        if(doDucks) {
+            // to the warehouse
+            lineTo(Vector2d(-56.0, -56.0))
+            lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
+        }
+
+        repeat(cycles) {
+            // to the warehouse
+            splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+            // grab freight
+            UNSTABLE_addTemporalMarkerOffset(-0.5) {
+                println("intake on")
+            }
+            lineTo(Vector2d(50.0, -64.0))
+            UNSTABLE_addTemporalMarkerOffset(1.0) {
+                println("intake off")
+            }
+            // out of the warehouse
+            lineTo(Vector2d(10.0, -64.0))
+            UNSTABLE_addTemporalMarkerOffset(0.0) {
+                println("lift up high")
+            }
+            // put freight in big wobble
+            UNSTABLE_addTemporalMarkerOffset(1.0) {
+                println("drop and lift down")
+            }
+            lineToLinearHeading(bigWobblePose)
+            waitSeconds(2.0)
+        }
+    }
+
+    // to the warehouse to park
+    splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+    // park fully
+    lineTo(Vector2d(40.0, -64.0))
+}.build()

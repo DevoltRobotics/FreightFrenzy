@@ -9,16 +9,16 @@ import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvInternalCamera2
 
-abstract class AutoBase(val needsVision: Boolean = true) : PhobosOpMode() {
+abstract class AutonomoBase(
+        val needsVision: Boolean = true,
+) : PhobosOpMode() {
 
     lateinit var drive: SampleMecanumDrive
         private set
 
     lateinit var camera: OpenCvCamera
         private set
-
     open val pipeline = TeamMarkerAprilTagPipeline()
-
     private var openFailed = false
 
     override fun setup() {
@@ -43,9 +43,11 @@ abstract class AutoBase(val needsVision: Boolean = true) : PhobosOpMode() {
     override fun begin() {
         drive.followTrajectorySequenceAsync(
                 sequence(
-                        if(openFailed) TeamMarkerPosition.RIGHT else pipeline.position
+                        if(openFailed) TeamMarkerPosition.UNKNOWN else pipeline.lastPosition
                 )
         )
+
+        camera.stopStreaming()
     }
 
     override fun update() {
