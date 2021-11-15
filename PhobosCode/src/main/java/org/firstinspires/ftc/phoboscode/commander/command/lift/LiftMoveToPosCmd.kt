@@ -11,9 +11,6 @@ open class LiftMoveToPosCmd(val positionSupplier: () -> Int) : DeltaCommand() {
     val liftSub = require<LiftSubsystem>()
 
     val controller = MotorPIDFController(Lift.pid)
-            .setInitialPower(Lift.power)
-            .setDeadzone(0.08)
-            .setErrorTolerance(5.0)
 
     constructor(position: Int) : this({ position })
 
@@ -21,6 +18,10 @@ open class LiftMoveToPosCmd(val positionSupplier: () -> Int) : DeltaCommand() {
 
     override fun init() {
         controller.reset()
+
+        controller.setInitialPower(Lift.power)
+                .setDeadzone(0.08)
+                .setErrorTolerance(5.0)
     }
 
     override fun run() {

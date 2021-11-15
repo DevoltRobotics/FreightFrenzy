@@ -16,7 +16,7 @@ fun main() {
             .setBackgroundAlpha(1f)
             // Set constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
             .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 15.0)
-            .setStartPose(Pose2d(-35.0, -55.0, Math.toRadians(90.0)))
+            .setStartPose(Pose2d(11.0, -55.0, Math.toRadians(90.0)))
             .followTrajectorySequence { drive: DriveShim ->
                 drive.trajectorySequenceBuilder(Pose2d(-35.0, -55.0, Math.toRadians(90.0)))
                         // big wobble goal

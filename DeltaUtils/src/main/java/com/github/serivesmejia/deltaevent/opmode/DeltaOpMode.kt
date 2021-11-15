@@ -32,10 +32,12 @@ abstract class DeltaOpMode : LinearOpMode() {
 
         if(isStopRequested) return
 
+        begin()
+
         while(opModeIsActive()) {
             deltaHardware.clearBulkCache()
 
-            run()
+            update()
 
             deltaScheduler.update()
 
@@ -47,7 +49,9 @@ abstract class DeltaOpMode : LinearOpMode() {
 
     abstract fun initialize()
 
-    open fun run() {
+    open fun begin() { }
+
+    open fun update() {
         isDefaultRun = true
     }
 

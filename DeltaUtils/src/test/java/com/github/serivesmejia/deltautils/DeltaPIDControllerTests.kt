@@ -7,7 +7,7 @@ import org.junit.Test
 
 class DeltaPIDControllerTests {
 
-    val coeffs = PIDFCoefficients(0.0113, 0.003, 0.05)
+    val coeffs = PIDFCoefficients(0.08, 0.0005, 0.0003)
 
     @Test
     fun testPIDControllerOutput() {
@@ -15,7 +15,6 @@ class DeltaPIDControllerTests {
         var onSetpoint = false
 
         TestUtil.spawnTimeoutThread({
-
             val pidController = MotorPIDFController(coeffs)
 
             pidController.setSetpoint(90.0)
@@ -24,8 +23,8 @@ class DeltaPIDControllerTests {
                     .setErrorTolerance(1.0)
 
             while(!pidController.onSetpoint() && !Thread.currentThread().isInterrupted) {
-                val powerF = pidController.calculate(currDeg);
-                currDeg += powerF * 0.764
+                val powerF = pidController.calculate(currDeg)
+                currDeg += powerF * (Math.random() * 10) - (Math.random() * 2)
                 onSetpoint = pidController.onSetpoint()
 
                 println("Power: $powerF, Sim. degrees: $currDeg")

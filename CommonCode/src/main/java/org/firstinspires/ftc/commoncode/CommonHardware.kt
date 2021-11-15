@@ -16,10 +16,12 @@ open class CommonHardware : SimpleHardware() {
         val hdw = DeltaHardwareHolonomic(hdwMap)
         hdw.initHardware(fl, fr, bl, br, true)
 
+        hdw
+    }
+
+    override fun init() {
         fl.direction = DcMotorSimple.Direction.REVERSE
         bl.direction = DcMotorSimple.Direction.REVERSE
-
-        hdw
     }
 
 }

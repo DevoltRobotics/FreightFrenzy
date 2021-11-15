@@ -35,7 +35,7 @@ enum class LiftPosition(val position: () -> Int) {
 
 @Config
 object Lift {
-    @JvmStatic val pid = PIDFCoefficients()
+    @JvmStatic val pid = PIDFCoefficients(0.12, 0.0, 0.0, 0.08)
 
     @JvmStatic val power = 0.7
 

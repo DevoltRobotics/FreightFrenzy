@@ -6,11 +6,17 @@ abstract class SimpleHardware {
 
     lateinit var hdwMap: HardwareMap
 
-    open fun initHardware(hardwareMap: HardwareMap) {
+    fun initHardware(hardwareMap: HardwareMap) {
         hdwMap = hardwareMap
+        init()
     }
+    
+    protected open fun init() { }
 
-    inline fun <reified T> hardware(name: String): Lazy<T> = lazy { hdwMap.get(T::class.java, name)!! }
+    inline fun <reified T> hardware(name: String): Lazy<T> = lazy {
+        require(::hdwMap.isInitialized) { "The HardwareMap is not defined, call initHardware(hardwareMap)" }
+        hdwMap.get(T::class.java, name)!!
+    }
 
 
 }
