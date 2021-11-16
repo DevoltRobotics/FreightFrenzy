@@ -14,5 +14,5 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.github.noahbres:meepmeep:1.0.6"
+    implementation "com.github.noahbres:meepmeep:2.0.0"
 }

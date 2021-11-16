@@ -27,7 +27,6 @@ abstract class AutonomoCompleto(
 
     override fun setup() {
         super.setup()
-
         drive.poseEstimate = startPosition
     }
 
@@ -71,7 +70,7 @@ abstract class AutonomoCompleto(
                      */
                     repeat(cycles) {
                         // to the warehouse
-                        splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+                        splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
                         UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeInCmd()
                         }
@@ -98,9 +97,11 @@ abstract class AutonomoCompleto(
                 }
 
                 // to the warehouse to park
-                splineToLinearHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+                splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
                 // park fully
                 lineTo(Vector2d(40.0, -64.0))
+                // in case alliance wants to park too
+                strafeTo(Vector2d(37.0, -46.0))
             }.build()
 
     private fun freightDropSequence() = deltaSequence {
