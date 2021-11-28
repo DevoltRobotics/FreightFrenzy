@@ -83,12 +83,12 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
                 println("intake on")
             }
             lineTo(Vector2d(40.0, -64.0))
-            lineTo(Vector2d(50.0, -64.0), drive.)
+            lineTo(Vector2d(50.0, -64.0))
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 println("intake off")
             }
             // out of the warehouse
-            lineTo(Vector2d(10.0, -64.0))
+            lineTo(Vector2d(23.0, -64.0))
             UNSTABLE_addTemporalMarkerOffset(0.0) {
                 println("lift up high")
             }
@@ -96,7 +96,7 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 println("drop and lift down")
             }
-            lineToLinearHeading(bigWobblePose)
+            splineToSplineHeading(bigWobblePose, Math.toRadians(100.0))
             waitSeconds(2.0)
         }
     }

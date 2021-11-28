@@ -77,18 +77,16 @@ abstract class AutonomoCompleto(
 
                         // grab freight
                         lineTo(Vector2d(50.0, -64.0))
-                        UNSTABLE_addTemporalMarkerOffset(0.0) {
+                        UNSTABLE_addTemporalMarkerOffset(2.0) {
                             + IntakeStopCmd()
+                            + LiftMoveToPosCmd(LiftPosition.HIGH)
                         }
 
                         // out of the warehouse
                         lineTo(Vector2d(10.0, -64.0))
-                        UNSTABLE_addTemporalMarkerOffset(0.0) {
-                            + LiftMoveToPosCmd(LiftPosition.HIGH)
-                        }
 
                         // put freight in big wobble
-                        UNSTABLE_addTemporalMarkerOffset(0.5) {
+                        UNSTABLE_addTemporalMarkerOffset(1.5) {
                             + freightDropSequence()
                         }
                         lineToLinearHeading(bigWobblePose)
