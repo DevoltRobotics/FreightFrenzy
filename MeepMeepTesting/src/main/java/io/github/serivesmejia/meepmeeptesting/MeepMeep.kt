@@ -37,13 +37,13 @@ fun main() {
                 deimosSequence(drive)
             }
 
-    mm.addEntity(robotPhobos).addEntity(robotDeimos).start()
+    mm.addEntity(robotPhobos)/*.addEntity(robotDeimos)*/.start()
 }
 
 val bigWobblePose = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
 
-val phobosDoDucks = false
-val cycles = 2
+val phobosDoDucks = true
+val cycles = 4
 
 fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosStartPosition).run {
     // put X cube in big wobble
@@ -82,7 +82,6 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
             UNSTABLE_addTemporalMarkerOffset(-0.5) {
                 println("intake on")
             }
-            lineTo(Vector2d(40.0, -64.0))
             lineTo(Vector2d(50.0, -64.0))
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 println("intake off")
@@ -96,8 +95,8 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 println("drop and lift down")
             }
-            splineToSplineHeading(bigWobblePose, Math.toRadians(100.0))
-            waitSeconds(2.0)
+            splineToSplineHeading(bigWobblePose, Math.toRadians(90.0))
+            waitSeconds(0.8)
         }
     }
 
@@ -106,7 +105,7 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
     // park fully
     lineTo(Vector2d(40.0, -64.0))
     // in case alliance wants to park too
-    strafeTo(Vector2d(37.0, -46.0))
+    strafeTo(Vector2d(40.0, -46.0))
 }.build()
 
 fun deimosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(deimosStartPosition).run {

@@ -20,7 +20,7 @@ import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
 abstract class AutonomoCompleto(
         val startPosition: Pose2d,
         val doDucks: Boolean = true,
-        val cycles: Int = 2
+        val cycles: Int = 4
 ) : AutonomoBase() {
 
     val bigWobblePose = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
@@ -77,20 +77,19 @@ abstract class AutonomoCompleto(
 
                         // grab freight
                         lineTo(Vector2d(50.0, -64.0))
-                        UNSTABLE_addTemporalMarkerOffset(2.0) {
+                        // out of the warehouse
+                        lineTo(Vector2d(23.0, -64.0))
+                        UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeStopCmd()
                             + LiftMoveToPosCmd(LiftPosition.HIGH)
                         }
 
-                        // out of the warehouse
-                        lineTo(Vector2d(10.0, -64.0))
-
                         // put freight in big wobble
-                        UNSTABLE_addTemporalMarkerOffset(1.5) {
+                        UNSTABLE_addTemporalMarkerOffset(2) {
                             + freightDropSequence()
                         }
-                        lineToLinearHeading(bigWobblePose)
-                        waitSeconds(2.0) // wait for the freight to drop
+                        splineToSplineHeading(bigWobblePose, Math.toRadians(90.0))
+                        waitSeconds(0.8) // wait for the freight to fall
                     }
                 }
 
@@ -99,7 +98,7 @@ abstract class AutonomoCompleto(
                 // park fully
                 lineTo(Vector2d(40.0, -64.0))
                 // in case alliance wants to park too
-                strafeTo(Vector2d(37.0, -46.0))
+                strafeTo(Vector2d(40.0, -46.0))
             }.build()
 
     private fun freightDropSequence() = deltaSequence {
@@ -112,23 +111,23 @@ abstract class AutonomoCompleto(
 
 }
 
-@Autonomous(name = "Completo Izquierda Pato", group = "Final")
+@Autonomous(name = "R-Completo Izquierda Pato", group = "Final")
 class AutonomoCompletoIzquierdaPato : AutonomoCompleto(
         Pose2d(-35.0, -62.0, Math.toRadians(90.0)), // pose inicial
-        cycles = 1
+        cycles = 2
 )
-@Autonomous(name = "Completo Izquierda", group = "Final")
+@Autonomous(name = "R-Completo Izquierda", group = "Final")
 class AutonomoCompletoIzquierda : AutonomoCompleto(
         Pose2d(-35.0, -62.0, Math.toRadians(90.0)), // pose inicial
         doDucks = false
 )
 
-@Autonomous(name = "Completo Izquierda Pato", group = "Final")
+@Autonomous(name = "R-Completo Izquierda Pato", group = "Final")
 class AutonomoCompletoDerechaPato : AutonomoCompleto(
         Pose2d(1.0, -62.0, Math.toRadians(90.0)), // pose inicial
-        cycles = 1
+        cycles = 2
 )
-@Autonomous(name = "Completo Derecha", group = "Final")
+@Autonomous(name = "R-Completo Derecha", group = "Final")
 class AutonomoCompletoDerecha : AutonomoCompleto(
         Pose2d(1.0, -62.0, Math.toRadians(90.0)), // pose inicial
         doDucks = false
