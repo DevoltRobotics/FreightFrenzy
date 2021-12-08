@@ -76,6 +76,17 @@ public class SampleMecanumDrive extends MecanumDrive {
     private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
+    public SampleMecanumDrive(HardwareMap hardwareMap) {
+        this(hardwareMap, buildHardware(hardwareMap));
+    }
+
+    private static DeltaHardwareHolonomic buildHardware(HardwareMap hardwareMap) {
+        DeltaHardwareHolonomic hardware = new DeltaHardwareHolonomic(hardwareMap);
+        hardware.initHardware("fl", "fr", "bl", "br", true);
+
+        return hardware;
+    }
+
     public SampleMecanumDrive(HardwareMap hardwareMap, DeltaHardwareHolonomic hardware) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 

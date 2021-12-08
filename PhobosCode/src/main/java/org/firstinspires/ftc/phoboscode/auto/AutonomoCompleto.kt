@@ -85,7 +85,7 @@ abstract class AutonomoCompleto(
                         }
 
                         // put freight in big wobble
-                        UNSTABLE_addTemporalMarkerOffset(2) {
+                        UNSTABLE_addTemporalMarkerOffset(2.0) {
                             + freightDropSequence()
                         }
                         splineToSplineHeading(bigWobblePose, Math.toRadians(90.0))
