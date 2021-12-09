@@ -9,5 +9,6 @@ open class CarouselMoveCmd(override val power: Double) : MotorPowerCmd() {
     override val motor = carSub.carouselMotor
 }
 
-class CarouselRotateCmd : CarouselMoveCmd(1.0)
+class CarouselRotateForwardCmd : CarouselMoveCmd(1.0)
+class CarouselRotateBackwardsCmd : CarouselMoveCmd(1.0)
 class CarouselStopCmd : CarouselMoveCmd(0.0)

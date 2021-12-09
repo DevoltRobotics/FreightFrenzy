@@ -1,6 +1,6 @@
 package com.github.serivesmejia.deltacommander
 
-import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
+import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.command.DeltaWaitCmd
 import com.github.serivesmejia.deltacommander.command.DeltaWaitConditionCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
@@ -63,7 +63,7 @@ abstract class DeltaCommand {
     fun stopAfter(timeSecs: Double): DeltaCommand {
         + deltaSequence {
             - DeltaWaitCmd(timeSecs)
-            - DeltaRunCmd(::requestFinish)
+            - DeltaInstantCmd(::requestFinish)
         }
 
         return this
@@ -72,7 +72,7 @@ abstract class DeltaCommand {
     fun stopOn(condition: () -> Boolean): DeltaCommand {
         + deltaSequence {
             - DeltaWaitConditionCmd(condition)
-            - DeltaRunCmd(::requestFinish)
+            - DeltaInstantCmd(::requestFinish)
         }
 
         return this

@@ -1,40 +1,45 @@
 package org.firstinspires.ftc.phoboscode.commander.command.lift
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients
+import com.acmerobotics.roadrunner.control.PIDFController
 import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.github.serivesmejia.deltacontrol.MotorPIDFController
 import org.firstinspires.ftc.phoboscode.commander.subsystem.Lift
 import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
 import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftSubsystem
+import org.firstinspires.ftc.robotcore.external.Telemetry
 
-open class LiftMoveToPosCmd(val positionSupplier: () -> Int) : DeltaCommand() {
+open class LiftMoveToPosCmd(val positionSupplier: () -> Int, private val telemetry: Telemetry? = null) : DeltaCommand() {
 
     val liftSub = require<LiftSubsystem>()
 
-    val controller = MotorPIDFController(Lift.pid)
+    val controller = PIDFController(PIDCoefficients(Lift.pid.p, Lift.pid.i, Lift.pid.d))
 
-    constructor(position: Int) : this({ position })
+    constructor(position: Int, telemetry: Telemetry? = null) : this({ position }, telemetry)
 
-    constructor(pos: LiftPosition) : this(pos.position)
+    constructor(pos: LiftPosition, telemetry: Telemetry? = null) : this(pos.position, telemetry)
 
     override fun init() {
         controller.reset()
-
-        controller.setInitialPower(Lift.power)
-                .setDeadzone(0.08)
-                .setErrorTolerance(5.0)
     }
 
     override fun run() {
-        controller.setSetpoint(positionSupplier().toDouble()) // set the target position
+        controller.targetPosition = positionSupplier().toDouble() // set the target position
 
-        liftSub.liftMotor.power = controller.calculate( // calculate output from pidcontroller
+        liftSub.liftMotor.power = controller.update( // calculate output from pidcontroller
                 liftSub.liftMotor.currentPosition.toDouble() // based from the current position
         )
+
+        telemetry?.run {
+            addData("lift target", controller.targetPosition)
+            addData("lift error", controller.lastError)
+            addData("lift power", liftSub.liftMotor.power)
+        }
     }
 
 }
 
-class LiftZeroPosition: LiftMoveToPosCmd(Lift.zeroPosition)
+class LiftZeroPosition(telemetry: Telemetry? = null): LiftMoveToPosCmd(Lift.zeroPosition, telemetry)
 class LiftLowPosition : LiftMoveToPosCmd(Lift.lowPosition)
 class LiftMiddlePosition : LiftMoveToPosCmd(Lift.middlePosition)
 class LiftHighPosition : LiftMoveToPosCmd(Lift.highPosition)

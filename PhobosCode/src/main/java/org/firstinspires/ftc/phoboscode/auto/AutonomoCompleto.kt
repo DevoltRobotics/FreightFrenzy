@@ -10,7 +10,7 @@ import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.*
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateCmd
+import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateForwardCmd
 import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselStopCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
@@ -50,7 +50,7 @@ abstract class AutonomoCompleto(
                     // duck spinny boi
                     lineToLinearHeading(Pose2d(-60.0, -60.0, Math.toRadians(170.0)))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
-                        + CarouselRotateCmd()
+                        + CarouselRotateForwardCmd()
                     }
                     waitSeconds(4.0)
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
@@ -84,10 +84,10 @@ abstract class AutonomoCompleto(
                             + LiftMoveToPosCmd(LiftPosition.HIGH)
                         }
 
-                        // put freight in big wobble
                         UNSTABLE_addTemporalMarkerOffset(2.0) {
                             + freightDropSequence()
                         }
+                        // put freight in big wobble
                         splineToSplineHeading(bigWobblePose, Math.toRadians(90.0))
                         waitSeconds(0.8) // wait for the freight to fall
                     }

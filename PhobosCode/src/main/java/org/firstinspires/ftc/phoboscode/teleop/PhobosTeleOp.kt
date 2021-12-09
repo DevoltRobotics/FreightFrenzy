@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.phoboscode.teleop
 
+import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
 import com.github.serivesmejia.deltacommander.command.NoCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltaevent.gamepad.button.Button
@@ -8,13 +9,16 @@ import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.commoncode.commander.command.MecanumDriveCommand
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateCmd
+import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateBackwardsCmd
+import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateForwardCmd
 import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselStopCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeOutCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.commander.command.lift.*
 import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import kotlin.math.abs
 
 @TeleOp(name = "TeleOp")
 class PhobosTeleOp : PhobosOpMode() {
@@ -26,7 +30,13 @@ class PhobosTeleOp : PhobosOpMode() {
         CAROUSEL
          */
         superGamepad1.scheduleOn(Button.A,
-                CarouselRotateCmd(),
+                CarouselRotateForwardCmd(),
+                CarouselStopCmd()
+        )
+
+
+        superGamepad1.scheduleOn(Button.B,
+                CarouselRotateBackwardsCmd(),
                 CarouselStopCmd()
         )
 
@@ -74,6 +84,14 @@ class PhobosTeleOp : PhobosOpMode() {
         superGamepad2.scheduleOnPress(Button.LEFT_TRIGGER,
                 BoxThrowCmd()
         )
+
+        /*
+        TELEMETRY LOGGING
+         */
+        + DeltaRunCmd {
+            telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
+            telemetry.update()
+        }
     }
 
     fun eitherStick(stickValue1: Float, stickValue2: Float) =
@@ -84,16 +102,16 @@ class PhobosTeleOp : PhobosOpMode() {
             }.toDouble()
 
     private fun liftSequence(liftPosition: LiftPosition) = deltaSequence {
-        val liftCommand = LiftMoveToPosCmd(liftPosition)
+        val liftCommand = LiftMoveToPosCmd(liftPosition, telemetry)
 
         - liftCommand.dontBlock()
-        - waitFor { liftCommand.controller.onSetpoint() }
+        - waitFor { abs(liftCommand.controller.lastError) < 10 }
 
         - BoxThrowCmd().dontBlock()
         - waitForSeconds(4.0)
         - BoxSaveCmd().dontBlock()
 
-        - LiftZeroPosition().dontBlock()
+        - LiftZeroPosition(telemetry).dontBlock()
     }
 
 }

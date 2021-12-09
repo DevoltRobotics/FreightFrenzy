@@ -40,12 +40,12 @@ enum class LiftPosition(val position: () -> Int) {
 
 @Config
 object Lift {
-    @JvmStatic val pid = PIDFCoefficients(0.12, 0.0, 0.0, 0.08)
+    @JvmField var pid = PIDFCoefficients(0.004, 0.0, 0.0, 0.0)
 
-    @JvmStatic val power = 0.7
+    @JvmField var power = 0.7
 
-    @JvmStatic val zeroPosition = 0
-    @JvmStatic val lowPosition = 100
-    @JvmStatic val middlePosition = 500
-    @JvmStatic val highPosition = 1000
+    @JvmField var zeroPosition = 0
+    @JvmField var lowPosition = 100
+    @JvmField var middlePosition = 500
+    @JvmField var highPosition = 1000
 }
