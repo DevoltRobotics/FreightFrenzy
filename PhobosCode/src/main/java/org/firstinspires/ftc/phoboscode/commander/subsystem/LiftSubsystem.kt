@@ -45,7 +45,7 @@ object Lift {
     @JvmField var power = 0.7
 
     @JvmField var zeroPosition = 0
-    @JvmField var lowPosition = 100
-    @JvmField var middlePosition = 500
-    @JvmField var highPosition = 1000
+    @JvmField var lowPosition = 200
+    @JvmField var middlePosition = 540
+    @JvmField var highPosition = 1100
 }

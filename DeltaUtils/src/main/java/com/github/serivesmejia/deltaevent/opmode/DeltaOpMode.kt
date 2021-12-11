@@ -20,7 +20,11 @@ abstract class DeltaOpMode : LinearOpMode() {
         deltaScheduler.reset()
 
         superGamepad1 = SuperGamepad(gamepad1)
-        superGamepad2 = SuperGamepad(gamepad2)
+        if(gamepad1 != gamepad2) {
+            superGamepad2 = SuperGamepad(gamepad2)
+        } else {
+            superGamepad2 = superGamepad1
+        }
 
         initialize()
 

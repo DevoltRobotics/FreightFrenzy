@@ -21,7 +21,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOp")
-class PhobosTeleOp : PhobosOpMode() {
+open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = false) : PhobosOpMode() {
+
+    override fun runOpMode() {
+        if(singleDriver) {
+            gamepad2 = gamepad1
+        }
+        super.runOpMode()
+    }
 
     override fun setup() {
         + MecanumDriveCommand(gamepad1) // contrar las mecanum con los joysticks del gamepad 1
@@ -29,13 +36,13 @@ class PhobosTeleOp : PhobosOpMode() {
         /*
         CAROUSEL
          */
-        superGamepad1.scheduleOn(Button.A,
+        superGamepad1.scheduleOn(Button.X,
                 CarouselRotateForwardCmd(),
                 CarouselStopCmd()
         )
 
 
-        superGamepad1.scheduleOn(Button.B,
+        superGamepad1.scheduleOn(Button.Y,
                 CarouselRotateBackwardsCmd(),
                 CarouselStopCmd()
         )
@@ -90,6 +97,7 @@ class PhobosTeleOp : PhobosOpMode() {
          */
         + DeltaRunCmd {
             telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
+            telemetry.addData("single driver", singleDriver)
             telemetry.update()
         }
     }
@@ -115,3 +123,6 @@ class PhobosTeleOp : PhobosOpMode() {
     }
 
 }
+
+@TeleOp(name = "TeleOp (1 Driver)")
+class PhobosTeleOpSingleDriver : PhobosTeleOp(singleDriver = true)
