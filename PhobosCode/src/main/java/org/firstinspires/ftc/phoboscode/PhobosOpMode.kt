@@ -2,14 +2,13 @@ package org.firstinspires.ftc.phoboscode
 
 import com.github.serivesmejia.deltacommander.deltaScheduler
 import org.firstinspires.ftc.commoncode.CommonOpMode
-import org.firstinspires.ftc.phoboscode.commander.subsystem.BoxSubsystem
-import org.firstinspires.ftc.phoboscode.commander.subsystem.CarouselSubsystem
-import org.firstinspires.ftc.phoboscode.commander.subsystem.IntakeSubsystem
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftSubsystem
+import org.firstinspires.ftc.phoboscode.commander.subsystem.*
 
-abstract class PhobosOpMode(usingRR: Boolean = false) : CommonOpMode(usingRR) {
+abstract class PhobosOpMode : CommonOpMode() {
 
     override val hardware = Hardware()
+
+    override val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
 
     lateinit var intakeSub: IntakeSubsystem
         private set
@@ -23,6 +22,7 @@ abstract class PhobosOpMode(usingRR: Boolean = false) : CommonOpMode(usingRR) {
     override fun initialize() {
         super.initialize()
 
+        mecanumSub.init()
         intakeSub = IntakeSubsystem(hardware.intakeMotor)
         carouselSub = CarouselSubsystem(hardware.carouselMotor)
         liftSub = LiftSubsystem(hardware.sliderMotor)

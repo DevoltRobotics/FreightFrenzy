@@ -38,4 +38,16 @@ abstract class DeltaSubsystem(addToScheduler: Boolean = true) {
         get() = deltaScheduler.getDefaultCommand(this)
         set(value) { deltaScheduler.setDefaultCommand(this, value!!) }
 
+    val isBusy: Boolean get() {
+        for(command in deltaScheduler.commands) {
+            for(requirement in command.requirements) {
+                if(requirement == this && command != defaultCommand) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
 }

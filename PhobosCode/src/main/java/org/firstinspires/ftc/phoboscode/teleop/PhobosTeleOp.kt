@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.phoboscode.teleop
 
+import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
-import com.github.serivesmejia.deltacommander.command.NoCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltaevent.gamepad.button.Button
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.phoboscode.PhobosOpMode
-import org.firstinspires.ftc.commoncode.commander.command.MecanumDriveCommand
+import org.firstinspires.ftc.commoncode.commander.command.MecanumFieldCentricDriveCommand
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
 import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateBackwardsCmd
@@ -17,7 +17,6 @@ import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeOutCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.commander.command.lift.*
 import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
-import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOp")
@@ -31,7 +30,13 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
     }
 
     override fun setup() {
-        + MecanumDriveCommand(gamepad1) // contrar las mecanum con los joysticks del gamepad 1
+        + MecanumFieldCentricDriveCommand(gamepad1, telemetry) // contrar las mecanum con los joysticks del gamepad 1
+
+        superGamepad1.scheduleOnPress(Button.DPAD_LEFT,
+                DeltaInstantCmd {
+                    mecanumSub.resetPose()
+                }
+        )
 
         /*
         CAROUSEL
@@ -66,19 +71,19 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
 
         superGamepad2.scheduleOnPress(Button.DPAD_UP,
                 liftSequence( LiftPosition.HIGH )
-        )
+        ) { !liftSub.isBusy } // only schedule command if lift is currently not busy from going to another position
 
-        superGamepad2.scheduleOn(Button.DPAD_RIGHT,
+        superGamepad2.scheduleOnPress(Button.DPAD_RIGHT,
                 liftSequence( LiftPosition.MID )
-        )
+        ) { !liftSub.isBusy }
 
-        superGamepad2.scheduleOn(Button.DPAD_DOWN,
-                liftSequence( LiftPosition.LOW )
-        )
+        superGamepad2.scheduleOnPress(Button.DPAD_DOWN,
+                liftSequence( LiftPosition.LOW ),
+        ) { !liftSub.isBusy }
 
         // controlling the lift with either of the joysticks when it isn't executing the "lift sequence"
         liftSub.defaultCommand = LiftMoveCmd {
-            -eitherStick(gamepad2.left_stick_y, gamepad2.right_stick_y)
+            - eitherStick(gamepad2.left_stick_y, gamepad2.right_stick_y)
         }
 
         /*
@@ -110,16 +115,16 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
             }.toDouble()
 
     private fun liftSequence(liftPosition: LiftPosition) = deltaSequence {
-        val liftCommand = LiftMoveToPosCmd(liftPosition, telemetry)
+        val liftCmd = LiftMoveToPosCmd(liftPosition, telemetry)
 
-        - liftCommand.dontBlock()
-        - waitFor { abs(liftCommand.controller.lastError) < 10 }
+        - liftCmd.dontBlock()
+        - waitFor { abs(liftCmd.controller.lastError) < 10 }
 
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(4.0)
+        - waitForSeconds(3.0)
         - BoxSaveCmd().dontBlock()
 
-        - LiftZeroPosition(telemetry).dontBlock()
+        - LiftZeroPosition(telemetry).stopOn { abs(controller.lastError) < 5 }.dontBlock()
     }
 
 }

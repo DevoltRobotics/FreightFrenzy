@@ -31,7 +31,10 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.phoboscode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.phoboscode.rr.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.phoboscode.rr.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.phoboscode.rr.util.AxesSigns;
+import org.firstinspires.ftc.phoboscode.rr.util.BNO055IMUUtil;
 import org.firstinspires.ftc.phoboscode.rr.util.LynxModuleUtil;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,7 +112,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
         // upward (normal to the floor) using a command like the following:
-        // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
+        BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
         leftFront = hardware.getWheelFrontLeft();
         leftRear = hardware.getWheelBackLeft();

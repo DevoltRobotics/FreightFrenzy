@@ -70,10 +70,10 @@ class SuperGamepad (var gamepad: Gamepad) : Super {
      * @param btt The button to be watched for press
      * @params cmd The command to be scheduled when the watched button is pressed
      */
-    fun scheduleOnPress(btt: Button, cmd: DeltaCommand) {
+    fun scheduleOnPress(btt: Button, cmd: DeltaCommand, condition: () -> Boolean = { true }) {
         registerEvent(object: SuperGamepadEvent() {
             override fun buttonsPressed(buttons: Buttons) {
-                if(buttons(btt)) deltaScheduler.schedule(cmd)
+                if(buttons(btt) && condition()) deltaScheduler.schedule(cmd)
             }
         })
     }
@@ -83,10 +83,10 @@ class SuperGamepad (var gamepad: Gamepad) : Super {
      * @param btt The button to be watched for release
      * @params cmd The command to be scheduled when the watched button is released
      */
-    fun scheduleOnRelease(btt: Button, cmd: DeltaCommand) {
+    fun scheduleOnRelease(btt: Button, cmd: DeltaCommand, condition: () -> Boolean = { true }) {
         registerEvent(object: SuperGamepadEvent() {
             override fun buttonsReleased(buttons: Buttons) {
-                if(buttons(btt)) deltaScheduler.schedule(cmd)
+                if(buttons(btt) && condition()) deltaScheduler.schedule(cmd)
             }
         })
     }

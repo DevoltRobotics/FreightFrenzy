@@ -11,7 +11,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvInternalCamera2
 
 abstract class AutonomoBase(
-        val needsRR: Boolean = true,
         val needsVision: Boolean = true,
 ) : PhobosOpMode() {
 
@@ -23,9 +22,7 @@ abstract class AutonomoBase(
     private var openFailed = false
 
     override fun setup() {
-        if(needsRR) {
-            drive = SampleMecanumDrive(hardwareMap, hardware.deltaHardware)
-        }
+        drive = mecanumSub.drive
 
         if(needsVision) {
             vision.initInternalCameraVision(hardwareMap)
@@ -33,20 +30,14 @@ abstract class AutonomoBase(
     }
 
     override fun begin() {
-        if(needsRR) {
-            drive.followTrajectorySequenceAsync(
-                    sequence(
-                            if (openFailed) TeamMarkerPosition.UNKNOWN else vision.position
-                    )
-            )
-        }
+        drive.followTrajectorySequenceAsync(
+                sequence(
+                        if (openFailed) TeamMarkerPosition.UNKNOWN else vision.position
+                )
+        )
 
-        vision.close()
-    }
-
-    override fun update() {
-        if(needsRR) {
-            drive.update()
+        if(needsVision) {
+            vision.close()
         }
     }
 

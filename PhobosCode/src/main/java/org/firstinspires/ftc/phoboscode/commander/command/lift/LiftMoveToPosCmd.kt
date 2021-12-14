@@ -27,8 +27,8 @@ open class LiftMoveToPosCmd(val positionSupplier: () -> Int, private val telemet
         controller.targetPosition = positionSupplier().toDouble() // set the target position
 
         liftSub.liftMotor.power = controller.update( // calculate output from pidcontroller
-                liftSub.liftMotor.currentPosition.toDouble() // based from the current position
-        )
+                liftSub.motorTicks.toDouble() // based from the current position
+        ) * Lift.power // scale the max motor power
 
         telemetry?.run {
             addData("lift target", controller.targetPosition)

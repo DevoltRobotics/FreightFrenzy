@@ -95,6 +95,7 @@ class DeltaScheduler internal constructor() {
         cmd.finishRequested = false
         cmd.endingCalled = false
         cmd.allowRequire = false
+        cmd.hasRunOnce = false
         cmd.init()
 
         val state = DeltaCommand.State(isInterruptible)
@@ -160,6 +161,7 @@ class DeltaScheduler internal constructor() {
 
         for((cmd, _) in scheduledCommands.entries.toTypedArray()) { //iterate through the scheduled commands
             cmd.run() //actually run the command
+            cmd.hasRunOnce = true
 
             for(evt in runEvents) { evt.run(cmd) } //execute the user events
 

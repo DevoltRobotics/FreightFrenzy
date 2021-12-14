@@ -1,15 +1,26 @@
 package org.firstinspires.ftc.commoncode.commander.subsystem
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive
+import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.github.serivesmejia.deltacommander.DeltaSubsystem
 import com.github.serivesmejia.deltadrive.drivebase.DeltaMecanumDrive
 import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 
-class MecanumSubsystem(
+abstract class MecanumSubsystem(
         hardware: DeltaHardwareHolonomic
 ) : DeltaSubsystem() {
 
-    val drive = DeltaMecanumDrive(hardware)
+    abstract val drive: MecanumDrive
 
-    override fun loop() { }
+    val deltaDrive by lazy { DeltaMecanumDrive(hardware) }
+
+    override fun loop() {
+    }
+
+    abstract fun setWeighedDrivePower(pose: Pose2d)
+
+    fun resetPose() {
+        drive.poseEstimate = Pose2d()
+    }
 
 }

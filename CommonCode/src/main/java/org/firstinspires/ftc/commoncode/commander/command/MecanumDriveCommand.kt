@@ -6,10 +6,10 @@ import org.firstinspires.ftc.commoncode.commander.subsystem.MecanumSubsystem
 
 class MecanumDriveCommand(val gamepad: Gamepad) : DeltaCommand() {
 
-    val sub = require<MecanumSubsystem>()
+    val sub = require<MecanumSubsystem>("MecanumSubsystem")
 
     override fun run() {
-        sub.drive.joystickRobotCentric(gamepad, true, 0.7)
+        sub.deltaDrive.joystickRobotCentric(gamepad, true, 0.7)
     }
 
 }

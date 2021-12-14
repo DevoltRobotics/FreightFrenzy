@@ -17,6 +17,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -75,6 +76,17 @@ public class SampleMecanumDrive extends MecanumDrive {
     private VoltageSensor batteryVoltageSensor;
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
+        this(hardwareMap, buildHardware(hardwareMap));
+    }
+
+    private static DeltaHardwareHolonomic buildHardware(HardwareMap hardwareMap) {
+        DeltaHardwareHolonomic hardware = new DeltaHardwareHolonomic(hardwareMap);
+        hardware.initHardware("fl", "fr", "bl", "br", true);
+
+        return hardware;
+    }
+
+    public SampleMecanumDrive(HardwareMap hardwareMap, DeltaHardwareHolonomic deltaHardware) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
@@ -98,13 +110,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "fl");
-        leftRear = hardwareMap.get(DcMotorEx.class, "bl");
-        rightRear = hardwareMap.get(DcMotorEx.class, "fr");
-        rightFront = hardwareMap.get(DcMotorEx.class, "br");
-
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        leftFront = deltaHardware.getWheelFrontLeft();
+        leftRear = deltaHardware.getWheelBackLeft();
+        rightRear = deltaHardware.getWheelBackRight();
+        rightFront = deltaHardware.getWheelFrontRight();
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

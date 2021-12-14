@@ -17,6 +17,9 @@ abstract class DeltaCommand {
         internal set
     internal var endingCalled = false
 
+    var hasRunOnce = false
+        internal set
+
     internal var allowRequire = true
 
     open fun init() {}
@@ -51,7 +54,27 @@ abstract class DeltaCommand {
             }
         }
 
-        throw IllegalArgumentException("Unable to find subsystem ${clazz::class.simpleName} in DeltaScheduler")
+        throw IllegalArgumentException("Unable to find subsystem ${clazz::class.java.name} in DeltaScheduler")
+    }
+
+    @JvmName("requireByName")
+    inline fun <reified S : DeltaSubsystem> require(clazzName: String): S {
+        val sub = require(clazzName)
+
+        if(sub is S)
+            return sub
+        else throw IllegalArgumentException("Unable to find subsystem $clazzName with type ${S::class.java.name} in DeltaScheduler")
+    }
+
+    fun require(clazzName: String): DeltaSubsystem {
+        for(subsystem in deltaScheduler.subsystems) {
+            if(subsystem::class.java.simpleName == clazzName) {
+                require(subsystem)
+                return subsystem
+            }
+        }
+
+        throw IllegalArgumentException("Unable to find subsystem $clazzName in DeltaScheduler")
     }
 
     fun requestFinish() {
@@ -63,16 +86,7 @@ abstract class DeltaCommand {
     fun stopAfter(timeSecs: Double): DeltaCommand {
         + deltaSequence {
             - DeltaWaitCmd(timeSecs)
-            - DeltaInstantCmd(::requestFinish)
-        }
-
-        return this
-    }
-
-    fun stopOn(condition: () -> Boolean): DeltaCommand {
-        + deltaSequence {
-            - DeltaWaitConditionCmd(condition)
-            - DeltaInstantCmd(::requestFinish)
+            - DeltaInstantCmd(this@DeltaCommand::requestFinish)
         }
 
         return this
@@ -86,5 +100,15 @@ abstract class DeltaCommand {
     operator fun unaryPlus() = schedule()
 
     data class State(val interruptible: Boolean)
+}
 
+inline fun <reified C: DeltaCommand> C.stopOn(noinline condition: C.() -> Boolean): DeltaCommand {
+    val command = this
+
+    + deltaSequence {
+        - waitFor { command.hasRunOnce && condition(command) }
+        - DeltaInstantCmd(command::requestFinish)
+    }
+
+    return this
 }

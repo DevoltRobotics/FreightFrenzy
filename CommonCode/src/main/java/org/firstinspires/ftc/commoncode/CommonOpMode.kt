@@ -8,11 +8,11 @@ import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 import com.github.serivesmejia.deltaevent.opmode.DeltaOpMode
 import org.firstinspires.ftc.commoncode.commander.subsystem.MecanumSubsystem
 
-abstract class CommonOpMode(val usingRR: Boolean = false) : DeltaOpMode() {
+abstract class CommonOpMode() : DeltaOpMode() {
 
     abstract val hardware: CommonHardware
 
-    val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
+    abstract val mecanumSub: MecanumSubsystem
 
     override fun initialize() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
@@ -21,10 +21,6 @@ abstract class CommonOpMode(val usingRR: Boolean = false) : DeltaOpMode() {
         hardware.initHardware(hardwareMap)
 
         deltaHardware = hardware.deltaHardware
-
-        if(!usingRR) {
-            deltaScheduler.addSubsystem(mecanumSub)
-        }
     }
 
 }

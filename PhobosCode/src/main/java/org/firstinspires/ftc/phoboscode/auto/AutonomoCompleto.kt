@@ -122,7 +122,7 @@ class AutonomoCompletoIzquierda : AutonomoCompleto(
         doDucks = false
 )
 
-@Autonomous(name = "R-Completo Izquierda Pato", group = "Final")
+@Autonomous(name = "R-Completo Derecha Pato", group = "Final")
 class AutonomoCompletoDerechaPato : AutonomoCompleto(
         Pose2d(1.0, -62.0, Math.toRadians(90.0)), // pose inicial
         cycles = 2
