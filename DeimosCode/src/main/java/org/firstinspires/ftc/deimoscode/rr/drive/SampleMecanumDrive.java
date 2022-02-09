@@ -17,7 +17,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,6 +29,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.deimoscode.rr.util.AxisDirection;
+import org.firstinspires.ftc.deimoscode.rr.util.BNO055IMUUtil;
 import org.firstinspires.ftc.deimoscode.rr.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -76,17 +77,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     private VoltageSensor batteryVoltageSensor;
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
-        this(hardwareMap, buildHardware(hardwareMap));
-    }
-
-    private static DeltaHardwareHolonomic buildHardware(HardwareMap hardwareMap) {
-        DeltaHardwareHolonomic hardware = new DeltaHardwareHolonomic(hardwareMap);
-        hardware.initHardware("fl", "fr", "bl", "br", true);
-
-        return hardware;
-    }
-
-    public SampleMecanumDrive(HardwareMap hardwareMap, DeltaHardwareHolonomic deltaHardware) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
@@ -106,14 +96,32 @@ public class SampleMecanumDrive extends MecanumDrive {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
 
-        // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
-        // upward (normal to the floor) using a command like the following:
-        // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
+        // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
+        // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
+        //
+        //             | +Z axis
+        //             |
+        //             |
+        //             |
+        //      _______|_____________     +Y axis
+        //     /       |_____________/|__________
+        //    /   REV / EXPANSION   //
+        //   /       / HUB         //
+        //  /_______/_____________//
+        // |_______/_____________|/
+        //        /
+        //       / +X axis
+        //
+        // This diagram is derived from the axes in section 3.4 https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
+        // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
+        //
+        // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
-        leftFront = deltaHardware.getWheelFrontLeft();
-        leftRear = deltaHardware.getWheelBackLeft();
-        rightRear = deltaHardware.getWheelBackRight();
-        rightFront = deltaHardware.getWheelFrontRight();
+        leftFront = hardwareMap.get(DcMotorEx.class, "FI");
+        leftRear = hardwareMap.get(DcMotorEx.class, "TI");
+        rightRear = hardwareMap.get(DcMotorEx.class, "TD");
+        rightFront = hardwareMap.get(DcMotorEx.class, "FD");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -292,25 +300,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        // TODO: This must be changed to match your configuration
-        //                           | Z axis
-        //                           |
-        //     (Motor Port Side)     |   / X axis
-        //                       ____|__/____
-        //          Y axis     / *   | /    /|   (IO Side)
-        //          _________ /______|/    //      I2C
-        //                   /___________ //     Digital
-        //                  |____________|/      Analog
+        // To work around an SDK bug, use -zRotationRate in place of xRotationRate
+        // and -xRotationRate in place of zRotationRate (yRotationRate behaves as
+        // expected). This bug does NOT affect orientation.
         //
-        //                 (Servo Port Side)
-        //
-        // The positive x axis points toward the USB port(s)
-        //
-        // Adjust the axis rotation rate as necessary
-        // Rotate about the z axis is the default assuming your REV Hub/Control Hub is laying
-        // flat on a surface
-
-        return (double) imu.getAngularVelocity().zRotationRate;
+        // See https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/251 for details.
+        return (double) -imu.getAngularVelocity().xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

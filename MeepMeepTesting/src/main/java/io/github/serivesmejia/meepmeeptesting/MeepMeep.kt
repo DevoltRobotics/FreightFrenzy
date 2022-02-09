@@ -37,7 +37,7 @@ fun main() {
                 deimosSequence(drive)
             }
 
-    mm.addEntity(robotPhobos)/*.addEntity(robotDeimos)*/.start()
+    mm.addEntity(robotPhobos).addEntity(robotDeimos).start()
 }
 
 val bigWobblePose = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
