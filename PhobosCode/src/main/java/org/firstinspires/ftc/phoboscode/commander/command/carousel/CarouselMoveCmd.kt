@@ -10,5 +10,5 @@ open class CarouselMoveCmd(override val power: Double) : MotorPowerCmd() {
 }
 
 class CarouselRotateForwardCmd : CarouselMoveCmd(0.7)
-class CarouselRotateBackwardsCmd : CarouselMoveCmd(0.7)
+class CarouselRotateBackwardsCmd : CarouselMoveCmd(-0.7)
 class CarouselStopCmd : CarouselMoveCmd(0.0)

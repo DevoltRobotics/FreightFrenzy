@@ -102,6 +102,18 @@ abstract class DeltaCommand {
     data class State(val interruptible: Boolean)
 }
 
+@Suppress("UNCHECKED_CAST")
+fun <S : DeltaSubsystem> subsystem(clazz: KClass<S>): S {
+    for(subsystem in deltaScheduler.subsystems) {
+        if(subsystem::class == clazz) {
+            return subsystem as S
+        }
+    }
+
+    throw IllegalArgumentException("Unable to find subsystem ${clazz::class.java.name} in DeltaScheduler")
+}
+inline fun <reified S : DeltaSubsystem> subsystem() = subsystem(S::class)
+
 inline fun <reified C: DeltaCommand> C.stopOn(noinline condition: C.() -> Boolean): DeltaCommand {
     val command = this
 
