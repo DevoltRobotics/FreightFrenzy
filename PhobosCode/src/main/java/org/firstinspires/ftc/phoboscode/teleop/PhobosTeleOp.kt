@@ -41,12 +41,12 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
          */
         superGamepad1.scheduleOn(Button.X,
                 ACCarouselRotateBackwardsCmd(),
-                CarouselStopCmd()
+                ACCarouselStopCmd()
         )
 
         superGamepad1.scheduleOn(Button.Y,
                 ACCarouselRotateForwardCmd(),
-                CarouselStopCmd()
+                ACCarouselStopCmd()
         )
 
         /*

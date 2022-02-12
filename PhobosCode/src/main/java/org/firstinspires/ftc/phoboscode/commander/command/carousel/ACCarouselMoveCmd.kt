@@ -34,7 +34,7 @@ class ACCarouselRotateBackwardsCmd : ACCarouselMoveCmd(-1.0)
 fun ACCarouselStopCmd() = deltaSequence {
     val carSub = subsystem<CarouselSubsystem>()
 
-    - ACCarouselMoveCmd(-carSub.carouselMotor.power)
+    - CarouselMoveCmd(-carSub.carouselMotor.power)
     - waitForSeconds(0.3)
     - CarouselStopCmd()
 }
