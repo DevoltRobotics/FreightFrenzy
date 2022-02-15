@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.deimoscode.rr.util;
-package org.firstinspires.ftc.teamcode.util;
 
 /**
  * A direction for an axis to be remapped to
