@@ -6,13 +6,9 @@ import com.github.serivesmejia.deltacommander.DeltaSubsystem
 import com.github.serivesmejia.deltadrive.drivebase.DeltaMecanumDrive
 import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 
-abstract class MecanumSubsystem(
-        hardware: DeltaHardwareHolonomic
-) : DeltaSubsystem() {
+abstract class MecanumSubsystem: DeltaSubsystem() {
 
     abstract val drive: MecanumDrive
-
-    val deltaDrive by lazy { DeltaMecanumDrive(hardware) }
 
     override fun loop() {
     }

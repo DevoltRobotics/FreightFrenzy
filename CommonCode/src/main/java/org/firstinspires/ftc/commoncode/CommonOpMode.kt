@@ -7,6 +7,7 @@ import com.github.serivesmejia.deltacommander.reset
 import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 import com.github.serivesmejia.deltaevent.opmode.DeltaOpMode
 import org.firstinspires.ftc.commoncode.commander.subsystem.MecanumSubsystem
+import org.firstinspires.ftc.robotcore.external.Telemetry
 
 abstract class CommonOpMode() : DeltaOpMode() {
 
@@ -14,7 +15,11 @@ abstract class CommonOpMode() : DeltaOpMode() {
 
     abstract val mecanumSub: MecanumSubsystem
 
+    lateinit var originalTelemetry: Telemetry
+        private set
+
     override fun initialize() {
+        originalTelemetry = telemetry
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
         deltaScheduler.reset()

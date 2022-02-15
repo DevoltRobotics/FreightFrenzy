@@ -8,8 +8,6 @@ import org.firstinspires.ftc.deimoscode.commander.subsystem.MecanumSubsystem
 
 abstract class DeimosOpMode : CommonOpMode() {
 
-    override val hardware = Hardware()
-
     override val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
 
     lateinit var armSub: ArmSubsystem

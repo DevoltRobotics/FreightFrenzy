@@ -8,7 +8,7 @@ abstract class PhobosOpMode : CommonOpMode() {
 
     override val hardware = Hardware()
 
-    override val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
+    override val mecanumSub by lazy { MecanumSubsystem(hardware.drive) }
 
     lateinit var intakeSub: IntakeSubsystem
         private set

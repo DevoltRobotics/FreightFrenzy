@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.phoboscode
 
+import com.github.serivesmejia.deltasimple.SimpleHardware
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Servo
-import org.firstinspires.ftc.commoncode.CommonHardware
+import org.firstinspires.ftc.phoboscode.rr.drive.SampleMecanumDrive
 
-class Hardware : CommonHardware() {
+class Hardware : SimpleHardware() {
+
+    val drive by lazy { SampleMecanumDrive(hdwMap)}
 
     val intakeMotor by hardware<DcMotor>("in")
     val carouselMotor by hardware<DcMotor>("ca")
