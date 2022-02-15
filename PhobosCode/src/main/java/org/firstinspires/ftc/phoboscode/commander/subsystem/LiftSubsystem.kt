@@ -3,6 +3,7 @@ package org.firstinspires.ftc.phoboscode.commander.subsystem
 import com.acmerobotics.dashboard.config.Config
 import com.github.serivesmejia.deltacommander.DeltaSubsystem
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import org.firstinspires.ftc.phoboscode.commander.command.lift.LiftMoveToPosCmd
 
@@ -18,6 +19,7 @@ class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
     val motorTicks get() = liftMotor.currentPosition - offset
 
     override fun init() {
+        liftMotor.direction = DcMotorSimple.Direction.REVERSE
         liftMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         liftMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
@@ -45,7 +47,7 @@ object Lift {
     @JvmField var power = 0.7
 
     @JvmField var zeroPosition = 0
-    @JvmField var lowPosition = 380
-    @JvmField var middlePosition = 700
-    @JvmField var highPosition = 1100
+    @JvmField var lowPosition = 210
+    @JvmField var middlePosition = 572
+    @JvmField var highPosition = 892
 }

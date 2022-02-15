@@ -9,9 +9,7 @@ import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.commoncode.commander.command.MecanumFieldCentricDriveCommand
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateBackwardsCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateForwardCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselStopCmd
+import org.firstinspires.ftc.phoboscode.commander.command.carousel.*
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeOutCmd
 import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
@@ -42,14 +40,13 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
         CAROUSEL
          */
         superGamepad1.scheduleOn(Button.X,
-                CarouselRotateForwardCmd(),
-                CarouselStopCmd()
+                ACCarouselRotateBackwardsCmd(),
+                ACCarouselStopCmd()
         )
 
-
         superGamepad1.scheduleOn(Button.Y,
-                CarouselRotateBackwardsCmd(),
-                CarouselStopCmd()
+                ACCarouselRotateForwardCmd(),
+                ACCarouselStopCmd()
         )
 
         /*
@@ -102,6 +99,7 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
          */
         + DeltaRunCmd {
             telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
+            telemetry.addData("carousel power", hardware.carouselMotor.power)
             telemetry.addData("single driver", singleDriver)
             telemetry.update()
         }
