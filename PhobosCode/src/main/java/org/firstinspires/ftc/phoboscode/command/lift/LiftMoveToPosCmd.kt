@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.phoboscode.commander.command.lift
+package org.firstinspires.ftc.phoboscode.command.lift
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.acmerobotics.roadrunner.control.PIDFController
 import com.github.serivesmejia.deltacommander.DeltaCommand
-import com.github.serivesmejia.deltacontrol.MotorPIDFController
-import org.firstinspires.ftc.phoboscode.commander.subsystem.Lift
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.Lift
+import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
+import org.firstinspires.ftc.phoboscode.subsystem.LiftSubsystem
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 open class LiftMoveToPosCmd(val positionSupplier: () -> Int, private val telemetry: Telemetry? = null) : DeltaCommand() {

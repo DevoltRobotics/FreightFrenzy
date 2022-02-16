@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.phoboscode.commander.command.carousel
+package org.firstinspires.ftc.phoboscode.command.carousel
 
 import com.acmerobotics.roadrunner.util.NanoClock
 import com.github.serivesmejia.deltacommander.DeltaCommand
-import com.github.serivesmejia.deltacommander.command.DeltaSequentialCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltacommander.subsystem
 import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.phoboscode.commander.subsystem.Carousel
-import org.firstinspires.ftc.phoboscode.commander.subsystem.CarouselSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.Carousel
+import org.firstinspires.ftc.phoboscode.subsystem.CarouselSubsystem
 import kotlin.math.abs
 import kotlin.math.sign
 

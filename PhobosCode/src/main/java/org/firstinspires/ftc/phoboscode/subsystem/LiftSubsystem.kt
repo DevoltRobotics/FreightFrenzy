@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.phoboscode.commander.subsystem
+package org.firstinspires.ftc.phoboscode.subsystem
 
 import com.acmerobotics.dashboard.config.Config
 import com.github.serivesmejia.deltacommander.DeltaSubsystem
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
-import org.firstinspires.ftc.phoboscode.commander.command.lift.LiftMoveToPosCmd
+import org.firstinspires.ftc.phoboscode.command.lift.LiftMoveToPosCmd
 
 class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
 

@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.phoboscode
 
-import com.github.serivesmejia.deltacommander.deltaScheduler
 import org.firstinspires.ftc.commoncode.CommonOpMode
-import org.firstinspires.ftc.phoboscode.commander.subsystem.*
+import org.firstinspires.ftc.phoboscode.subsystem.*
 
 abstract class PhobosOpMode : CommonOpMode() {
 
@@ -18,6 +17,8 @@ abstract class PhobosOpMode : CommonOpMode() {
         private set
     lateinit var boxSub: BoxSubsystem
         private set
+    lateinit var cappingTurretSub: CappingTurretSubsystem
+        private set
 
     override fun initialize() {
         super.initialize()
@@ -27,6 +28,7 @@ abstract class PhobosOpMode : CommonOpMode() {
         carouselSub = CarouselSubsystem(hardware.carouselMotor, telemetry)
         liftSub = LiftSubsystem(hardware.sliderMotor)
         boxSub = BoxSubsystem(hardware.boxServo)
+        cappingTurretSub = CappingTurretSubsystem(hardware.turretYawServo, hardware.turretPitchServo)
 
         setup()
     }

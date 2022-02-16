@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.phoboscode.commander.command.carousel
+package org.firstinspires.ftc.phoboscode.command.carousel
 
 import org.firstinspires.ftc.commoncode.commander.command.MotorPowerCmd
-import org.firstinspires.ftc.phoboscode.commander.subsystem.CarouselSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.CarouselSubsystem
 
 open class CarouselMoveCmd(override val power: Double) : MotorPowerCmd() {
     val carSub = require<CarouselSubsystem>()

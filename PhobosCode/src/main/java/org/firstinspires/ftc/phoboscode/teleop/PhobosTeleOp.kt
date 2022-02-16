@@ -7,14 +7,14 @@ import com.github.serivesmejia.deltaevent.gamepad.button.Button
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.commoncode.commander.command.MecanumFieldCentricDriveCommand
-import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
-import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.*
-import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeInCmd
-import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeOutCmd
-import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
-import org.firstinspires.ftc.phoboscode.commander.command.lift.*
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
+import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
+import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.*
+import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
+import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
+import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
+import org.firstinspires.ftc.phoboscode.command.lift.*
+import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOp")
