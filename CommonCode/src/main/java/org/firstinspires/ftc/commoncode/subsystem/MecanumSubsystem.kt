@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.commoncode.commander.subsystem
+package org.firstinspires.ftc.commoncode.subsystem
 
 import com.acmerobotics.roadrunner.drive.MecanumDrive
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.github.serivesmejia.deltacommander.DeltaSubsystem
-import com.github.serivesmejia.deltadrive.drivebase.DeltaMecanumDrive
-import com.github.serivesmejia.deltadrive.hardware.DeltaHardwareHolonomic
 
 abstract class MecanumSubsystem: DeltaSubsystem() {
 

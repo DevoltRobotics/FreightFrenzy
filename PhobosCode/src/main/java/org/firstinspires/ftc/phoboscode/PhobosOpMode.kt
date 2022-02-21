@@ -19,6 +19,8 @@ abstract class PhobosOpMode : CommonOpMode() {
         private set
     lateinit var cappingTurretSub: CappingTurretSubsystem
         private set
+    lateinit var cappingTurretTapeSub: CappingTurretTapeSubsystem
+        private set
 
     override fun initialize() {
         super.initialize()
@@ -28,7 +30,11 @@ abstract class PhobosOpMode : CommonOpMode() {
         carouselSub = CarouselSubsystem(hardware.carouselMotor, telemetry)
         liftSub = LiftSubsystem(hardware.sliderMotor)
         boxSub = BoxSubsystem(hardware.boxServo)
-        cappingTurretSub = CappingTurretSubsystem(hardware.turretYawServo, hardware.turretPitchServo)
+        cappingTurretSub = CappingTurretSubsystem(
+            hardware.turretYawServo,
+            hardware.turretPitchServo
+        )
+        cappingTurretTapeSub = CappingTurretTapeSubsystem(hardware.turretTapeMotor)
 
         setup()
     }

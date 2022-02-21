@@ -6,9 +6,13 @@ import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltaevent.gamepad.button.Button
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.phoboscode.PhobosOpMode
-import org.firstinspires.ftc.commoncode.commander.command.MecanumFieldCentricDriveCommand
+import org.firstinspires.ftc.commoncode.command.MecanumFieldCentricDriveCommand
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
+import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretIncrementalMoveCmd
+import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorExtendCmd
+import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorSaveCmd
+import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorStopCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.*
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
@@ -31,9 +35,28 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
         + MecanumFieldCentricDriveCommand(gamepad1, telemetry) // contrar las mecanum con los joysticks del gamepad 1
 
         superGamepad1.scheduleOnPress(Button.DPAD_LEFT,
-                DeltaInstantCmd {
-                    mecanumSub.resetPose()
-                }
+            DeltaInstantCmd {
+                mecanumSub.resetPose()
+            }
+        )
+
+        /*
+        CAPPING TURRET
+         */
+
+        CapTurretIncrementalMoveCmd(
+            { gamepad2.left_stick_x.toDouble() * 0.05 }, // yaw servo
+            { -gamepad2.left_stick_y.toDouble() * 0.05 }, // pitch servo
+        ).schedule(false)
+
+        superGamepad2.scheduleOn(Button.X,
+            CapTurretTapeMotorExtendCmd(),
+            CapTurretTapeMotorStopCmd()
+        )
+
+        superGamepad2.scheduleOn(Button.Y,
+            CapTurretTapeMotorSaveCmd(),
+            CapTurretTapeMotorStopCmd()
         )
 
         /*
@@ -80,8 +103,11 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
 
         // controlling the lift with either of the joysticks when it isn't executing the "lift sequence"
         liftSub.defaultCommand = LiftMoveCmd {
-            - eitherStick(gamepad2.left_stick_y, gamepad2.right_stick_y)
+            -gamepad2.right_stick_y.toDouble()
         }
+
+        // Sobas le gana
+        // no
 
         /*
         BOX

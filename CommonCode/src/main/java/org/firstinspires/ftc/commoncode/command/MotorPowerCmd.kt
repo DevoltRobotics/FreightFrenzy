@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.commoncode.commander.command
+package org.firstinspires.ftc.commoncode.command
 
 import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.qualcomm.robotcore.hardware.DcMotor

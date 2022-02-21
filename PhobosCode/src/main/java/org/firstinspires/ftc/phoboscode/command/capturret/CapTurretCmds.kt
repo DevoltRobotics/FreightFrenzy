@@ -23,7 +23,7 @@ open class CapTurretMoveCmd(
 
 class CapTurretIncrementalMoveCmd(
         val incrementYawProvider: () -> Double,
-        val incrementPitchProvider: () -> Double,
+        val incrementPitchProvider: () -> Double
 ) : DeltaCommand() {
 
     val turretSub = require<CappingTurretSubsystem>()

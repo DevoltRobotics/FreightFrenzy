@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.phoboscode.command.carousel
 
-import org.firstinspires.ftc.commoncode.commander.command.MotorPowerCmd
+import org.firstinspires.ftc.commoncode.command.MotorPowerCmd
 import org.firstinspires.ftc.phoboscode.subsystem.CarouselSubsystem
 
 open class CarouselMoveCmd(override val power: Double) : MotorPowerCmd() {

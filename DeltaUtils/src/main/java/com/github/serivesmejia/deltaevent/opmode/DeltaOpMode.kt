@@ -9,28 +9,27 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 
 abstract class DeltaOpMode : LinearOpMode() {
 
-    lateinit var deltaHardware: DeltaHardware
-
     lateinit var superGamepad1: SuperGamepad
     lateinit var superGamepad2: SuperGamepad
 
     private var isDefaultRun = false
 
     override fun runOpMode() {
+        val lynxModules = hardwareMap.getAll(LynxModule::class.java)
+
         deltaScheduler.reset()
 
         superGamepad1 = SuperGamepad(gamepad1)
-        if(gamepad1 != gamepad2) {
-            superGamepad2 = SuperGamepad(gamepad2)
+        superGamepad2 = if(gamepad1 != gamepad2) {
+            SuperGamepad(gamepad2)
         } else {
-            superGamepad2 = superGamepad1
+            superGamepad1
         }
 
         initialize()
 
         superGamepad1.attachToScheduler()
         superGamepad2.attachToScheduler()
-        deltaHardware.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
 
         waitForStart()
 
@@ -38,8 +37,14 @@ abstract class DeltaOpMode : LinearOpMode() {
 
         begin()
 
+        for(module in lynxModules) {
+            module.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
+        }
+
         while(opModeIsActive()) {
-            deltaHardware.clearBulkCache()
+            for(module in lynxModules) {
+                module.clearBulkCache()
+            }
 
             update()
 

@@ -18,4 +18,6 @@ class Hardware : SimpleHardware() {
     val turretYawServo by hardware<Servo>("ty")
     val turretPitchServo by hardware<Servo>("tp")
 
+    val turretTapeMotor by hardware<DcMotor>("tt")
+
 }
