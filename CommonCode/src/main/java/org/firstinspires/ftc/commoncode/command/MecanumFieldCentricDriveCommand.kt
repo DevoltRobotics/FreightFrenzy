@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.commoncode.commander.command
+package org.firstinspires.ftc.commoncode.command
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.commoncode.commander.subsystem.MecanumSubsystem
+import org.firstinspires.ftc.commoncode.subsystem.MecanumSubsystem
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class MecanumFieldCentricDriveCommand(val gamepad: Gamepad, val telemetry: Telemetry? = null) : DeltaCommand() {

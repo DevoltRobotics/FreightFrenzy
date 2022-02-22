@@ -7,6 +7,9 @@ abstract class DeltaSubsystem(addToScheduler: Boolean = true) {
 
     private var hasBeenInitialized = false
 
+    var maxRunningCommands = 1
+        protected set
+
     init {
         if(addToScheduler) {
             deltaScheduler.addSubsystem(this)

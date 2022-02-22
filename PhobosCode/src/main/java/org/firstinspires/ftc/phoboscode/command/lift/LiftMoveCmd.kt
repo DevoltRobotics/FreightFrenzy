@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.phoboscode.commander.command.lift
+package org.firstinspires.ftc.phoboscode.command.lift
 
-import org.firstinspires.ftc.commoncode.commander.command.MotorPowerCmd
-import org.firstinspires.ftc.phoboscode.commander.subsystem.Lift
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftSubsystem
+import org.firstinspires.ftc.commoncode.command.MotorPowerCmd
+import org.firstinspires.ftc.phoboscode.subsystem.Lift
+import org.firstinspires.ftc.phoboscode.subsystem.LiftSubsystem
 
 open class LiftMoveCmd(val powerSupplier: () -> Double) : MotorPowerCmd() {
 

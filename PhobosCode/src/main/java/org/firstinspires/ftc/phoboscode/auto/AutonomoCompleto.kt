@@ -8,14 +8,14 @@ import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.*
-import org.firstinspires.ftc.phoboscode.commander.command.box.BoxSaveCmd
-import org.firstinspires.ftc.phoboscode.commander.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselRotateForwardCmd
-import org.firstinspires.ftc.phoboscode.commander.command.carousel.CarouselStopCmd
-import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeInCmd
-import org.firstinspires.ftc.phoboscode.commander.command.intake.IntakeStopCmd
-import org.firstinspires.ftc.phoboscode.commander.command.lift.LiftMoveToPosCmd
-import org.firstinspires.ftc.phoboscode.commander.subsystem.LiftPosition
+import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
+import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.CarouselRotateForwardCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.CarouselStopCmd
+import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
+import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
+import org.firstinspires.ftc.phoboscode.command.lift.LiftMoveToPosCmd
+import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 
 abstract class AutonomoCompleto(
         val startPosition: Pose2d,

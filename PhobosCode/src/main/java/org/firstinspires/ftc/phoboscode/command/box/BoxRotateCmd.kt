@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.phoboscode.commander.command.box
+package org.firstinspires.ftc.phoboscode.command.box
 
 import com.github.serivesmejia.deltacommander.DeltaCommand
-import org.firstinspires.ftc.phoboscode.commander.subsystem.Box
-import org.firstinspires.ftc.phoboscode.commander.subsystem.BoxSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.Box
+import org.firstinspires.ftc.phoboscode.subsystem.BoxSubsystem
 
 open class BoxRotateCmd(val position: Double) : DeltaCommand() {
 
