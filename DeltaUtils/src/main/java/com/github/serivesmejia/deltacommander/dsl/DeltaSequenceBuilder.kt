@@ -1,7 +1,7 @@
 package com.github.serivesmejia.deltacommander.dsl
 
 import com.github.serivesmejia.deltacommander.DeltaCommand
-import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
+import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.command.DeltaSequentialCmd
 import com.github.serivesmejia.deltacommander.command.DeltaWaitCmd
 import com.github.serivesmejia.deltacommander.command.DeltaWaitConditionCmd
@@ -21,13 +21,24 @@ class DeltaSequenceBuilder(private val block: DeltaSequenceBuilder.() -> Unit) {
         return this
     }
 
-    fun DeltaCommand.dontBlock() = DeltaRunCmd(this::schedule)
+    fun DeltaCommand.dontBlock() = DeltaInstantCmd(this::schedule)
 
-    fun Task<*>.dontBlock() = DeltaRunCmd(this.command::schedule)
+    fun Task<*>.dontBlock() = DeltaInstantCmd(this.command::schedule)
 
     fun waitFor(condition: () -> Boolean) = DeltaWaitConditionCmd(condition)
 
     fun waitForSeconds(seconds: Double) = DeltaWaitCmd(seconds)
+
+    inline fun <reified C: DeltaCommand> C.stopOn(noinline condition: C.() -> Boolean): DeltaCommand {
+        val command = this
+
+        - deltaSequence {
+            - waitFor { command.hasRunOnce && condition(command) }
+            - DeltaInstantCmd(command::requestFinish)
+        }.dontBlock()
+
+        return this
+    }
 
     fun build(): DeltaSequentialCmd {
         block()

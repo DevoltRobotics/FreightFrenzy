@@ -20,7 +20,7 @@ class DeltaScheduler internal constructor() {
     val commandsAmount get() = scheduledCommands.size
 
     //hashmap containing the required subsystems by specific commands
-    private val requirements: HashMap<DeltaSubsystem, DeltaCommand> = HashMap()
+    private val requirements: HashMap<DeltaSubsystem, MutableList<DeltaCommand>> = HashMap()
 
     //user events
     private val initEvents: ArrayList<DeltaSchedulerEvent> = ArrayList()
@@ -36,6 +36,7 @@ class DeltaScheduler internal constructor() {
      */
     fun schedule(cmd: DeltaCommand, isInterruptible: Boolean = true): Boolean {
         if(!enabled) return false
+        if(scheduledCommands.contains(cmd)) return false
 
         val cmdReqs = cmd.requirements
         var reqsCurrentlyInUse = false
@@ -52,22 +53,31 @@ class DeltaScheduler internal constructor() {
         } else {
             val waitingCommands = mutableListOf<DeltaCommand>()
 
-            //check if the commands requiring a specific subsystem are interruptible
             for(req in cmdReqs) {
                 if(requirements.containsKey(req)) {
-                    val command = requirements[req]!!
+                    val runningCommands = requirements[req]!!.size
 
-                    if(!scheduledCommands[command]!!.interruptible) {
-                        return false
+                    // if the subsystem is not at it's max capacity of running commands,
+                    // schedule the requested command and move on
+                    if(runningCommands < req.maxRunningCommands) {
+                        addCommand(cmd, isInterruptible)
+                        return true
                     } else {
-                        if(!command.endCondition()) {
-                            if(!command.endingCalled) {
-                                command.ending()
-                                command.endingCalled = true
-                            }
-                            command.finishRequested = true
+                        for (runningCmd in requirements[req]!!) {
+                            //check if the commands requiring a specific subsystem are interruptible
+                            if (!scheduledCommands[runningCmd]!!.interruptible) {
+                                return false
+                            } else {
+                                if (!runningCmd.endCondition()) {
+                                    if (!runningCmd.endingCalled) {
+                                        runningCmd.ending()
+                                        runningCmd.endingCalled = true
+                                    }
+                                    runningCmd.finishRequested = true
 
-                            waitingCommands.add(command)
+                                    waitingCommands.add(runningCmd)
+                                }
+                            }
                         }
                     }
                 }
@@ -81,7 +91,7 @@ class DeltaScheduler internal constructor() {
             //cancel all the commands that require a subsystem
             for(req in cmdReqs) {
                 if(requirements.containsKey(req)) {
-                    stop(requirements[req]!!)
+                    requirements[req]!!.forEach(this::stop)
                 }
             }
 
@@ -94,12 +104,17 @@ class DeltaScheduler internal constructor() {
         cmd.finishRequested = false
         cmd.endingCalled = false
         cmd.allowRequire = false
+        cmd.hasRunOnce = false
         cmd.init()
 
         val state = DeltaCommand.State(isInterruptible)
 
         for(req in cmd.requirements) {
-            requirements[req] = cmd
+            if(!requirements.containsKey(req)) {
+                requirements[req] = mutableListOf()
+            }
+
+            requirements[req]!!.add(cmd)
         }
 
         scheduledCommands[cmd] = state
@@ -159,6 +174,7 @@ class DeltaScheduler internal constructor() {
 
         for((cmd, _) in scheduledCommands.entries.toTypedArray()) { //iterate through the scheduled commands
             cmd.run() //actually run the command
+            cmd.hasRunOnce = true
 
             for(evt in runEvents) { evt.run(cmd) } //execute the user events
 

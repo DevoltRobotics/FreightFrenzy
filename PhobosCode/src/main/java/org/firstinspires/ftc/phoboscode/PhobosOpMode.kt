@@ -1,17 +1,44 @@
 package org.firstinspires.ftc.phoboscode
 
-import com.github.serivesmejia.deltacommander.deltaScheduler
 import org.firstinspires.ftc.commoncode.CommonOpMode
-import org.firstinspires.ftc.phoboscode.commander.subsystem.TestSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.*
 
-abstract class PhobosOpMode(usingRR: Boolean = false) : CommonOpMode(usingRR) {
+abstract class PhobosOpMode : CommonOpMode() {
 
     override val hardware = Hardware()
+
+    override val mecanumSub by lazy { MecanumSubsystem(hardware.drive) }
+
+    lateinit var intakeSub: IntakeSubsystem
+        private set
+    lateinit var carouselSub: CarouselSubsystem
+        private set
+    lateinit var liftSub: LiftSubsystem
+        private set
+    lateinit var boxSub: BoxSubsystem
+        private set
+    lateinit var cappingTurretSub: CappingTurretSubsystem
+        private set
+    lateinit var cappingTurretTapeSub: CappingTurretTapeSubsystem
+        private set
 
     override fun initialize() {
         super.initialize()
 
-        deltaScheduler.addSubsystem(TestSubsystem(hardware.testServo))
+        mecanumSub.init()
+        intakeSub = IntakeSubsystem(hardware.intakeMotor)
+        carouselSub = CarouselSubsystem(hardware.carouselMotor, telemetry)
+        liftSub = LiftSubsystem(hardware.sliderMotor)
+        boxSub = BoxSubsystem(hardware.boxServo)
+        cappingTurretSub = CappingTurretSubsystem(
+            hardware.turretYawServo,
+            hardware.turretPitchServo
+        )
+        cappingTurretTapeSub = CappingTurretTapeSubsystem(hardware.turretTapeMotor)
+
+        setup()
     }
+
+    abstract fun setup()
 
 }

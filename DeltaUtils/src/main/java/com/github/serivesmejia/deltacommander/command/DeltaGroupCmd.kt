@@ -18,7 +18,21 @@ open class DeltaGroupCmd(private val executionMode: ExecutionMode = ExecutionMod
         //and add all the commands from the vararg to the arraylist
         for(cmd in commands) {
             this.commands.add(cmd)
+
+            // add their requirements too
+            for(requirement in cmd.requirements) {
+                if(!requirements.contains(requirement)) {
+                    require(requirement)
+                }
+            }
         }
+    }
+
+    private var currentCommand: DeltaCommand? = null
+
+    override fun init() {
+        currentCommand = null
+        currentCommandIndex = 0
 
         if(executionMode == ExecutionMode.PARALLEL) {
             for(cmd in commands) {
@@ -26,8 +40,6 @@ open class DeltaGroupCmd(private val executionMode: ExecutionMode = ExecutionMod
             }
         }
     }
-
-    private var currentCommand: DeltaCommand? = null
 
     override fun run() {
         when(executionMode) {

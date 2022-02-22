@@ -4,16 +4,27 @@ import com.github.serivesmejia.deltacommander.deltaScheduler
 import org.firstinspires.ftc.commoncode.CommonOpMode
 import org.firstinspires.ftc.deimoscode.commander.subsystem.ArmClawSubystem
 import org.firstinspires.ftc.deimoscode.commander.subsystem.ArmSubsystem
+import org.firstinspires.ftc.deimoscode.commander.subsystem.MecanumSubsystem
 
-abstract class DeimosOpMode(usingRR: Boolean = false) : CommonOpMode(usingRR) {
+abstract class DeimosOpMode : CommonOpMode() {
 
-    override val hardware = Hardware()
+    override val mecanumSub by lazy { MecanumSubsystem(hardware.deltaHardware) }
+
+    lateinit var armSub: ArmSubsystem
+        private set
+    lateinit var armClawSub: ArmClawSubystem
+        private set
 
     override fun initialize() {
         super.initialize()
 
-        deltaScheduler.addSubsystem(ArmSubsystem(hardware.motorClawVertical, hardware.motorClawRotate))
-        deltaScheduler.addSubsystem(ArmClawSubystem(hardware.servoClaw))
+        mecanumSub.init()
+        armSub = ArmSubsystem(hardware.motorClawVertical, hardware.motorClawRotate)
+        armClawSub = ArmClawSubystem(hardware.servoClaw)
+
+        setup()
     }
+
+    abstract fun setup()
 
 }

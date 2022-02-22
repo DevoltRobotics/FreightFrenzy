@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.util.ElapsedTime
 
 class MotorPIDFController(private var coeffs: PIDFCoefficients) {
 
+    constructor(coeffs: com.qualcomm.robotcore.hardware.PIDFCoefficients) : this(
+            PIDFCoefficients(coeffs.p, coeffs.i, coeffs.d, coeffs.f)
+    )
+
     private var inverse = false
 
     //temp values params
@@ -20,6 +24,7 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
 
     private var velocityDelta = 1.0
     private var errorDelta = errorTolerance + 1
+    private var totalError = 0.0
 
     private var pidMultiplier = 1.0
     private var invertError = false
@@ -95,7 +100,6 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
     fun calculate(input: Double) : Double {
         if(firstLoop) {
             errorDelta = errorTolerance + 1
-            elapsedTime.reset()
             firstLoop = false
         }
 
@@ -104,19 +108,16 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
         else
             setpoint - input
 
-        val currentMillis = elapsedTime.milliseconds()
-        val deltaTime = currentMillis - prevMillis
-
-        velocityDelta = (errorDelta - prevErrorDelta) / deltaTime
-
-        val totalError = deltaTime * (setpoint - input)
+        velocityDelta = (errorDelta - prevErrorDelta) / elapsedTime.seconds()
+        totalError += errorDelta * elapsedTime.seconds()
 
         val proportional = errorDelta * coeffs.kP * pidMultiplier
         val integral = totalError * coeffs.kI * pidMultiplier
         val derivative = velocityDelta * coeffs.kD * pidMultiplier
         val feedforward = setpoint * coeffs.kF * pidMultiplier
 
-        val turbo: Double = DeltaMathUtil.clamp(proportional + integral + derivative + feedforward, -1.0, 1.0)
+        val turbo = proportional + integral + derivative + feedforward
+
         var powerF = initialPower * turbo
 
         if (powerF > 0) {
@@ -127,7 +128,8 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
 
         prevErrorDelta = errorDelta
         prevInput = input
-        prevMillis = currentMillis
+
+        elapsedTime.reset()
 
         return if(inverse) {
             if(onSetpoint())
@@ -140,7 +142,6 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
      * Resets all values to default in order to start a different PID Loop
      */
     fun reset() : MotorPIDFController {
-
         errorTolerance = 0.0
         deadZone = 0.0
 
@@ -152,6 +153,7 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
 
         velocityDelta = 1.0
         errorDelta = errorTolerance + 1
+        totalError = 0.0
 
         pidMultiplier = 1.0
         invertError = false
@@ -159,7 +161,6 @@ class MotorPIDFController(private var coeffs: PIDFCoefficients) {
         firstLoop = true
 
         return this
-
     }
 
 }

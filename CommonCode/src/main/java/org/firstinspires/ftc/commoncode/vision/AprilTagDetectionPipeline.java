@@ -21,6 +21,8 @@
 
 package org.firstinspires.ftc.commoncode.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -37,8 +39,32 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+@Disabled
 public class AprilTagDetectionPipeline extends OpenCvPipeline
 {
+    // STATIC CONSTANTS
+
+    public static Scalar blue = new Scalar(7,197,235,255);
+    public static Scalar red = new Scalar(255,0,0,255);
+    public static Scalar green = new Scalar(0,255,0,255);
+    public static Scalar white = new Scalar(255,255,255,255);
+
+    static final double FEET_PER_METER = 3.28084;
+
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
+    public static double fx = 578.272;
+    public static double fy = 578.272;
+    public static double cx = 402.145;
+    public static double cy = 221.506;
+
+    // UNITS ARE METERS
+    public static double TAG_SIZE = 0.166;
+
+    // instance variables
+
     private long nativeApriltagPtr;
     private Mat grey = new Mat();
     private ArrayList<AprilTagDetection> detections = new ArrayList<>();
@@ -48,35 +74,14 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
 
     Mat cameraMatrix;
 
-    Scalar blue = new Scalar(7,197,235,255);
-    Scalar red = new Scalar(255,0,0,255);
-    Scalar green = new Scalar(0,255,0,255);
-    Scalar white = new Scalar(255,255,255,255);
-
-    double fx;
-    double fy;
-    double cx;
-    double cy;
-
-    // UNITS ARE METERS
-    double tagsize;
-    double tagsizeX;
-    double tagsizeY;
+    double tagsizeX = TAG_SIZE;
+    double tagsizeY = TAG_SIZE;
 
     private float decimation;
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
 
-    public AprilTagDetectionPipeline(double tagsize, double fx, double fy, double cx, double cy)
-    {
-        this.tagsize = tagsize;
-        this.tagsizeX = tagsize;
-        this.tagsizeY = tagsize;
-        this.fx = fx;
-        this.fy = fy;
-        this.cx = cx;
-        this.cy = cy;
-
+    public AprilTagDetectionPipeline() {
         constructMatrix();
     }
 
@@ -110,7 +115,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
         }
 
         // Run AprilTag
-        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
+        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, TAG_SIZE, fx, fy, cx, cy);
 
         synchronized (detectionsUpdateSync)
         {

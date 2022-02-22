@@ -7,6 +7,9 @@ abstract class DeltaSubsystem(addToScheduler: Boolean = true) {
 
     private var hasBeenInitialized = false
 
+    var maxRunningCommands = 1
+        protected set
+
     init {
         if(addToScheduler) {
             deltaScheduler.addSubsystem(this)
@@ -37,5 +40,17 @@ abstract class DeltaSubsystem(addToScheduler: Boolean = true) {
     var defaultCommand: DeltaCommand?
         get() = deltaScheduler.getDefaultCommand(this)
         set(value) { deltaScheduler.setDefaultCommand(this, value!!) }
+
+    val isBusy: Boolean get() {
+        for(command in deltaScheduler.commands) {
+            for(requirement in command.requirements) {
+                if(requirement == this && command != defaultCommand) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
 
 }

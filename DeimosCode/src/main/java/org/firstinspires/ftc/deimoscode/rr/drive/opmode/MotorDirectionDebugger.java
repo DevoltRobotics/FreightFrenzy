@@ -38,7 +38,6 @@ import org.firstinspires.ftc.deimoscode.rr.drive.SampleMecanumDrive;
  *
  * Uncomment the @Disabled tag below to use this opmode.
  */
-@Disabled
 @Config
 @TeleOp(group = "drive")
 public class MotorDirectionDebugger extends LinearOpMode {
@@ -63,6 +62,12 @@ public class MotorDirectionDebugger extends LinearOpMode {
         while (!isStopRequested()) {
             telemetry.addLine("Press each button to turn on its respective motor");
             telemetry.addLine();
+
+            telemetry.addData("fl", drive.leftFront.getCurrentPosition());
+            telemetry.addData("fr", drive.rightFront.getCurrentPosition());
+            telemetry.addData("bl", drive.leftRear.getCurrentPosition());
+            telemetry.addData("br", drive.rightRear.getCurrentPosition());
+
             telemetry.addLine("<font face=\"monospace\">Xbox/PS4 Button - Motor</font>");
             telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;X / ▢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Left</font>");
             telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;Y / Δ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Right</font>");

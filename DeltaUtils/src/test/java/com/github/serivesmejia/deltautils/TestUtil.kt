@@ -6,7 +6,9 @@ object TestUtil {
 
     fun spawnTimeoutThread(callback: () -> Unit, timeoutSecs: Double) {
         val t = thread {
-            callback()
+            try {
+                callback()
+            } catch(e: InterruptedException) {}
             Thread.currentThread().interrupt()
         }
 
