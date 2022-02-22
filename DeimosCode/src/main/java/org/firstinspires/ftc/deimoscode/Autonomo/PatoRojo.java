@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.deimoscode.Hardwareñ;
 
-@Autonomous (name = "PatoAzul", group = "Autonomus")
-public class PatoAzul extends LinearOpMode {
+@Autonomous (name = "PatoRojo", group = "Autonomus")
+public class PatoRojo extends LinearOpMode {
 
     private DcMotor FrontalD;
     private DcMotor FrontalI;
@@ -22,7 +22,6 @@ public class PatoAzul extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-
 
         FrontalD = hardwareMap.dcMotor.get("FD");
         FrontalI = hardwareMap.dcMotor.get("FI");

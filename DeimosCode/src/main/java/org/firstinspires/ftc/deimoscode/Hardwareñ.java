@@ -23,7 +23,7 @@ public class Hardwareñ {
     public DcMotor Extender;
     public DcMotor Elevador;
     public Servo Absorber;
-    public Servo Bloqueo;
+
 
     public void initHardware(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -32,7 +32,6 @@ public class Hardwareñ {
         Extender = hardwareMap.dcMotor.get("EXT");
         Elevador = hardwareMap.dcMotor.get("ELE");
         Absorber = hardwareMap.servo.get("Abs");
-        Bloqueo = hardwareMap.servo.get("Bloqueo");
     }
 
     public void updateLift(int targetPos) {

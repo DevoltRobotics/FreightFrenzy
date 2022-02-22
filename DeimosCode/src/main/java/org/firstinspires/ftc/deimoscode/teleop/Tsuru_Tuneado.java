@@ -36,7 +36,7 @@ public class Tsuru_Tuneado extends LinearOpMode {
 
             switch(liftState) {
                 case IDLE:
-                    hdw.Elevador.setPower(-gamepad2.right_stick_y * 0.8);
+                    hdw.Elevador.setPower(-gamepad2.right_stick_y * 0.6);
                     break;
                 case MOVING:
                     hdw.updateLift(liftTarget);
@@ -47,19 +47,13 @@ public class Tsuru_Tuneado extends LinearOpMode {
                     break;
             }
 
-            Extend = gamepad2.left_stick_y * 0.5;
+            Extend = gamepad2.left_stick_y;
             hdw.Extender.setPower(-Extend);
 
             if (gamepad2.right_bumper) {
                 hdw.Absorber.setPosition(1);
             } else if (gamepad2.left_bumper) {
                 hdw.Absorber.setPosition(0.4);
-            }
-
-            if (gamepad2.x) {
-                hdw.Bloqueo.setPosition(1);
-            } else if (gamepad2.a) {
-                hdw.Bloqueo.setPosition(0);
             }
 
             if (gamepad2.y) {
@@ -72,6 +66,12 @@ public class Tsuru_Tuneado extends LinearOpMode {
                 hdw.Pato.setPower(-1);
             } else {
                 hdw.Pato.setPower(0);
+            }
+
+            if (gamepad2.x) {
+                hdw.Extender.setPower(.4);
+            } else {
+                hdw.Extender.setPower(0);
             }
 
 
