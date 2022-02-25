@@ -45,8 +45,8 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
          */
 
         CapTurretIncrementalMoveCmd(
-            { gamepad2.left_stick_x.toDouble() * 0.05 }, // yaw servo
-            { -gamepad2.left_stick_y.toDouble() * 0.05 }, // pitch servo
+            { gamepad2.left_stick_x.toDouble() * 0.02 }, // yaw servo
+            { -gamepad2.left_stick_y.toDouble() * 0.02 }, // pitch servo
         ).schedule(false)
 
         superGamepad2.scheduleOn(Button.X,

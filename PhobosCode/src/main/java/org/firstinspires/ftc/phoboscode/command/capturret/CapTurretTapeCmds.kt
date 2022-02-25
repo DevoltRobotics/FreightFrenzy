@@ -8,6 +8,6 @@ open class CapTurretTapeMotorMoveCmd(override val power: Double) : MotorPowerCmd
     override val motor = capSub.tapeMotor
 }
 
-class CapTurretTapeMotorExtendCmd : CapTurretTapeMotorMoveCmd(1.0)
-class CapTurretTapeMotorSaveCmd : CapTurretTapeMotorMoveCmd(-1.0)
+class CapTurretTapeMotorExtendCmd : CapTurretTapeMotorMoveCmd(0.7)
+class CapTurretTapeMotorSaveCmd : CapTurretTapeMotorMoveCmd(-0.7)
 class CapTurretTapeMotorStopCmd : CapTurretTapeMotorMoveCmd(0.0)
