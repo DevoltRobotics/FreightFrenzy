@@ -17,6 +17,8 @@ import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeWithColorSensorCmd
 import org.firstinspires.ftc.phoboscode.command.lift.LiftMoveToPosCmd
 import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
+import org.firstinspires.ftc.phoboscode.rr.drive.DriveConstants
+import org.firstinspires.ftc.phoboscode.rr.drive.SampleMecanumDrive
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 
 enum class ParkPosition {
@@ -32,23 +34,23 @@ abstract class AutonomoCompleto(
         val startWobblePose: Pose2d? = null,
         val doDucks: Boolean = true,
         val cycles: Int = 4,
-        val parkPosition: ParkPosition = STORAGE_UNIT,
+        val parkPosition: ParkPosition = WAREHOUSE,
         val alliance: Alliance = Alliance.RED
 ) : AutonomoBase() {
 
-    val bigWobblePose = Pose2d(-10.0, -35.5, Math.toRadians(300.0)).invertIfNeeded()
-
-    override fun setup() {
-        super.setup()
-
-        drive.poseEstimate = startPosition
-        liftSub.resetMotorPosition()
-    }
+    val bigWobblePose = Pose2d(-10.4, -35.5, Math.toRadians(300.0)).invertIfNeeded()
 
     override fun runOpMode() {
         super.runOpMode()
 
         lastKnownRobotPose = drive.poseEstimate
+    }
+
+    override fun setup() {
+        super.setup()
+
+        drive.poseEstimate = startPosition
+        liftSub.stopAndReset()
     }
 
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
@@ -86,7 +88,7 @@ abstract class AutonomoCompleto(
                         lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)).invertIfNeeded())
                     }
 
-                    var currentGrabCubeX = 55.0
+                    var currentGrabCubeX = 55.4
                     var minusBigWobblePose = Pose2d()
 
                     /*
@@ -94,13 +96,16 @@ abstract class AutonomoCompleto(
                      */
                     repeat(cycles) {
                         // to the warehouse
-                        splineToSplineHeading(Pose2d(25.0, -64.1, Math.toRadians(0.0)).invertIfNeeded(), 0.0)
+                        splineToSplineHeading(Pose2d(25.0, -63.7, Math.toRadians(90.0)).invertIfNeeded(), 0.0)
                         UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeWithColorSensorCmd(1.0)
                         }
 
                         // grab freight
-                        lineTo(Vector2d(currentGrabCubeX, -64.0).invertIfNeeded())
+                        lineTo(Vector2d(currentGrabCubeX, -63.9).invertIfNeeded(),
+                            SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 0.7, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL * 0.8)
+                        )
 
                         // out of the warehouse
                         lineTo(Vector2d(23.0, -64.0).invertIfNeeded())
@@ -109,15 +114,16 @@ abstract class AutonomoCompleto(
                             + LiftMoveToPosCmd(LiftPosition.HIGH)
                         }
 
-                        UNSTABLE_addTemporalMarkerOffset(1.5) {
+                        UNSTABLE_addTemporalMarkerOffset(1.8) {
                             + freightDropSequence()
                         }
                         // put freight in big wobble
-                        splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(-90.0.invertDegIfNeeded()))
-                        waitSeconds(0.8) // wait for the freight to fall
+                        splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians((180.0).invertDegIfNeeded()))
+                        waitSeconds(0.9) // wait for the freight to fall
 
-                        currentGrabCubeX *= 1.08
-                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-2.0, 0.7))
+                        currentGrabCubeX *= 1.087
+
+                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-2.0, 0.6))
                     }
                 }
 
@@ -125,11 +131,11 @@ abstract class AutonomoCompleto(
                     NONE -> this
                     WAREHOUSE -> {
                         // to the warehouse to park
-                        splineToSplineHeading(Pose2d(28.0, -64.0, Math.toRadians(0.0)).invertIfNeeded(), 0.0)
+                        splineToSplineHeading(Pose2d(30.0, -64.0, Math.toRadians(0.0)).invertIfNeeded(), 0.0)
                         // park fully
                         lineTo(Vector2d(45.0, -64.0).invertIfNeeded())
                         // in case alliance wants to park too
-                        strafeTo(Vector2d(40.0, -46.0).invertIfNeeded())
+                        strafeTo(Vector2d(40.0, -44.0).invertIfNeeded())
                     }
                     STORAGE_UNIT -> {
                         lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0).invertIfNeeded())
@@ -145,16 +151,16 @@ abstract class AutonomoCompleto(
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()
     }
 
-    fun Vector2d.invertIfNeeded() = if(alliance == Alliance.RED) {
+    fun Vector2d.invertIfNeeded() = if(alliance == Alliance.BLUE) {
         Vector2d(x, -y)
     } else this
 
 
-    fun Pose2d.invertIfNeeded() = if(alliance == Alliance.RED) {
+    fun Pose2d.invertIfNeeded() = if(alliance == Alliance.BLUE) {
         Pose2d(x, -y, heading.invertRadIfNeeded())
     } else this
 
-    fun Double.invertRadIfNeeded() = if(alliance == Alliance.RED) angleAdd(Math.toDegrees(this), 180.0) else this
-    fun Double.invertDegIfNeeded() = if(alliance == Alliance.RED) angleAdd(this, 180.0) else this
+    fun Double.invertRadIfNeeded() = if(alliance == Alliance.BLUE) angleAdd(Math.toDegrees(this), 180.0) else this
+    fun Double.invertDegIfNeeded() = if(alliance == Alliance.BLUE) angleAdd(this, 180.0) else this
 
 }

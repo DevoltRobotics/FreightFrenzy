@@ -13,8 +13,6 @@ class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
         defaultCommand = LiftMoveToPosCmd(LiftPosition.ZERO)
     }
 
-    val positionPid = Lift.pid
-
     private var offset = 0
     val motorTicks get() = liftMotor.currentPosition - offset
 
@@ -27,8 +25,15 @@ class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
     override fun loop() {
     }
 
-    fun resetMotorPosition() {
+    fun resetMotorPositionOffset() {
         offset = liftMotor.currentPosition
+    }
+
+    fun stopAndReset() {
+        liftMotor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        liftMotor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+
+        offset = 0
     }
 
 }

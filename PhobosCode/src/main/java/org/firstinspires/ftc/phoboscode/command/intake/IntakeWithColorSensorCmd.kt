@@ -3,8 +3,12 @@ package org.firstinspires.ftc.phoboscode.command.intake
 import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
+import com.github.serivesmejia.deltacommander.subsystem
 import org.firstinspires.ftc.phoboscode.subsystem.IntakeSubsystem
+import org.firstinspires.ftc.phoboscode.subsystem.Lift
+import org.firstinspires.ftc.phoboscode.subsystem.LiftSubsystem
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
 class IntakeWithColorSensorCmd(
     val power: Double,
@@ -13,6 +17,8 @@ class IntakeWithColorSensorCmd(
 
     val intakeSub = require<IntakeSubsystem>()
 
+    val liftSub = subsystem<LiftSubsystem>()
+
     var hasIntaked = false
         private set
 
@@ -20,10 +26,17 @@ class IntakeWithColorSensorCmd(
         private set
 
     override fun run() {
-        intakeSub.intakeMotor.power = if(reversed) {
-            -power
-        } else power
+        intakeSub.intakeMotor.power = if(liftSub.motorTicks.toDouble() < Lift.lowPosition.toDouble() / 2.0) {
+            if (reversed) {
+                -power
+            } else power
+        } else {
+            0.0
+        }
 
+        val distance = intakeSub.colorSensor.getDistance(DistanceUnit.INCH)
+
+        /*
         val argb = intakeSub.colorSensor.argb()
 
         val red = argb shl 16*2 and 0xFF
@@ -33,12 +46,13 @@ class IntakeWithColorSensorCmd(
         telemetry?.addData("r", red)
         telemetry?.addData("g", green)
         telemetry?.addData("b", blue)
+         */
 
-        if(green >= 1.0 && !hasIntaked) {
+        if(distance <= 1.0 && !hasIntaked) {
             hasIntaked = true
 
             + deltaSequence {
-                - waitForSeconds(0.5)
+                - waitForSeconds(0.6)
                 - DeltaInstantCmd { reversed = true }
             }
         }
