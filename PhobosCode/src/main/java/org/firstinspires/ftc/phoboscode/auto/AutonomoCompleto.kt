@@ -23,13 +23,17 @@ enum class ParkPosition {
     NONE, WAREHOUSE, STORAGE_UNIT
 }
 
+enum class Alliance {
+    RED, BLUE
+}
+
 abstract class AutonomoCompleto(
         val startPosition: Pose2d,
         val startWobblePose: Pose2d? = null,
         val doDucks: Boolean = true,
         val cycles: Int = 4,
         val parkPosition: ParkPosition = STORAGE_UNIT,
-        val invertForBlue: Boolean = false
+        val alliance: Alliance = Alliance.RED
 ) : AutonomoBase() {
 
     val bigWobblePose = Pose2d(-10.0, -35.5, Math.toRadians(300.0)).invertIfNeeded()
@@ -141,16 +145,16 @@ abstract class AutonomoCompleto(
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()
     }
 
-    fun Vector2d.invertIfNeeded() = if(invertForBlue) {
+    fun Vector2d.invertIfNeeded() = if(alliance == Alliance.RED) {
         Vector2d(x, -y)
     } else this
 
 
-    fun Pose2d.invertIfNeeded() = if(invertForBlue) {
+    fun Pose2d.invertIfNeeded() = if(alliance == Alliance.RED) {
         Pose2d(x, -y, heading.invertRadIfNeeded())
     } else this
 
-    fun Double.invertRadIfNeeded() = angleAdd(Math.toDegrees(this), 180.0)
-    fun Double.invertDegIfNeeded() = angleAdd(this, 180.0)
+    fun Double.invertRadIfNeeded() = if(alliance == Alliance.RED) angleAdd(Math.toDegrees(this), 180.0) else this
+    fun Double.invertDegIfNeeded() = if(alliance == Alliance.RED) angleAdd(this, 180.0) else this
 
 }
