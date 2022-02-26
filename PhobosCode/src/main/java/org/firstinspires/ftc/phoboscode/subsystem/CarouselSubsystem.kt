@@ -35,5 +35,5 @@ class CarouselSubsystem(
 
 @Config
 object Carousel {
-    @JvmField var acceleration = 0.7
+    @JvmField var acceleration = 0.6
 }

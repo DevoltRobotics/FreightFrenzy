@@ -26,7 +26,7 @@ abstract class PhobosOpMode : CommonOpMode() {
         super.initialize()
 
         mecanumSub.init()
-        intakeSub = IntakeSubsystem(hardware.intakeMotor)
+        intakeSub = IntakeSubsystem(hardware.intakeMotor, hardware.intakeColorSensor)
         carouselSub = CarouselSubsystem(hardware.carouselMotor, telemetry)
         liftSub = LiftSubsystem(hardware.sliderMotor)
         boxSub = BoxSubsystem(hardware.boxServo)
