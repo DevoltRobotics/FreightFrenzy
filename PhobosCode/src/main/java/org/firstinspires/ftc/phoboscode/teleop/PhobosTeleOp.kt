@@ -41,8 +41,8 @@ class PhobosTeleOp : PhobosOpMode() {
          */
 
         CapTurretIncrementalMoveCmd(
-            { gamepad2.left_stick_x.toDouble() * 0.02 }, // yaw servo
-            { -gamepad2.left_stick_y.toDouble() * 0.02 }, // pitch servo
+            { gamepad2.left_stick_x.toDouble() * 0.01 }, // yaw servo
+            { -gamepad2.left_stick_y.toDouble() * 0.01 }, // pitch servo
         ).schedule(false)
 
         superGamepad2.scheduleOn(Button.X,

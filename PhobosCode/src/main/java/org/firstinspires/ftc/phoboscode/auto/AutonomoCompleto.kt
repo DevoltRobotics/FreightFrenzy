@@ -21,6 +21,20 @@ import org.firstinspires.ftc.phoboscode.rr.drive.DriveConstants
 import org.firstinspires.ftc.phoboscode.rr.drive.SampleMecanumDrive
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 
+enum class StartPosition(
+    val startPose: Pose2d,
+    val startWobblePose: Pose2d
+) {
+    LEFT(
+        Pose2d(-35.0, -62.0, Math.toRadians(90.0)), // start
+        Pose2d(-36.0, -34.8, Math.toRadians(210.0)) // start big wobble pose
+    ),
+    RIGHT(
+        Pose2d(1.0, -62.0, Math.toRadians(90.0)),
+        Pose2d(-10.2, -34.0, Math.toRadians(300.0))
+    )
+}
+
 enum class ParkPosition {
     NONE, WAREHOUSE, STORAGE_UNIT
 }
@@ -30,31 +44,28 @@ enum class Alliance {
 }
 
 abstract class AutonomoCompleto(
-        val startPosition: Pose2d,
-        val startWobblePose: Pose2d? = null,
-        val doDucks: Boolean = true,
-        val cycles: Int = 4,
+        val startPosition: StartPosition,
         val parkPosition: ParkPosition = WAREHOUSE,
-        val alliance: Alliance = Alliance.RED
+        val alliance: Alliance = Alliance.RED,
+        val doDucks: Boolean = true,
+        val cycles: Int = 4
 ) : AutonomoBase() {
 
-    val bigWobblePose = Pose2d(-10.4, -35.5, Math.toRadians(300.0)).invertIfNeeded()
-
-    override fun runOpMode() {
-        super.runOpMode()
-
-        lastKnownRobotPose = drive.poseEstimate
-    }
+    val bigWobblePose = Pose2d(-10.2, -34.0, Math.toRadians(300.0)).invertIfNeeded()
 
     override fun setup() {
         super.setup()
 
-        drive.poseEstimate = startPosition
+        drive.poseEstimate = startPosition.startPose
         liftSub.stopAndReset()
     }
 
+    override fun update() {
+        lastKnownRobotPose = drive.poseEstimate
+    }
+
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
-            drive.trajectorySequenceBuilder(startPosition).run {
+            drive.trajectorySequenceBuilder(startPosition.startPose.invertIfNeeded()).run {
                 // put X cube in big wobble
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
                     + LiftMoveToPosCmd(when(teamMarkerPosition) { // mapping barcode position to lift height
@@ -66,7 +77,7 @@ abstract class AutonomoCompleto(
                 UNSTABLE_addTemporalMarkerOffset(2.5) {
                     + freightDropSequence()
                 }
-                lineToLinearHeading(startWobblePose?.invertIfNeeded() ?: bigWobblePose)
+                lineToSplineHeading(startPosition.startWobblePose.invertIfNeeded())
                 waitSeconds(2.0)
 
                 if(doDucks) {
@@ -88,7 +99,7 @@ abstract class AutonomoCompleto(
                         lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)).invertIfNeeded())
                     }
 
-                    var currentGrabCubeX = 55.4
+                    var currentGrabCubeX = 53.0
                     var minusBigWobblePose = Pose2d()
 
                     /*
@@ -96,19 +107,20 @@ abstract class AutonomoCompleto(
                      */
                     repeat(cycles) {
                         // to the warehouse
-                        splineToSplineHeading(Pose2d(25.0, -63.7, Math.toRadians(90.0)).invertIfNeeded(), 0.0)
+                        splineToSplineHeading(
+                            Pose2d(25.0, -63.3, Math.toRadians(0.0)).invertIfNeeded(),
+                            Math.toRadians((-5.0).invertDegIfNeeded())
+                        )
+
                         UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeWithColorSensorCmd(1.0)
                         }
 
                         // grab freight
-                        lineTo(Vector2d(currentGrabCubeX, -63.9).invertIfNeeded(),
-                            SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 0.7, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL * 0.8)
-                        )
+                        splineTo(Vector2d(currentGrabCubeX, -63.2).invertIfNeeded(), 0.0)
 
                         // out of the warehouse
-                        lineTo(Vector2d(23.0, -64.0).invertIfNeeded())
+                        lineTo(Vector2d(18.0, -63.2).invertIfNeeded())
                         UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeStopCmd()
                             + LiftMoveToPosCmd(LiftPosition.HIGH)
@@ -118,12 +130,12 @@ abstract class AutonomoCompleto(
                             + freightDropSequence()
                         }
                         // put freight in big wobble
-                        splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians((180.0).invertDegIfNeeded()))
+                        splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians((90.0).invertDegIfNeeded()))
                         waitSeconds(0.9) // wait for the freight to fall
 
-                        currentGrabCubeX *= 1.087
+                        currentGrabCubeX *= 1.06
 
-                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-2.0, 0.6))
+                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-2.5, 0.8))
                     }
                 }
 
@@ -133,9 +145,9 @@ abstract class AutonomoCompleto(
                         // to the warehouse to park
                         splineToSplineHeading(Pose2d(30.0, -64.0, Math.toRadians(0.0)).invertIfNeeded(), 0.0)
                         // park fully
-                        lineTo(Vector2d(45.0, -64.0).invertIfNeeded())
+                        lineTo(Vector2d(50.0, -64.0).invertIfNeeded())
                         // in case alliance wants to park too
-                        strafeTo(Vector2d(40.0, -44.0).invertIfNeeded())
+                        strafeTo(Vector2d(50.0, -40.0).invertIfNeeded())
                     }
                     STORAGE_UNIT -> {
                         lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0).invertIfNeeded())
