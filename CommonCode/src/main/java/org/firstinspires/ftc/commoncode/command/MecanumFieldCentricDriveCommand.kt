@@ -27,8 +27,8 @@ class MecanumFieldCentricDriveCommand(
         val pose = sub.drive.poseEstimate
 
         val input = Vector2d(
-                (-gamepad.left_stick_y).toDouble() * turbo,
-                (-gamepad.left_stick_x).toDouble() * turbo
+                (-gamepad.left_stick_y).toDouble() * 0.7 * turbo,
+                (-gamepad.left_stick_x).toDouble() * 0.7 * turbo
         ).rotated(-pose.heading)
 
         sub.setWeighedDrivePower(
