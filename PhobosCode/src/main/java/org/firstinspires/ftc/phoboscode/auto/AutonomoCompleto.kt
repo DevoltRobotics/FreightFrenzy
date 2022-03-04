@@ -136,7 +136,7 @@ abstract class AutonomoCompleto(
                         waitSeconds(0.9) // wait for the freight to fall
 
                         currentGrabCubeX *= 1.06
-                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, 0.7))\
+                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, 0.7))
                     }
                 }
 
