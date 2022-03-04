@@ -77,7 +77,7 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
 
         repeat(cycles) {
             // to the warehouse
-            splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+            splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), Math.toRadians(-5.0))
             // grab freight
             UNSTABLE_addTemporalMarkerOffset(-0.5) {
                 println("intake on")
