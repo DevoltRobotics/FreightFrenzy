@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.commoncode.vision
 
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.openftc.easyopencv.OpenCvCamera
-import org.openftc.easyopencv.OpenCvCameraFactory
-import org.openftc.easyopencv.OpenCvCameraRotation
-import org.openftc.easyopencv.OpenCvInternalCamera2
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.openftc.easyopencv.*
 
 
 class TeamMarkerAprilTagDetector {
@@ -20,12 +18,12 @@ class TeamMarkerAprilTagDetector {
 
     private var openFailed = false
 
-    private fun init() {
+    private fun init(cameraOrientation: OpenCvCameraRotation) {
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
                 camera.setPipeline(pipeline)
                 camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-                camera.startStreaming(640, 480, OpenCvCameraRotation.SIDEWAYS_LEFT)
+                camera.startStreaming(640, 480, cameraOrientation)
             }
 
             override fun onError(errorCode: Int) {
@@ -36,12 +34,25 @@ class TeamMarkerAprilTagDetector {
 
     fun initInternalCameraVision(
             hardwareMap: HardwareMap,
-            cameraDirection: OpenCvInternalCamera2.CameraDirection = OpenCvInternalCamera2.CameraDirection.BACK
+            cameraDirection: OpenCvInternalCamera2.CameraDirection = OpenCvInternalCamera2.CameraDirection.BACK,
+            cameraOrientation: OpenCvCameraRotation = OpenCvCameraRotation.SIDEWAYS_LEFT
     ) {
         val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
         camera = OpenCvCameraFactory.getInstance().createInternalCamera2(cameraDirection, cameraMonitorViewId)
 
-        init()
+        init(cameraOrientation)
+    }
+
+
+    fun initWebcamVision(
+        hardwareMap: HardwareMap,
+        name: String,
+        cameraOrientation: OpenCvCameraRotation = OpenCvCameraRotation.SIDEWAYS_LEFT
+    ) {
+        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName::class.java, name), cameraMonitorViewId)
+
+        init(cameraOrientation)
     }
 
     fun close() {

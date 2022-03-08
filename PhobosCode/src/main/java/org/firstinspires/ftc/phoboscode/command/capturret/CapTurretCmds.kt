@@ -35,4 +35,4 @@ class CapTurretIncrementalMoveCmd(
 
 }
 
-class CapTurretZeroCmd : CapTurretMoveCmd(0.0, 0.0)
+class CapTurretZeroCmd : CapTurretMoveCmd(1.0, 0.0)

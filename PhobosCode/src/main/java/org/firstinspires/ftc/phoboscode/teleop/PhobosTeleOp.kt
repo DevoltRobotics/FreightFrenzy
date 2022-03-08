@@ -18,20 +18,16 @@ import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.command.lift.*
+import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOp")
-open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = false) : PhobosOpMode() {
-
-    override fun runOpMode() {
-        if(singleDriver) {
-            gamepad2 = gamepad1
-        }
-        super.runOpMode()
-    }
+class PhobosTeleOp : PhobosOpMode() {
 
     override fun setup() {
+        hardware.drive.poseEstimate = lastKnownRobotPose
+
         + MecanumFieldCentricDriveCommand(gamepad1, telemetry) // contrar las mecanum con los joysticks del gamepad 1
 
         superGamepad1.scheduleOnPress(Button.DPAD_LEFT,
@@ -45,8 +41,8 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
          */
 
         CapTurretIncrementalMoveCmd(
-            { gamepad2.left_stick_x.toDouble() * 0.05 }, // yaw servo
-            { -gamepad2.left_stick_y.toDouble() * 0.05 }, // pitch servo
+            { gamepad2.left_stick_x.toDouble() * 0.01 }, // yaw servo
+            { -gamepad2.left_stick_y.toDouble() * 0.01 }, // pitch servo
         ).schedule(false)
 
         superGamepad2.scheduleOn(Button.X,
@@ -126,7 +122,6 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
         + DeltaRunCmd {
             telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
             telemetry.addData("carousel power", hardware.carouselMotor.power)
-            telemetry.addData("single driver", singleDriver)
             telemetry.update()
         }
     }
@@ -152,6 +147,3 @@ open class PhobosTeleOp @JvmOverloads constructor(val singleDriver: Boolean = fa
     }
 
 }
-
-@TeleOp(name = "TeleOp (1 Driver)")
-class PhobosTeleOpSingleDriver : PhobosTeleOp(singleDriver = true)
