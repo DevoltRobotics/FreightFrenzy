@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.deimoscode.Hardwareñ;
 
@@ -20,6 +21,7 @@ public class Tsuru_Tuneado extends LinearOpMode {
     int liftTarget = 0;
 
     LiftState liftState = LiftState.IDLE;
+    ElapsedTime liftTimer = new ElapsedTime();
 
     enum LiftState { IDLE, MOVING, WAITING, ZERO}
 
@@ -32,18 +34,40 @@ public class Tsuru_Tuneado extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            hdw.drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
+            double turbo = 1.0 - (gamepad1.left_trigger * 0.8);
+
+            hdw.drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * turbo, -gamepad1.left_stick_x * turbo, -gamepad1.right_stick_x * turbo));
 
             switch(liftState) {
                 case IDLE:
                     hdw.Elevador.setPower(-gamepad2.right_stick_y * 0.8);
+
+                    if(gamepad2.dpad_up) {
+                        liftTarget = 1120;
+                        liftState = LiftState.MOVING;
+                    }
                     break;
                 case MOVING:
                     hdw.updateLift(liftTarget);
+
+                    if(hdw.Elevador.getCurrentPosition() >= liftTarget - 10) {
+                        liftState = LiftState.WAITING;
+                        liftTimer.reset();
+                    }
                     break;
                 case WAITING:
+                    hdw.updateLift(liftTarget);
+
+                    if(liftTimer.seconds() > 4) {
+                        liftState = LiftState.ZERO;
+                    }
                     break;
                 case ZERO:
+                    hdw.updateLift(0);
+
+                    if(hdw.Elevador.getCurrentPosition() >= liftTarget - 10) {
+                        liftState = LiftState.IDLE;
+                    }
                     break;
             }
 
@@ -51,9 +75,9 @@ public class Tsuru_Tuneado extends LinearOpMode {
             hdw.Extender.setPower(-Extend);
 
             if (gamepad2.right_bumper) {
-                hdw.Absorber.setPosition(1);
+                hdw.Absorber.setPosition(0.85);
             } else if (gamepad2.left_bumper) {
-                hdw.Absorber.setPosition(0.4);
+                hdw.Absorber.setPosition(0.2);
             }
 
             if (gamepad2.y) {

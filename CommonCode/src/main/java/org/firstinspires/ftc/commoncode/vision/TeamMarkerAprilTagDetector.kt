@@ -5,7 +5,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.openftc.easyopencv.*
 
 
-class TeamMarkerAprilTagDetector {
+class   TeamMarkerAprilTagDetector {
 
     val pipeline = TeamMarkerAprilTagPipeline()
 

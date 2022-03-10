@@ -25,7 +25,6 @@ public class Hardwareñ {
     public DcMotor Empuje;
     public Servo Absorber;
 
-
     public void initHardware(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
 

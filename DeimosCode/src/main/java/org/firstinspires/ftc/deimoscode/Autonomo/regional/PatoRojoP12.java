@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.deimoscode.Autonomo;
+package org.firstinspires.ftc.deimoscode.Autonomo.regional;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.deimoscode.Hardwareñ;
 
-@Autonomous (name = "PatoRojo", group = "Autonomus")
-public class PatoRojo extends LinearOpMode {
+@Autonomous (name = "PatoRojo12", group = "Autonomus")
+public class PatoRojoP12 extends LinearOpMode {
 
     private DcMotor FrontalD;
     private DcMotor FrontalI;
@@ -41,6 +41,7 @@ public class PatoRojo extends LinearOpMode {
         //TI=FI
 
         waitForStart();
+
 
         Garra.setPosition(0);
         sleep(500);
@@ -95,11 +96,11 @@ public class PatoRojo extends LinearOpMode {
         Elevador.setPower(0);
         sleep(800);
         Garra.setPosition(0);
-        FrontalD.setPower(-.6);
-        TraseroD.setPower(-.6);
-        FrontalI.setPower(-.6);
-        TraseroI.setPower(-.6);
-        sleep(950);
+        FrontalD.setPower(-.4);
+        TraseroD.setPower(-.4);
+        FrontalI.setPower(-.4);
+        TraseroI.setPower(-.4);
+        sleep(1800);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
@@ -109,7 +110,7 @@ public class PatoRojo extends LinearOpMode {
         TraseroD.setPower(-.3);
         FrontalI.setPower(.3);
         TraseroI.setPower(.3);
-        sleep(100);
+        sleep(200);
         FrontalD.setPower(-.3);  //movimiento a la Derecha
         TraseroD.setPower(.3);
         FrontalI.setPower(.3);
@@ -121,7 +122,7 @@ public class PatoRojo extends LinearOpMode {
         TraseroI.setPower(0);
         sleep(400);
         Pato.setPower(.8);
-        sleep(5500);
+        sleep(3500);
         Pato.setPower(0);
         sleep(200);
         FrontalD.setPower(.3);  //movimiento a la Izquierda
@@ -148,7 +149,7 @@ public class PatoRojo extends LinearOpMode {
         TraseroD.setPower(-.3);
         FrontalI.setPower(-.3);
         TraseroI.setPower(.3);
-        sleep(1500);
+        sleep(1800);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
@@ -164,4 +165,5 @@ public class PatoRojo extends LinearOpMode {
 
     }
 }
+
 
