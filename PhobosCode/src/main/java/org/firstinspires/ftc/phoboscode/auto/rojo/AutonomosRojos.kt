@@ -13,7 +13,7 @@ class AutonomoCompletoRojoIzquierdaPato : AutonomoCompletoRojo(
 class AutonomoCompletoRojoIzquierda : AutonomoCompletoRojo(
     startPosition = StartPosition.DUCKS_NEAREST,
     parkPosition = ParkPosition.WAREHOUSE,
-    doDucks = false, cycles = 2
+    doDucks = false, cycles = 1
 )
 
 @Autonomous(name = "R-Completo Derecha Pato", group = "Final")
@@ -26,5 +26,5 @@ class AutonomoCompletoRojoDerechaPato : AutonomoCompletoRojo(
 class AutonomoCompletoRojoDerecha : AutonomoCompletoRojo(
     startPosition = StartPosition.WAREHOUSE_NEAREST,
     parkPosition = ParkPosition.WAREHOUSE,
-    doDucks = false, cycles = 2
+    doDucks = false, cycles = 1
 )

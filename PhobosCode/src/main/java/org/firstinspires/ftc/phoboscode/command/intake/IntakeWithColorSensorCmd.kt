@@ -52,7 +52,11 @@ class IntakeWithColorSensorCmd(
             hasIntaked = true
 
             + deltaSequence {
-                - waitForSeconds(0.6)
+<<<<<<< HEAD
+                - waitForSeconds(0.45)
+=======
+                - waitForSeconds(0.3)
+>>>>>>> fbd9e251fc4f0ef5c00f56aa52b3a333b0fab8a1
                 - DeltaInstantCmd { reversed = true }
             }
         }

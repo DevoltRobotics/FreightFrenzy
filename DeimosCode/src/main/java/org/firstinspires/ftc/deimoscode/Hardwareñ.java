@@ -22,6 +22,7 @@ public class Hardwareñ {
     public DcMotor Pato;
     public DcMotor Extender;
     public DcMotor Elevador;
+    public DcMotor Empuje;
     public Servo Absorber;
 
 
@@ -32,6 +33,7 @@ public class Hardwareñ {
         Extender = hardwareMap.dcMotor.get("EXT");
         Elevador = hardwareMap.dcMotor.get("ELE");
         Absorber = hardwareMap.servo.get("Abs");
+        Empuje = hardwareMap.dcMotor.get("Emp");
     }
 
     public void updateLift(int targetPos) {
