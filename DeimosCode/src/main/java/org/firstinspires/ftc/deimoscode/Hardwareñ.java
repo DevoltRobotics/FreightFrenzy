@@ -13,7 +13,11 @@ import org.firstinspires.ftc.deimoscode.rr.drive.SampleMecanumDrive;
 @Config
 public class Hardwareñ {
 
-    public static PIDCoefficients LIFT_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients LIFT_PID = new PIDCoefficients(0.005, 0, 0);
+
+    public static int HIGH_LIFT_POS = 3000;
+    public static int MID_LIFT_POS = 800;
+    public static int LOW_LIFT_POS = 300;
 
     private PIDFController liftController = new PIDFController(LIFT_PID);
 

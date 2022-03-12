@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.deimoscode.Autonomo.nacional;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition;
 import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name = "WHB", group = "###Autonomus")
 public class WHB extends AutonomoBase {
 
     Pose2d startPóse = new Pose2d(11.5, 60.0, Math.toRadians(180.0));
@@ -41,5 +43,9 @@ public class WHB extends AutonomoBase {
                 //Estacionarse
                 .lineToSplineHeading(new Pose2d(60.0, 39.0, Math.toRadians(90.0)))
                 .build();
+
+        waitForStart();
+
+        hardware.drive.followTrajectorySequence(sequence);
     }
 }

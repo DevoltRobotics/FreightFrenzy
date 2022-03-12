@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.deimoscode.Autonomo.nacional;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerAprilTagDetector;
 import org.firstinspires.ftc.deimoscode.Hardwareñ;
@@ -19,6 +20,9 @@ public abstract class AutonomoBase extends LinearOpMode {
         hardware.initHardware(hardwareMap);
 
         detector.initWebcamVision(hardwareMap, "Enchiladas", OpenCvCameraRotation.SIDEWAYS_LEFT);
+
+        hardware.Elevador.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hardware.Elevador.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         run();
     }
