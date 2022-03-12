@@ -97,7 +97,7 @@ abstract class AutonomoCompletoRojo(
                         lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                     }
 
-                    var currentGrabCubeX = 55.5
+                    var currentGrabCubeX = 52.5
                     var minusBigWobblePose = Pose2d()
 
                     /*
@@ -105,7 +105,7 @@ abstract class AutonomoCompletoRojo(
                      */
                     repeat(cycles) {
                         // to the warehouse
-                        splineToSplineHeading(Pose2d(25.0, -62.8, Math.toRadians(0.0)), 0.0)
+                        splineToSplineHeading(Pose2d(25.0, -63.3, Math.toRadians(0.0)), 0.0)
 
                         UNSTABLE_addTemporalMarkerOffset(0.0) {
                             + IntakeWithColorSensorCmd(1.0)
@@ -131,8 +131,8 @@ abstract class AutonomoCompletoRojo(
                         )
                         waitSeconds(0.9) // wait for the freight to fall
 
-                        currentGrabCubeX *= 1.4
-                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-4.0, 0.7))
+                        currentGrabCubeX *= 1.06
+                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, 0.7))
                     }
                 }
 
