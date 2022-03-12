@@ -115,6 +115,8 @@ public class Tsuru_Tuneado extends LinearOpMode {
             telemetry.addData("lift target", liftTarget);
             telemetry.addData("lift state", liftState);
             telemetry.update();
+
+            hdw.Capstone.setPosition(hdw.Capstone.getPosition() + (gamepad2.left_trigger * 0.01) - (gamepad2.right_trigger * 0.01));
         }
     }
 }

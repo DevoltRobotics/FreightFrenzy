@@ -28,6 +28,7 @@ public class Hardwareñ {
     public DcMotor Elevador;
     public DcMotor Empuje;
     public Servo Absorber;
+    public Servo Capstone;
 
     public void initHardware(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -37,6 +38,7 @@ public class Hardwareñ {
         Elevador = hardwareMap.dcMotor.get("ELE");
         Absorber = hardwareMap.servo.get("Abs");
         Empuje = hardwareMap.dcMotor.get("Emp");
+        Capstone = hardwareMap.servo.get("Cap");
     }
 
     public void updateLift(int targetPos) {
