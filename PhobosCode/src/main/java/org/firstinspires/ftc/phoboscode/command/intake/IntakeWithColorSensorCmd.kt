@@ -48,7 +48,7 @@ class IntakeWithColorSensorCmd(
         telemetry?.addData("b", blue)
          */
 
-        if(distance <= 1.0 && !hasIntaked) {
+        if(distance <= 1.5 && !hasIntaked) {
             hasIntaked = true
 
             + deltaSequence {

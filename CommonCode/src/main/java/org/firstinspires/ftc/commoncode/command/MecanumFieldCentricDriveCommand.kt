@@ -20,21 +20,21 @@ class MecanumFieldCentricDriveCommand(
             gamepad.left_trigger
         } else gamepad.right_trigger
 
-        val turbo = if(applyTurboWithTriggers) {
+        val turbo = 0.7 * if(applyTurboWithTriggers) {
             1.0 - (triggerValue * 0.8)
         } else 1.0
 
         val pose = sub.drive.poseEstimate
 
         val input = Vector2d(
-                (-gamepad.left_stick_y).toDouble() * turbo,
-                (-gamepad.left_stick_x).toDouble() * turbo
+                (-gamepad.left_stick_y).toDouble() * 0.7 * turbo,
+                (-gamepad.left_stick_x).toDouble() * 0.7 * turbo
         ).rotated(-pose.heading)
 
         sub.setWeighedDrivePower(
                 Pose2d(
                         input.x, input.y,
-                        (-gamepad.right_stick_x).toDouble()  * turbo
+                        (-gamepad.right_stick_x).toDouble() * turbo
                 )
         )
 

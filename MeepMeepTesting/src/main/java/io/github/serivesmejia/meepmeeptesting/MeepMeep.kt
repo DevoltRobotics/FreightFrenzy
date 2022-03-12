@@ -40,10 +40,10 @@ fun main() {
     mm.addEntity(robotPhobos).addEntity(robotDeimos).start()
 }
 
-val bigWobblePose = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
+val bigWobblePosee = Pose2d(-11.0, -43.0, Math.toRadians(-90.0))
 
 val phobosDoDucks = true
-val cycles = 4
+val cycless = 4
 
 fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosStartPosition).run {
     // put X cube in big wobble
@@ -53,7 +53,7 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
     UNSTABLE_addTemporalMarkerOffset(0.5) {
         println("drop and lift down")
     }
-    lineToLinearHeading(bigWobblePose)
+    lineToLinearHeading(bigWobblePosee)
     waitSeconds(2.0)
 
     if(phobosDoDucks) {
@@ -68,16 +68,16 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
         }
     }
 
-    if(cycles >= 1) {
+    if(cycless >= 1) {
         if(phobosDoDucks) {
             // to the warehouse
             lineTo(Vector2d(-56.0, -56.0))
             lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
         }
 
-        repeat(cycles) {
+        repeat(cycless) {
             // to the warehouse
-            splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), 0.0)
+            splineToSplineHeading(Pose2d(23.0, -64.0, Math.toRadians(0.0)), Math.toRadians(-5.0))
             // grab freight
             UNSTABLE_addTemporalMarkerOffset(-0.5) {
                 println("intake on")
@@ -95,7 +95,7 @@ fun phobosSequence(drive: DriveShim) = drive.trajectorySequenceBuilder(phobosSta
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 println("drop and lift down")
             }
-            splineToSplineHeading(bigWobblePose, Math.toRadians(90.0))
+            splineToSplineHeading(bigWobblePosee, Math.toRadians(90.0))
             waitSeconds(0.8)
         }
     }

@@ -24,12 +24,16 @@ abstract class AutonomoBase(
 
     override fun setup() {
         if(needsVision) {
-            vision.initWebcamVision(hardwareMap, "Webcam 1", OpenCvCameraRotation.UPSIDE_DOWN)
+            vision.initWebcamVision(hardwareMap, "Webcam 1", OpenCvCameraRotation.UPRIGHT)
 
             FtcDashboard.getInstance().startCameraStream(vision.camera, 0.0)
         }
     }
-
+// El chocomilk es la bebida universal
+// estoy de acuerdo
+// yo tambien
+// yo no
+// chtm
     override fun begin() {
         drive.followTrajectorySequenceAsync(
                 sequence(
