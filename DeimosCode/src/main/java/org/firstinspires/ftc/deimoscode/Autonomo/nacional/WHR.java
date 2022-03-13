@@ -10,7 +10,7 @@ import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequence
 @Autonomous(name = "WHR", group = "###Autonomus")
 public class WHR extends AutonomoBase {
 
-    Pose2d startPóse = new Pose2d(11.5, -60.0, Math.toRadians(0.0));
+    Pose2d startPóse = new Pose2d(11.5, -60, Math.toRadians(0));
 
     int liftPos = 0;
 
@@ -32,33 +32,43 @@ public class WHR extends AutonomoBase {
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(0.0, -20.0, Math.toRadians(45)))
-                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Absorber.setPosition(1);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.0, () -> {
-                    hardware.Absorber.setPosition(0);
-                })
+                .lineToSplineHeading(new Pose2d(-3.8, -5.5, Math.toRadians(90)))
 
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    hardware.Absorber.setPosition(0.7);
+                })
                 .waitSeconds(1.5)
 
-                //Fuera de WareHouse
-                .lineToSplineHeading(new Pose2d(7.0, -64.0, Math.toRadians(0.0)))
+                //Ir Entrada
+                .lineToSplineHeading(new Pose2d(7.0, -64.0, Math.toRadians(0)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Absorber.setPosition(0);
                     liftPos = Hardwareñ.LOW_LIFT_POS;
                 })
-                
-                .waitSeconds(1)
-                //Entrar a Warehouse
-                .lineToSplineHeading(new Pose2d(40.0, -64.0, Math.toRadians(0.0)))
+
+                .waitSeconds(2)
+
+                // Entrar WH
+                .lineToSplineHeading(new Pose2d(40.0, -64.0, Math.toRadians(0)))
+
                 //Estacionarse
-                .lineToSplineHeading(new Pose2d(60.0, -39.0, Math.toRadians(270.0)))
+                .lineToSplineHeading(new Pose2d(65.0, -44.0, Math.toRadians(270)))
+
                 .build();
 
-        waitForStart();
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("position", detector.getPosition());
+            telemetry.update();
+        }
 
-        hardware.drive.followTrajectorySequence(sequence);
+        if(isStopRequested()) return;
+
+        hardware.drive.followTrajectorySequenceAsync(sequence);
+
+        while(opModeIsActive()) {
+            hardware.drive.update();
+            hardware.updateLift(liftPos);
+        }
     }
 }
