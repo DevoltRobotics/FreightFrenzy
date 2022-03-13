@@ -13,6 +13,7 @@ public class WHR extends AutonomoBase {
 
     @Override
     public void run() {
+        // esto lo mueve
         hardware.drive.setPoseEstimate(startPóse);
 
         hardware.Absorber.setPosition(0);

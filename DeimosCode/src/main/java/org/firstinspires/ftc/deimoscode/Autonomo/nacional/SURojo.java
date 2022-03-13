@@ -28,7 +28,6 @@ public class SURojo extends AutonomoBase {
                         liftPos = Hardwareñ.MID_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
                         liftPos = Hardwareñ.HIGH_LIFT_POS;
-                    }
                 })
 
                 // ir a poner cubo
