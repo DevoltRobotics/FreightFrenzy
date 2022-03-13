@@ -28,8 +28,8 @@ fun main() {
                     .UNSTABLE_addDisplacementMarkerOffset(0.0) {
                         println("poner cubo")
                     }
-                    .lineToSplineHeading(Pose2d(-60.0, 60.0, Math.toRadians(210.0)))
-                    .lineToSplineHeading(Pose2d(-58.0, 35.0, Math.toRadians(180.0)))
+                    .lineToSplineHeading(Pose2d(-59.5, 59.5, Math.toRadians(210.0)))
+                    .lineToSplineHeading(Pose2d(-58.0, 35.0, Math.toRadians(0.0)))
                     .build();
             }
 

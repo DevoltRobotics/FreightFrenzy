@@ -21,7 +21,7 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
     public static int APRILTAG_ID = 8;
 
     final float DECIMATION_HIGH = 3;
-    final float DECIMATION_LOW = 2;
+    final float DECIMATION_LOW = 1;
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 

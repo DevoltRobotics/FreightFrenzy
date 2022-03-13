@@ -22,7 +22,13 @@ public class SURojo extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
+                        liftPos = Hardwareñ.MID_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    }
                 })
 
                 // ir a poner cubo
@@ -34,7 +40,7 @@ public class SURojo extends AutonomoBase {
                 .waitSeconds(1.5)
 
                 //Ir a Pato
-                .lineToSplineHeading(new Pose2d(-60.0, -60.0, Math.toRadians(340)))
+                .lineToSplineHeading(new Pose2d(-60.7, -60.0, Math.toRadians(340)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Absorber.setPosition(0);
@@ -50,10 +56,15 @@ public class SURojo extends AutonomoBase {
                 .waitSeconds(5)
 
                 // estacionarse
-                .lineToSplineHeading(new Pose2d(-58.0, -35.0, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(-60.0, -31.0, Math.toRadians(0)))
                 .build();
 
-        waitForStart();
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("position", detector.getPosition());
+            telemetry.update();
+        }
+
+        if(isStopRequested()) return;
 
         hardware.drive.followTrajectorySequenceAsync(sequence);
 

@@ -34,9 +34,9 @@ public class Tsuru_Tuneado extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            double turbo = 1.0 - (gamepad1.left_trigger * 0.7);
+            double Turbo = 1.0 - (gamepad1.left_trigger * 0.7);
 
-            hdw.drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * turbo, -gamepad1.left_stick_x * turbo, -gamepad1.right_stick_x * turbo));
+            hdw.drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * Turbo, -gamepad1.left_stick_x * Turbo, -gamepad1.right_stick_x * Turbo));
 
             switch(liftState) {
                 case IDLE:
@@ -115,6 +115,9 @@ public class Tsuru_Tuneado extends LinearOpMode {
             telemetry.addData("lift target", liftTarget);
             telemetry.addData("lift state", liftState);
             telemetry.update();
+
+            hdw.Cebollin.setPosition(hdw.Cebollin.getPosition() + (gamepad2.left_trigger * 0.01) - (gamepad2.right_trigger * 0.01));
+
         }
     }
 }

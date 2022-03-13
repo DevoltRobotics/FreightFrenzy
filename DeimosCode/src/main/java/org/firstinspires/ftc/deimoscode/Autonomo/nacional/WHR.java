@@ -15,9 +15,11 @@ public class WHR extends AutonomoBase {
     public void run() {
         hardware.drive.setPoseEstimate(startPóse);
 
+        hardware.Absorber.setPosition(0);
+
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(0.0, -32.0, Math.toRadians(45)))
+                .lineToSplineHeading(new Pose2d(0.0, -20.0, Math.toRadians(45)))
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
                     hardware.Elevador.setPower(0.8);
                 })

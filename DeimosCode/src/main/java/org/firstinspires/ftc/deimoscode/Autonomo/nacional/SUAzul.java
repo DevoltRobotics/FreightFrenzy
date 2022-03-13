@@ -50,7 +50,7 @@ public class SUAzul extends AutonomoBase {
                 .waitSeconds(5)
 
                 // estacionarse
-                .lineToSplineHeading(new Pose2d(-58.0, 35.0, Math.toRadians(180.0)))
+                .lineToSplineHeading(new Pose2d(-58.0, 35.0, Math.toRadians(0.0)))
                 .build();
 
         waitForStart();
