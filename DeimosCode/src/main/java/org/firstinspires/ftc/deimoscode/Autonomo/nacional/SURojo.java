@@ -28,6 +28,7 @@ public class SURojo extends AutonomoBase {
                         liftPos = Hardwareñ.MID_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
                         liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    }
                 })
 
                 // ir a poner cubo
@@ -39,7 +40,7 @@ public class SURojo extends AutonomoBase {
                 .waitSeconds(1.5)
 
                 //Ir a Pato
-                .lineToSplineHeading(new Pose2d(-60.7, -60.0, Math.toRadians(340)))
+                .lineToSplineHeading(new Pose2d(-61.5, -60.0, Math.toRadians(330)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Absorber.setPosition(0);
@@ -55,7 +56,7 @@ public class SURojo extends AutonomoBase {
                 .waitSeconds(5)
 
                 // estacionarse
-                .lineToSplineHeading(new Pose2d(-60.0, -31.0, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(-60.0, -29.0, Math.toRadians(0)))
                 .build();
 
         while(!isStarted() && !isStopRequested()) {

@@ -110,7 +110,7 @@ public class Tsuru_Tuneado extends LinearOpMode {
             } else {
                 hdw.Empuje.setPower(0);
             }
-            
+
             hdw.Cebollin.setPosition(hdw.Cebollin.getPosition() + (gamepad2.left_trigger * 0.01) - (gamepad2.right_trigger * 0.01));
 
             telemetry.addData("lift current", hdw.Elevador.getCurrentPosition());
