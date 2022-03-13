@@ -22,7 +22,13 @@ public class SURojo extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
+                        liftPos = Hardwareñ.MID_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    }
                 })
 
                 // ir a poner cubo

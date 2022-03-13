@@ -15,9 +15,9 @@ public class Hardwareñ {
 
     public static PIDCoefficients LIFT_PID = new PIDCoefficients(0.005, 0, 0);
 
-    public static int HIGH_LIFT_POS = 3000;
-    public static int MID_LIFT_POS = 800;
-    public static int LOW_LIFT_POS = 300;
+    public static int HIGH_LIFT_POS = 7200;
+    public static int MID_LIFT_POS = 3600;
+    public static int LOW_LIFT_POS = 1200;
 
     private PIDFController liftController = new PIDFController(LIFT_PID);
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.deimoscode.Autonomo.nacional;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -19,7 +20,8 @@ public abstract class AutonomoBase extends LinearOpMode {
         hardware = new Hardwareñ();
         hardware.initHardware(hardwareMap);
 
-        detector.initWebcamVision(hardwareMap, "Enchiladas", OpenCvCameraRotation.SIDEWAYS_LEFT);
+        detector.initWebcamVision(hardwareMap, "Enchiladas", OpenCvCameraRotation.UPRIGHT);
+        FtcDashboard.getInstance().startCameraStream(detector.getCamera(), 0);
 
         hardware.Elevador.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hardware.Elevador.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
