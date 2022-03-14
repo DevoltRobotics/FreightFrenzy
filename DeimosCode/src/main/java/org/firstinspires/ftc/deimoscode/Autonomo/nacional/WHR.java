@@ -32,11 +32,12 @@ public class WHR extends AutonomoBase {
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(-3.8, -5.5, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-3.8, -6.5, Math.toRadians(90)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     hardware.Absorber.setPosition(0.7);
                 })
+
                 .waitSeconds(1.5)
 
                 //Ir Entrada
