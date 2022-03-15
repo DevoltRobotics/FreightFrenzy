@@ -25,12 +25,12 @@ enum class StartPosition(
     val startWobblePose: Pose2d
 ) {
     DUCKS_NEAREST(
-        Pose2d(-39.0, 62.0, Math.toRadians(270.0)), // start
-        Pose2d(-23.0, 37.0, Math.toRadians(150.0))
+        Pose2d(-35.0, 62.0, Math.toRadians(270.0)), // start
+        Pose2d(-36.0, 34.3, Math.toRadians(30.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(11.0, 63.0, Math.toRadians(270.0)),
-        Pose2d(1.0, 38.8, Math.toRadians(75.0))
+        Pose2d(1.0, 62.0, Math.toRadians(270.0)),
+        Pose2d(-10.2, 33.6, Math.toRadians(130.0))
     )
 }
 
@@ -45,7 +45,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase() {
 
-    val bigWobblePose = Pose2d(0.0, 38.5, Math.toRadians(60.0))
+    val bigWobblePose = Pose2d(-10.2, 33.6, Math.toRadians(130.0))
 
     override fun setup() {
         super.setup()
@@ -59,93 +59,101 @@ abstract class AutonomoCompletoAzul(
     }
 
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
-            drive.trajectorySequenceBuilder(startPosition.startPose).run {
-                // put X cube in big wobble
-                UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    + LiftMoveToPosCmd(when(teamMarkerPosition) { // mapping barcode position to lift height
+        drive.trajectorySequenceBuilder(startPosition.startPose).run {
+            // put X cube in big wobble
+            UNSTABLE_addTemporalMarkerOffset(0.0) {
+                +LiftMoveToPosCmd(
+                    when (teamMarkerPosition) { // mapping barcode position to lift height
                         LEFT -> LiftPosition.LOW
                         MIDDLE -> LiftPosition.MID
                         else -> LiftPosition.HIGH
-                    })
+                    }
+                )
+            }
+            UNSTABLE_addTemporalMarkerOffset(2.5) {
+                + freightDropSequence()
+            }
+
+            lineToSplineHeading(startPosition.startWobblePose)
+
+            waitSeconds(2.0)
+
+            if (doDucks) {
+                // duck spinny boi
+                lineToLinearHeading(Pose2d(-66.5, 59.0, Math.toRadians(0.0)))
+                UNSTABLE_addTemporalMarkerOffset(0.0) {
+                    +ACCarouselRotateForwardCmd()
                 }
-                UNSTABLE_addTemporalMarkerOffset(2.5) {
-                    + freightDropSequence()
+                waitSeconds(3.0)
+                UNSTABLE_addTemporalMarkerOffset(0.0) {
+                    +CarouselStopCmd()
+                }
+            }
+
+            if (cycles >= 1) {
+                if (doDucks) {
+                    // to the warehouse
+                    lineTo(Vector2d(-56.0, 55.5))
+                    lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                lineToSplineHeading(startPosition.startWobblePose)
+                var currentGrabCubeX = 55.0
+                var minusBigWobblePose = Pose2d(-4.8, 0.4)
 
-                waitSeconds(2.0)
+                /*
+                Generating repetitive trajectories for each cycle
+                 */
+                repeat(cycles) {
+                    // to the warehouse (Casita de los cubos)
+                    splineToSplineHeading(
+                        Pose2d(25.1, 61.9, Math.toRadians(-5.0)),
+                        Math.toRadians((0.0))
+                    )
 
-                if(doDucks) {
-                    // duck spinny boi
-                    lineToLinearHeading(Pose2d(-63.6, 62.0, Math.toRadians(195.0)))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
-                        + ACCarouselRotateForwardCmd()
+                        +IntakeWithColorSensorCmd(1.0)
                     }
-                    waitSeconds(3.0)
+
+                    // grab freight
+                    splineTo(Vector2d(currentGrabCubeX, 61.9), 0.0)
+
+                    // out of the warehouse
+                    lineTo(Vector2d(18.0, 61.9))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
-                        + CarouselStopCmd()
+                        +IntakeStopCmd()
+                        +LiftMoveToPosCmd(LiftPosition.HIGH)
                     }
+
+                    UNSTABLE_addTemporalMarkerOffset(1.8) {
+                        +freightDropSequence()
+                    }
+                    // put freight in big wobble
+                    splineToSplineHeading(
+                        bigWobblePose.minus(minusBigWobblePose),
+                        Math.toRadians((90.0))
+                    )
+                    waitSeconds(0.9) // wait for the freight to fall
+
+                    currentGrabCubeX *= 1.08
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-7.0, -1.5))
                 }
+            }
 
-                if(cycles >= 1) {
-                    if(doDucks) {
-                        // to the warehouse
-                        lineTo(Vector2d(-56.0, 55.5))
-                        lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
-                    }
-
-                    var currentGrabCubeX = 68.0
-                    var minusBigWobblePose = Pose2d()
-
-                    /*
-                    Generating repetitive trajectories for each cycle
-                     */
-                    repeat(cycles) {
-                        // to the warehouse
-                        splineToSplineHeading(Pose2d(25.0, 63.0, Math.toRadians(0.0)), Math.toRadians(365.0))
-
-                        UNSTABLE_addTemporalMarkerOffset(0.0) {
-                            + IntakeWithColorSensorCmd(1.0)
-                        }
-
-                        // grab freight
-                        splineTo(Vector2d(currentGrabCubeX, 63.2), 0.0)
-
-                        // out of the warehouse
-                        lineTo(Vector2d(18.0, 63.2))
-                        UNSTABLE_addTemporalMarkerOffset(0.0) {
-                            + IntakeStopCmd()
-                            + LiftMoveToPosCmd(LiftPosition.HIGH)
-                        }
-
-                        UNSTABLE_addTemporalMarkerOffset(1.8) {
-                            + freightDropSequence()
-                        }
-                        // put freight in big wobble
-                        splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(270.0))
-                        waitSeconds(0.9) // wait for the freight to fall
-
-                        currentGrabCubeX *= 1.06
-                        minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, -0.7))
-                    }
+            when (parkPosition) {
+                NONE -> this
+                WAREHOUSE -> {
+                    // to the warehouse to park (De la casita al parque)
+                    splineToSplineHeading(Pose2d(34.0, -64.0, Math.toRadians(0.0)), 0.0)
+                    // park fully
+                    lineTo(Vector2d(57.0, -64.0))
+                    // in case alliance wants to park too
+                    strafeTo(Vector2d(57.0, -40.0))
+                }// mechrams el que lo copie
+                STORAGE_UNIT -> {
+                    lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))
                 }
-
-                when(parkPosition) {
-                    NONE -> this
-                    WAREHOUSE -> {
-                        // to the warehouse to park
-                        splineToSplineHeading(Pose2d(25.0, 63.0, Math.toRadians(0.0)), Math.toRadians(3.0))
-                        // park fully
-                        lineTo(Vector2d(50.0, 64.0))
-                        // in case alliance wants to park too
-                        strafeTo(Vector2d(50.0, 40.0))
-                    }
-                    STORAGE_UNIT -> {
-                        lineToSplineHeading(Pose2d(-62.0, 32.0, 0.0))
-                    }
-                }
-            }.build()
+            }
+        }.build()
 
     private fun freightDropSequence() = deltaSequence {
         - BoxThrowCmd().dontBlock()

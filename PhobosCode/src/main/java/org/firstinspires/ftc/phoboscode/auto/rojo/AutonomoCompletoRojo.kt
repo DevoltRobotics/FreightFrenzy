@@ -150,7 +150,7 @@ abstract class AutonomoCompletoRojo(
                     lineTo(Vector2d(57.0, -64.0))
                     // in case alliance wants to park too
                     strafeTo(Vector2d(57.0, -40.0))
-                }
+                }// mechrams el que lo copie
                 STORAGE_UNIT -> {
                     lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))
                 }
