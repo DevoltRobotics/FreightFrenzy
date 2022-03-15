@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp( name = "teleop", group = "Chido")
-public class teleop extends LinearOpMode {
+public class Ceviche extends LinearOpMode {
 
     private DcMotor motorleft;
     private DcMotor motorright;

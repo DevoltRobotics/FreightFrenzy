@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.deimoscode.Autonomo;
+package org.firstinspires.ftc.deimoscode.Autonomo.regional;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,10 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.deimoscode.Hardwareñ;
-
-@Autonomous (name = "PatoRojo12", group = "Autonomus")
-public class PatoRojoP12 extends LinearOpMode {
+@Autonomous(name = "PatoAzulExt", group = "Autonomus")
+public class PatoAzulExt extends LinearOpMode {
 
     private DcMotor FrontalD;
     private DcMotor FrontalI;
@@ -21,7 +19,7 @@ public class PatoRojoP12 extends LinearOpMode {
     private Servo Garra;
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
 
         FrontalD = hardwareMap.dcMotor.get("FD");
         FrontalI = hardwareMap.dcMotor.get("FI");
@@ -35,121 +33,139 @@ public class PatoRojoP12 extends LinearOpMode {
         FrontalI.setDirection(DcMotorSimple.Direction.REVERSE);
         TraseroI.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //FD=TD
-        //TD=FD
-        //FI=TI
-        //TI=FI
-
-        waitForStart();
-
-
+        
+    waitForStart();
         Garra.setPosition(0);
-        sleep(500);
-        FrontalD.setPower(.5);  //movimiento a la Izquierda
-        TraseroD.setPower(-.5);
-        FrontalI.setPower(-.5);
-        TraseroI.setPower(.5);
-        sleep(1300);
-        FrontalD.setPower(0);
-        TraseroD.setPower(0);
-        FrontalI.setPower(0);
-        TraseroI.setPower(0);
-        sleep(500);
-        FrontalD.setPower(-.5);
-        TraseroD.setPower(-.5);
-        FrontalI.setPower(.5);
-        TraseroI.setPower(.5);
-        sleep(10);
-        FrontalD.setPower(0);
-        TraseroD.setPower(0);
-        FrontalI.setPower(0);
-        TraseroI.setPower(0);
         sleep(300);
+        FrontalD.setPower(.3);
+        TraseroD.setPower(.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(.3);
+        sleep(2350);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(400);
         Elevador.setPower(.6);
         sleep(2400);
-        FrontalD.setPower(.5);  //movimiento a la Izquierda
-        TraseroD.setPower(-.5);
-        FrontalI.setPower(-.5);
-        TraseroI.setPower(.5);
-        sleep(250);
+        FrontalD.setPower(.3);  //movimiento a la Izquierda
+        TraseroD.setPower(-.3);
+        FrontalI.setPower(-.3);
+        TraseroI.setPower(.3);
+        sleep(500);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
         TraseroI.setPower(0);
         sleep(300);
-        Garra.setPosition(0);
-        sleep(500);
         Garra.setPosition(1);
-        sleep(500);
-        FrontalD.setPower(-.3);
+        sleep(400);
+        FrontalD.setPower(-.3);  //movimiento a la Derecha
         TraseroD.setPower(.3);
         FrontalI.setPower(.3);
         TraseroI.setPower(-.3);
-        sleep(2400);
+        sleep(1000);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
         TraseroI.setPower(0);
         sleep(400);
         Elevador.setPower(-.6);
-        sleep(750);
+        sleep(320);
         Elevador.setPower(0);
-        sleep(800);
+        sleep(200);
         Garra.setPosition(0);
         FrontalD.setPower(-.4);
         TraseroD.setPower(-.4);
-        FrontalI.setPower(-.4);
-        TraseroI.setPower(-.4);
-        sleep(1800);
-        FrontalD.setPower(0);
-        TraseroD.setPower(0);
-        FrontalI.setPower(0);
-        TraseroI.setPower(0);
-        sleep(200);
-        FrontalD.setPower(-.3);
-        TraseroD.setPower(-.3);
-        FrontalI.setPower(.3);
-        TraseroI.setPower(.3);
-        sleep(200);
-        FrontalD.setPower(-.3);  //movimiento a la Derecha
-        TraseroD.setPower(.3);
-        FrontalI.setPower(.3);
-        TraseroI.setPower(-.3);
-        sleep(2500);
+        FrontalI.setPower(.4);
+        TraseroI.setPower(.4);
+        sleep(500);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
         TraseroI.setPower(0);
         sleep(400);
-        Pato.setPower(.8);
-        sleep(3500);
-        Pato.setPower(0);
-        sleep(200);
-        FrontalD.setPower(.3);  //movimiento a la Izquierda
+        FrontalD.setPower(-.3);
         TraseroD.setPower(-.3);
-        FrontalI.setPower(-.3);
-        TraseroI.setPower(.3);
-        sleep(1200);
-        FrontalD.setPower(0);
-        TraseroD.setPower(0);
-        FrontalI.setPower(0);
-        TraseroI.setPower(0);
-        sleep(300);
-        FrontalD.setPower(.3);
-        TraseroD.setPower(.3);
         FrontalI.setPower(-.3);
         TraseroI.setPower(-.3);
-        sleep(250);
+        sleep(700);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(400);
+        FrontalD.setPower(-.3);  //movimiento a la Derecha
+        TraseroD.setPower(.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(-.3);
+        sleep(3000);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
         TraseroI.setPower(0);
         sleep(300);
-        FrontalD.setPower(.3);  //movimiento a la Izquierda
+        FrontalD.setPower(-.3);
+        TraseroD.setPower(-.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(.3);
+        sleep(350);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(300);
+        FrontalD.setPower(-.3);  //movimiento a la Derecha
+        TraseroD.setPower(.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(-.3);
+        sleep(2000);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(300);
+        Pato.setPower(-.8);
+        sleep(3500);
+        Pato.setPower(0);
+        FrontalD.setPower(.3);    //Movimiento a la Izquierda
         TraseroD.setPower(-.3);
         FrontalI.setPower(-.3);
         TraseroI.setPower(.3);
-        sleep(1800);
+        sleep(1000);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(300);
+        FrontalD.setPower(-.3);
+        TraseroD.setPower(-.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(.3);
+        sleep(700);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(300);
+        Elevador.setPower(0.15);
+        FrontalD.setPower(-.5);
+        TraseroD.setPower(-.5);
+        FrontalI.setPower(-.5);
+        TraseroI.setPower(-.5);
+        sleep(2100);
+        Elevador.setPower(0);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
+        TraseroI.setPower(0);
+        sleep(300);
+        FrontalD.setPower(-.3);  //movimiento a la Derecha
+        TraseroD.setPower(.3);
+        FrontalI.setPower(.3);
+        TraseroI.setPower(-.3);
+        sleep(2200);
         FrontalD.setPower(0);
         TraseroD.setPower(0);
         FrontalI.setPower(0);
@@ -159,11 +175,13 @@ public class PatoRojoP12 extends LinearOpMode {
         TraseroD.setPower(-.3);
         FrontalI.setPower(-.3);
         TraseroI.setPower(-.3);
-        sleep(900);
+        sleep(2300);
+        FrontalD.setPower(0);
+        TraseroD.setPower(0);
+        FrontalI.setPower(0);
 
-
+        TraseroI.setPower(0);
+        sleep(300);
 
     }
 }
-
-

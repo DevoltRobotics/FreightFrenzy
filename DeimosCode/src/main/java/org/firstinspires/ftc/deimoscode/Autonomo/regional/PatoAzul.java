@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.deimoscode.Autonomo;
+package org.firstinspires.ftc.deimoscode.Autonomo.regional;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

@@ -50,7 +50,7 @@ object Lift {
     @JvmField var pid = PIDFCoefficients(0.004, 0.0, 0.0, 0.0)
 
     @JvmField var power = 0.7
-
+ggit add
     @JvmField var zeroPosition = 0
     @JvmField var lowPosition = 210
     @JvmField var middlePosition = 572

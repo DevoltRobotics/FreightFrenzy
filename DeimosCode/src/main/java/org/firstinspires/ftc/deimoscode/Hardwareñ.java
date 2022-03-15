@@ -13,7 +13,11 @@ import org.firstinspires.ftc.deimoscode.rr.drive.SampleMecanumDrive;
 @Config
 public class Hardwareñ {
 
-    public static PIDCoefficients LIFT_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients LIFT_PID = new PIDCoefficients(0.005, 0, 0);
+
+    public static int HIGH_LIFT_POS = 2360;
+    public static int MID_LIFT_POS = 1600;
+    public static int LOW_LIFT_POS = 1100;
 
     private PIDFController liftController = new PIDFController(LIFT_PID);
 
@@ -24,6 +28,7 @@ public class Hardwareñ {
     public DcMotor Elevador;
     public DcMotor Empuje;
     public Servo Absorber;
+    public Servo Cebollin;
 
 
     public void initHardware(HardwareMap hardwareMap) {
@@ -34,6 +39,7 @@ public class Hardwareñ {
         Elevador = hardwareMap.dcMotor.get("ELE");
         Absorber = hardwareMap.servo.get("Abs");
         Empuje = hardwareMap.dcMotor.get("Emp");
+        Cebollin = hardwareMap.servo.get("Cebollin");
     }
 
     public void updateLift(int targetPos) {
