@@ -28,10 +28,10 @@ public class WHB extends AutonomoBase {
                 .waitSeconds(2.5)
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Absorber.setPosition(1);
+                    hardware.Garra.setPosition(1);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.0, () -> {
-                    hardware.Absorber.setPosition(0);
+                    hardware.Garra.setPosition(0);
                 })
 
                 .waitSeconds(1.5)
