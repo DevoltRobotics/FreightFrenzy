@@ -28,11 +28,11 @@ enum class StartPosition(
 ) {
     DUCKS_NEAREST(
         Pose2d(-35.0, -62.0, Math.toRadians(90.0)), // start
-        Pose2d(-36.0, -34.8, Math.toRadians(210.0)) // start big wobble pose
+        Pose2d(-36.0, -34.3, Math.toRadians(210.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
         Pose2d(1.0, -62.0, Math.toRadians(90.0)),
-        Pose2d(-10.2, -34.0, Math.toRadians(300.0))
+        Pose2d(-10.2, -33.6, Math.toRadians(310.0))
     )
 }
 
@@ -52,7 +52,7 @@ abstract class AutonomoCompletoRojo(
     val cycles: Int = 4
 ) : AutonomoBase() {
 
-    val bigWobblePose = Pose2d(-10.2, -34.0, Math.toRadians(300.0))
+    val bigWobblePose = Pose2d(-10.2, -33.5, Math.toRadians(310.0))
 
     override fun setup() {
         super.setup()
@@ -102,17 +102,17 @@ abstract class AutonomoCompletoRojo(
                     lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 52.5
-                var minusBigWobblePose = Pose2d()
+                var currentGrabCubeX = 55.0
+                var minusBigWobblePose = Pose2d(-4.8, 0.4)
 
                 /*
                 Generating repetitive trajectories for each cycle
                  */
                 repeat(cycles) {
-                    // to the warehouse
+                    // to the warehouse (Casita de los cubos)
                     splineToSplineHeading(
-                        Pose2d(25.0, -63.3, Math.toRadians(0.0)),
-                        Math.toRadians((-5.0))
+                        Pose2d(25.1, -61.9, Math.toRadians(-5.0)),
+                        Math.toRadians((0.0))
                     )
 
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
@@ -120,10 +120,10 @@ abstract class AutonomoCompletoRojo(
                     }
 
                     // grab freight
-                    splineTo(Vector2d(currentGrabCubeX, -63.2), 0.0)
+                    splineTo(Vector2d(currentGrabCubeX, -61.9), 0.0)
 
                     // out of the warehouse
-                    lineTo(Vector2d(18.0, -63.2))
+                    lineTo(Vector2d(18.0, -61.9))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
@@ -136,20 +136,20 @@ abstract class AutonomoCompletoRojo(
                     splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians((90.0)))
                     waitSeconds(0.9) // wait for the freight to fall
 
-                    currentGrabCubeX *= 1.06
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, 0.7))
+                    currentGrabCubeX *= 1.08
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-7.0, 1.5))
                 }
             }
 
             when(parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
-                    // to the warehouse to park
-                    splineToSplineHeading(Pose2d(30.0, -64.0, Math.toRadians(0.0)), 0.0)
+                    // to the warehouse to park (De la casita al parque)
+                    splineToSplineHeading(Pose2d(34.0, -64.0, Math.toRadians(0.0)), 0.0)
                     // park fully
-                    lineTo(Vector2d(50.0, -64.0))
+                    lineTo(Vector2d(57.0, -64.0))
                     // in case alliance wants to park too
-                    strafeTo(Vector2d(50.0, -40.0))
+                    strafeTo(Vector2d(57.0, -40.0))
                 }
                 STORAGE_UNIT -> {
                     lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))

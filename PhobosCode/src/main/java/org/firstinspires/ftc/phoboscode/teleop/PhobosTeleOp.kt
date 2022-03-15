@@ -108,12 +108,12 @@ class PhobosTeleOp : PhobosOpMode() {
         /*
         BOX
          */
-        superGamepad2.scheduleOnPress(Button.RIGHT_TRIGGER,
-                BoxSaveCmd()
-        )
-
         superGamepad2.scheduleOnPress(Button.LEFT_TRIGGER,
                 BoxThrowCmd()
+        )
+
+        superGamepad2.scheduleOnPress(Button.RIGHT_TRIGGER,
+                BoxSaveCmd()
         )
 
         /*
@@ -137,10 +137,12 @@ class PhobosTeleOp : PhobosOpMode() {
         val liftCmd = LiftMoveToPosCmd(liftPosition, telemetry)
 
         - liftCmd.dontBlock()
-        - waitFor { abs(liftCmd.controller.lastError) < 10 }
+        - waitFor { gamepad2.right_trigger > 0.5f }
 
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(3.0)
+
+        - waitFor { gamepad2.left_trigger > 0.5f }
+
         - BoxSaveCmd().dontBlock()
 
         - LiftZeroPosition(telemetry).stopOn { abs(controller.lastError) < 5 }.dontBlock()
