@@ -18,7 +18,7 @@ public class WHR extends AutonomoBase {
     public void run() {
         hardware.drive.setPoseEstimate(startPóse);
 
-        hardware.Absorber.setPosition(0);
+        hardware.Garra.setPosition(0);
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
@@ -35,7 +35,7 @@ public class WHR extends AutonomoBase {
                 .lineToSplineHeading(new Pose2d(-3.8, -6.5, Math.toRadians(90)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Absorber.setPosition(0.7);
+                    hardware.Garra.setPosition(0.7);
                 })
 
                 .waitSeconds(1.5)
@@ -44,7 +44,7 @@ public class WHR extends AutonomoBase {
                 .lineToSplineHeading(new Pose2d(7.0, -64.0, Math.toRadians(0)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    hardware.Absorber.setPosition(0);
+                    hardware.Garra.setPosition(0);
                     liftPos = Hardwareñ.LOW_LIFT_POS;
                 })
 

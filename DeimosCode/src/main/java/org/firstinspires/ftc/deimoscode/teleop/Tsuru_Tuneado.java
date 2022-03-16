@@ -34,7 +34,8 @@ public class Tsuru_Tuneado extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            double Turbo = 1.0 - (gamepad1.left_trigger * 0.7);
+            double Turbo = 0.8
+                    - (gamepad1.left_trigger * 0.7);
 
             hdw.drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * Turbo, -gamepad1.left_stick_x * Turbo,-gamepad1.right_stick_x * Turbo));
 
