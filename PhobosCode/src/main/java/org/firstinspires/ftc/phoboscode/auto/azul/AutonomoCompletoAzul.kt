@@ -26,7 +26,7 @@ enum class StartPosition(
 ) {
     DUCKS_NEAREST(
         Pose2d(-35.0, 62.0, Math.toRadians(270.0)), // start
-        Pose2d(-36.0, 34.3, Math.toRadians(30.0)) // start big wobble pose
+        Pose2d(-25.6, 31.5, Math.toRadians(130.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
         Pose2d(1.0, 62.0, Math.toRadians(270.0)),
@@ -80,13 +80,13 @@ abstract class AutonomoCompletoAzul(
 
             if (doDucks) {
                 // duck spinny boi
-                lineToLinearHeading(Pose2d(-66.5, 59.0, Math.toRadians(0.0)))
+                lineToLinearHeading(Pose2d(-66.5, 60.0, Math.toRadians(40.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    +ACCarouselRotateForwardCmd()
+                    + ACCarouselRotateForwardCmd()
                 }
                 waitSeconds(3.0)
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    +CarouselStopCmd()
+                    + CarouselStopCmd()
                 }
             }
 
@@ -151,7 +151,7 @@ abstract class AutonomoCompletoAzul(
                     strafeTo(Vector2d(44.0, 40.0))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))
+                    lineToSplineHeading(Pose2d(-66.5, 20.0, 0.0))
                 }
             }
         }.build()
