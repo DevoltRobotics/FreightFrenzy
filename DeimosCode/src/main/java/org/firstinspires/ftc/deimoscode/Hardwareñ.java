@@ -17,28 +17,25 @@ public class Hardwareñ {
 
     public static int HIGH_LIFT_POS = 2360;
     public static int MID_LIFT_POS = 1600;
-    public static int LOW_LIFT_POS = 1100;
+    public static int LOW_LIFT_POS = 900;
 
     private PIDFController liftController = new PIDFController(LIFT_PID);
 
     public SampleMecanumDrive drive;
 
     public DcMotor Pato;
-    public DcMotor Extender;
+    public DcMotor jokeis;
     public DcMotor Elevador;
-    public DcMotor Empuje;
-    public Servo Absorber;
+    public Servo Garra;
     public Servo Cebollin;
 
 
     public void initHardware(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-
         Pato = hardwareMap.dcMotor.get("Pato");
-        Extender = hardwareMap.dcMotor.get("EXT");
+        jokeis = hardwareMap.dcMotor.get("BARR");
         Elevador = hardwareMap.dcMotor.get("ELE");
-        Absorber = hardwareMap.servo.get("Abs");
-        Empuje = hardwareMap.dcMotor.get("Emp");
+        Garra = hardwareMap.servo.get("Garra");
         Cebollin = hardwareMap.servo.get("Cebollin");
     }
 
@@ -47,4 +44,4 @@ public class Hardwareñ {
         Elevador.setPower(liftController.update(Elevador.getCurrentPosition()));
     }
 
-}
+}   

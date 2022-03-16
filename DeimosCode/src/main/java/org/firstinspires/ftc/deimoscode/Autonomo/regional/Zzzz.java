@@ -23,22 +23,6 @@ public class Zzzz extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        FrontalD = hardwareMap.dcMotor.get("FD");
-        FrontalI = hardwareMap.dcMotor.get("FI");
-        TraseroD = hardwareMap.dcMotor.get("TD");
-        TraseroI = hardwareMap.dcMotor.get("TI");
-        Elevador = hardwareMap.dcMotor.get("ELE");
-        Extender = hardwareMap.dcMotor.get("EXT");
-        Pato = hardwareMap.dcMotor.get("Pato");
-        Garra = hardwareMap.servo.get("Abs");
-
-        FrontalI.setDirection(DcMotorSimple.Direction.REVERSE);
-        TraseroI.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //FD=TD
-        //TD=FD
-        //FI=TI
-        //TI=FI
 
         waitForStart();
         FrontalD.setPower(1);

@@ -7,10 +7,10 @@ import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition;
 import org.firstinspires.ftc.deimoscode.Hardwareñ;
 import org.firstinspires.ftc.deimoscode.rr.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "WHR", group = "###Autonomus")
-public class WHR extends AutonomoBase {
+@Autonomous(name = "DWHAzul", group = "###Autonomus")
+public class DWHAzul extends AutonomoBase {
 
-    Pose2d startPóse = new Pose2d(11.5, -60, Math.toRadians(0));
+    Pose2d startPóse = new Pose2d(-35, 60, Math.toRadians(180));
 
     int liftPos = 0;
 
@@ -32,29 +32,33 @@ public class WHR extends AutonomoBase {
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(-3.8, -6.5, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-17.5, 14.0, Math.toRadians(270)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Garra.setPosition(0.7);
+                    hardware.Garra.setPosition(0.5);
                 })
 
                 .waitSeconds(1.5)
 
-                //Ir Entrada
-                .lineToSplineHeading(new Pose2d(7.0, -64.0, Math.toRadians(0)))
+                // ir a hacer patos
+                .lineToSplineHeading(new Pose2d(-67.0, 59.0, Math.toRadians(210.0)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Garra.setPosition(0);
                     liftPos = Hardwareñ.LOW_LIFT_POS;
                 })
 
-                .waitSeconds(2)
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    hardware.Pato.setPower(-0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(5, () -> {
+                    hardware.Pato.setPower(0);
+                })
+                .waitSeconds(12)
 
-                // Entrar WH
-                .lineToSplineHeading(new Pose2d(40.0, -64.0, Math.toRadians(0)))
-
-                //Estacionarse
-                .lineToSplineHeading(new Pose2d(65.0, -44.0, Math.toRadians(270)))
+                // estacionarse
+                .lineToSplineHeading(new Pose2d(0.0, 64.0, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(42.0, 64.0, Math.toRadians(180)))
 
                 .build();
 
@@ -72,4 +76,6 @@ public class WHR extends AutonomoBase {
             hardware.updateLift(liftPos);
         }
     }
+
 }
+

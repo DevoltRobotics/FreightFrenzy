@@ -18,7 +18,7 @@ public class SURojo extends AutonomoBase {
     public void run() {
         hardware.drive.setPoseEstimate(startPóse);
 
-        hardware.Absorber.setPosition(0);
+        hardware.Garra.setPosition(0);
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
@@ -32,18 +32,18 @@ public class SURojo extends AutonomoBase {
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(-21.5, -20.0, Math.toRadians(339)))
+                .lineToSplineHeading(new Pose2d(-29, -6.8, Math.toRadians(270)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Absorber.setPosition(0.7);
+                    hardware.Garra.setPosition(0.7);
                 })
                 .waitSeconds(1.5)
 
                 //Ir a Pato
-                .lineToSplineHeading(new Pose2d(-61.5, -60.0, Math.toRadians(330)))
+                .lineToSplineHeading(new Pose2d(-66.5, -60.0, Math.toRadians(330)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    hardware.Absorber.setPosition(0);
+                    hardware.Garra.setPosition(0);
                     liftPos = Hardwareñ.LOW_LIFT_POS;
                 })
 
@@ -56,7 +56,7 @@ public class SURojo extends AutonomoBase {
                 .waitSeconds(5)
 
                 // estacionarse
-                .lineToSplineHeading(new Pose2d(-60.0, -29.0, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(-66.0, -29.0, Math.toRadians(0)))
                 .build();
 
         while(!isStarted() && !isStopRequested()) {
