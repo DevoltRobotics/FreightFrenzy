@@ -38,9 +38,19 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
     int numFramesWithoutDetection = 0;
 
     Telemetry telemetry;
+    boolean useOneDivider = false;
+
+    public TeamMarkerAprilTagPipeline(Telemetry telemetry, boolean useOneDivider) {
+        this.telemetry = telemetry;
+        this.useOneDivider = useOneDivider;
+    }
 
     public TeamMarkerAprilTagPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
+    }
+
+    public TeamMarkerAprilTagPipeline(boolean useOneDivider) {
+        this(null, useOneDivider);
     }
 
     public TeamMarkerAprilTagPipeline() {
@@ -63,7 +73,9 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
         rightRectangle.height = output.rows();
 
         Imgproc.rectangle(output, leftRectangle, LINE_COLOR);
-        Imgproc.rectangle(output, rightRectangle, LINE_COLOR);
+        if(!useOneDivider) {
+            Imgproc.rectangle(output, rightRectangle, LINE_COLOR);
+        }
 
         synchronized (positionLock) {
             List<AprilTagDetection> detections = getDetectionsUpdate();
@@ -78,6 +90,8 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
                     if(numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                         setDecimation(DECIMATION_LOW);
                     }
+
+                    position = TeamMarkerPosition.RIGHT;
                 } else {
                     numFramesWithoutDetection = 0;
 

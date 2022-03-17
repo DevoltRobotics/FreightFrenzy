@@ -2,7 +2,7 @@ package org.firstinspires.ftc.phoboscode.auto.rojo
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 
-@Autonomous(name = "R-Completo Izquierda Pato", group = "Final")
+@Autonomous(name = "R-Izquierda Pato", group = "Final")
 class AutonomoCompletoRojoIzquierdaPato : AutonomoCompletoRojo(
     startPosition = StartPosition.DUCKS_NEAREST,
     parkPosition = ParkPosition.STORAGE_UNIT,
@@ -16,7 +16,7 @@ class AutonomoCompletoRojoIzquierda : AutonomoCompletoRojo(
     doDucks = false, cycles = 1
 )
 
-@Autonomous(name = "R-Completo Derecha Pato", group = "Final")
+@Autonomous(name = "R-Derecha Pato", group = "Final")
 class AutonomoCompletoRojoDerechaPato : AutonomoCompletoRojo(
     startPosition = StartPosition.WAREHOUSE_NEAREST,
     parkPosition = ParkPosition.STORAGE_UNIT,
