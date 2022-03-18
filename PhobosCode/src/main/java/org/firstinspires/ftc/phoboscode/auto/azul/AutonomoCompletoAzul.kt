@@ -26,11 +26,11 @@ enum class StartPosition(
 ) {
     DUCKS_NEAREST(
         Pose2d(-35.0, 62.0, Math.toRadians(270.0)), // start
-        Pose2d(-36.0, 34.3, Math.toRadians(30.0)) // start big wobble pose
+        Pose2d(-25.6, 31.5, Math.toRadians(130.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
         Pose2d(1.0, 62.0, Math.toRadians(270.0)),
-        Pose2d(-10.2, 33.6, Math.toRadians(130.0))
+        Pose2d(-10.2, 33.6, Math.toRadians(50.0))
     )
 }
 
@@ -45,7 +45,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase() {
 
-    val bigWobblePose = Pose2d(-10.2, 33.6, Math.toRadians(130.0))
+    val bigWobblePose = Pose2d(-10.2, 33.6, Math.toRadians(50.0))
 
     override fun setup() {
         super.setup()
@@ -80,13 +80,13 @@ abstract class AutonomoCompletoAzul(
 
             if (doDucks) {
                 // duck spinny boi
-                lineToLinearHeading(Pose2d(-66.5, 59.0, Math.toRadians(0.0)))
+                lineToLinearHeading(Pose2d(-66.5, 60.0, Math.toRadians(40.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    +ACCarouselRotateForwardCmd()
+                    + ACCarouselRotateForwardCmd()
                 }
                 waitSeconds(3.0)
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    +CarouselStopCmd()
+                    + CarouselStopCmd()
                 }
             }
 
@@ -97,8 +97,8 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 55.0
-                var minusBigWobblePose = Pose2d(-4.8, 0.4)
+                var currentGrabCubeX = 48.0
+                var minusBigWobblePose = Pose2d(-1.0, 2.0)
 
                 /*
                 Generating repetitive trajectories for each cycle
@@ -106,36 +106,33 @@ abstract class AutonomoCompletoAzul(
                 repeat(cycles) {
                     // to the warehouse (Casita de los cubos)
                     splineToSplineHeading(
-                        Pose2d(25.1, 61.9, Math.toRadians(-5.0)),
-                        Math.toRadians((0.0))
+                        Pose2d(21.0, 65.0, Math.toRadians(0.0)),
+                        Math.toRadians((8.0))
                     )
 
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
-                        +IntakeWithColorSensorCmd(1.0)
+                        + IntakeWithColorSensorCmd(1.0)
                     }
 
                     // grab freight
-                    splineTo(Vector2d(currentGrabCubeX, 61.9), 0.0)
+                    lineToLinearHeading(Pose2d(currentGrabCubeX, 65.0, Math.toRadians(-5.0)))
 
                     // out of the warehouse
-                    lineTo(Vector2d(18.0, 61.9))
+                    lineToLinearHeading(Pose2d(5.0, 65.0, Math.toRadians(-0.0)))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
-                        +IntakeStopCmd()
-                        +LiftMoveToPosCmd(LiftPosition.HIGH)
+                        + IntakeStopCmd()
+                        + LiftMoveToPosCmd(LiftPosition.HIGH)
                     }
 
                     UNSTABLE_addTemporalMarkerOffset(1.8) {
-                        +freightDropSequence()
+                        + freightDropSequence()
                     }
                     // put freight in big wobble
-                    splineToSplineHeading(
-                        bigWobblePose.minus(minusBigWobblePose),
-                        Math.toRadians((90.0))
-                    )
+                    lineToLinearHeading(bigWobblePose.minus(minusBigWobblePose))
                     waitSeconds(0.9) // wait for the freight to fall
 
                     currentGrabCubeX *= 1.08
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-7.0, -1.5))
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, -0.3))
                 }
             }
 
@@ -143,14 +140,18 @@ abstract class AutonomoCompletoAzul(
                 NONE -> this
                 WAREHOUSE -> {
                     // to the warehouse to park (De la casita al parque)
-                    splineToSplineHeading(Pose2d(34.0, -64.0, Math.toRadians(0.0)), 0.0)
+                    splineToSplineHeading(
+                        Pose2d(21.0, 65.0, Math.toRadians(0.0)),
+                        Math.toRadians((8.0))
+                    )
+
                     // park fully
-                    lineTo(Vector2d(57.0, -64.0))
+                    splineTo(Vector2d(44.0, 64.0), Math.toRadians(0.0))
                     // in case alliance wants to park too
-                    strafeTo(Vector2d(57.0, -40.0))
+                    strafeTo(Vector2d(44.0, 40.0))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))
+                    lineToSplineHeading(Pose2d(-66.5, 20.0, 0.0))
                 }
             }
         }.build()

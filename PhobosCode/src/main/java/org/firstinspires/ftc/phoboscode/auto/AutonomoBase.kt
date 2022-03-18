@@ -25,6 +25,7 @@ abstract class AutonomoBase(
     override fun setup() {
         if(needsVision) {
             vision.initWebcamVision(hardwareMap, "Webcam 1", OpenCvCameraRotation.UPRIGHT)
+            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.38;
 
             FtcDashboard.getInstance().startCameraStream(vision.camera, 0.0)
         }
