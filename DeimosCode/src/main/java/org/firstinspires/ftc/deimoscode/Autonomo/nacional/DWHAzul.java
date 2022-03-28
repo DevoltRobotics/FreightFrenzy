@@ -22,12 +22,12 @@ public class DWHAzul extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
-                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
                         liftPos = Hardwareñ.MID_LIFT_POS;
-                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
-                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    } else {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
                     }
                 })
 
@@ -58,7 +58,7 @@ public class DWHAzul extends AutonomoBase {
 
                 // estacionarse
                 .lineToSplineHeading(new Pose2d(0.0, 64.0, Math.toRadians(180)))
-                .lineToSplineHeading(new Pose2d(42.0, 64.0, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(45.0, 64.0, Math.toRadians(180)))
 
                 .build();
 

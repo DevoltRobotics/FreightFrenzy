@@ -41,6 +41,7 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
     Telemetry telemetry;
     boolean useOneDivider = false;
+
     boolean defaultToRight = false;
 
     public TeamMarkerAprilTagPipeline(Telemetry telemetry, boolean useOneDivider) {
@@ -55,7 +56,6 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
     public TeamMarkerAprilTagPipeline(boolean useOneDivider) {
         this(null, useOneDivider);
     }
-
 
     public TeamMarkerAprilTagPipeline(boolean useOneDivider, boolean defaultToRight) {
         this(null, useOneDivider);
