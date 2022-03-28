@@ -31,7 +31,7 @@ class LiftSubsystem(val liftMotor: DcMotor) : DeltaSubsystem() {
 
     fun stopAndReset() {
         liftMotor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        liftMotor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        liftMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
 
         offset = 0
     }
@@ -50,10 +50,7 @@ object Lift {
     @JvmField var pid = PIDFCoefficients(0.004, 0.0, 0.0, 0.0)
 
     @JvmField var power = 0.7
-<<<<<<< HEAD
-=======
 
->>>>>>> e137b8922ee764d919f3e4473dda0a8c6e711c23
     @JvmField var zeroPosition = 0
     @JvmField var lowPosition = 210
     @JvmField var middlePosition = 572

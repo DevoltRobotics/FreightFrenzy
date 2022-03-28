@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import org.firstinspires.ftc.commoncode.util.angleAdd
+import org.firstinspires.ftc.commoncode.vision.TeamMarkerAprilTagPipeline
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.*
 import org.firstinspires.ftc.phoboscode.auto.AutonomoBase
@@ -50,12 +51,16 @@ abstract class AutonomoCompletoRojo(
     val alliance: Alliance = Alliance.RED,
     val doDucks: Boolean = true,
     val cycles: Int = 4
-) : AutonomoBase() {
+) : AutonomoBase(true, false) {
 
-    val bigWobblePose = Pose2d(-10.2, -33.5, Math.toRadians(310.0))
+    val bigWobblePose = Pose2d(-10.2, -33.5, Math.toRadians(298.0))
 
     override fun setup() {
         super.setup()
+
+        if(startPosition == StartPosition.WAREHOUSE_NEAREST) {
+            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.6
+        }
 
         drive.poseEstimate = startPosition.startPose
         liftSub.stopAndReset()
@@ -85,7 +90,7 @@ abstract class AutonomoCompletoRojo(
 
             if(doDucks) {
                 // duck spinny boi
-                lineToLinearHeading(Pose2d(-66.5, -59.0, Math.toRadians(180.0)))
+                lineToLinearHeading(Pose2d(-66.5, -60.5, Math.toRadians(180.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
                     + ACCarouselRotateForwardCmd()
                 }
@@ -103,7 +108,7 @@ abstract class AutonomoCompletoRojo(
                 }
 
                 var currentGrabCubeX = 55.0
-                var minusBigWobblePose = Pose2d(-4.8, 0.4)
+                var minusBigWobblePose = Pose2d(-6.0, 0.4)
 
                 /*
                 Generating repetitive trajectories for each cycle

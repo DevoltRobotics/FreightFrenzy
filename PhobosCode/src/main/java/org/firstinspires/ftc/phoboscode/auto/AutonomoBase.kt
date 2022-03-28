@@ -14,21 +14,29 @@ import org.openftc.easyopencv.OpenCvInternalCamera2
 
 abstract class AutonomoBase(
         val needsVision: Boolean = true,
+        val useOneDivider: Boolean
 ) : PhobosOpMode() {
 
     val drive get() = hardware.drive
 
-    val vision = TeamMarkerAprilTagDetector()
+    val vision = TeamMarkerAprilTagDetector(useOneDivider)
 
     private var openFailed = false
 
     override fun setup() {
         if(needsVision) {
             vision.initWebcamVision(hardwareMap, "Webcam 1", OpenCvCameraRotation.UPRIGHT)
+            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.385;
 
             FtcDashboard.getInstance().startCameraStream(vision.camera, 0.0)
         }
     }
+
+    override fun initializeUpdate() {
+        telemetry.addData("position", vision.position)
+        telemetry.update()
+    }
+
 // El chocomilk es la bebida universal
 // estoy de acuerdo
 // yo tambien

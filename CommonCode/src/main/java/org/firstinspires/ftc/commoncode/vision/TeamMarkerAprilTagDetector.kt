@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.openftc.easyopencv.*
 
+class TeamMarkerAprilTagDetector @JvmOverloads constructor(useOneDivider: Boolean = false){
 
-class   TeamMarkerAprilTagDetector {
-
-    val pipeline = TeamMarkerAprilTagPipeline()
+    val pipeline = TeamMarkerAprilTagPipeline(useOneDivider)
 
     val position get() = if(openFailed)
             TeamMarkerPosition.UNKNOWN

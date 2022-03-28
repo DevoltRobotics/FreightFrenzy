@@ -31,7 +31,9 @@ abstract class DeltaOpMode : LinearOpMode() {
         superGamepad1.attachToScheduler()
         superGamepad2.attachToScheduler()
 
-        waitForStart()
+        while(!isStarted && !isStopRequested) {
+            initializeUpdate()
+        }
 
         if(isStopRequested) return
 
@@ -57,6 +59,8 @@ abstract class DeltaOpMode : LinearOpMode() {
     }
 
     abstract fun initialize()
+
+    open fun initializeUpdate() { }
 
     open fun begin() { }
 

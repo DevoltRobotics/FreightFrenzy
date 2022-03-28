@@ -5,6 +5,7 @@ package org.firstinspires.ftc.phoboscode.auto.azul
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
+import org.firstinspires.ftc.commoncode.vision.TeamMarkerAprilTagPipeline
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.LEFT
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.MIDDLE
@@ -43,12 +44,16 @@ abstract class AutonomoCompletoAzul(
         val parkPosition: ParkPosition = WAREHOUSE,
         val doDucks: Boolean = true,
         val cycles: Int = 4
-) : AutonomoBase() {
+) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
     val bigWobblePose = Pose2d(-10.2, 33.6, Math.toRadians(50.0))
 
     override fun setup() {
         super.setup()
+
+        if(startPosition == StartPosition.WAREHOUSE_NEAREST) {
+            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.6
+        }
 
         drive.poseEstimate = startPosition.startPose
         liftSub.stopAndReset()
@@ -62,7 +67,7 @@ abstract class AutonomoCompletoAzul(
         drive.trajectorySequenceBuilder(startPosition.startPose).run {
             // put X cube in big wobble
             UNSTABLE_addTemporalMarkerOffset(0.0) {
-                +LiftMoveToPosCmd(
+                + LiftMoveToPosCmd(
                     when (teamMarkerPosition) { // mapping barcode position to lift height
                         LEFT -> LiftPosition.LOW
                         MIDDLE -> LiftPosition.MID

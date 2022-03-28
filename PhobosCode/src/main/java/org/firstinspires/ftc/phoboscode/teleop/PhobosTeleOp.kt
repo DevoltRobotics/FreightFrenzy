@@ -9,10 +9,7 @@ import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.commoncode.command.MecanumFieldCentricDriveCommand
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretIncrementalMoveCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorExtendCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorSaveCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorStopCmd
+import org.firstinspires.ftc.phoboscode.command.capturret.*
 import org.firstinspires.ftc.phoboscode.command.carousel.*
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
@@ -53,6 +50,11 @@ class PhobosTeleOp : PhobosOpMode() {
         superGamepad2.scheduleOn(Button.Y,
             CapTurretTapeMotorSaveCmd(),
             CapTurretTapeMotorStopCmd()
+        )
+
+        superGamepad2.scheduleOn(Button.DPAD_LEFT,
+            CapTurretTapeMotorMoveCmd(1.0),
+            CapTurretTapeMotorMoveCmd(0.0),
         )
 
         /*

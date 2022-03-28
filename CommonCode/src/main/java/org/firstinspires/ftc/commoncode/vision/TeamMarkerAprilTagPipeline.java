@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.commoncode.vision;
 
-//import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Mat;
@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.List;
 
-//@Config
+@Config
 public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
     public static double LEFT_LINE_PERC = 0.32;
@@ -37,10 +37,29 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
     int numFramesWithoutDetection = 0;
 
+    boolean hasDetected = false;
+
     Telemetry telemetry;
+    boolean useOneDivider = false;
+    boolean defaultToRight = false;
+
+    public TeamMarkerAprilTagPipeline(Telemetry telemetry, boolean useOneDivider) {
+        this.telemetry = telemetry;
+        this.useOneDivider = useOneDivider;
+    }
 
     public TeamMarkerAprilTagPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
+    }
+
+    public TeamMarkerAprilTagPipeline(boolean useOneDivider) {
+        this(null, useOneDivider);
+    }
+
+
+    public TeamMarkerAprilTagPipeline(boolean useOneDivider, boolean defaultToRight) {
+        this(null, useOneDivider);
+        this.defaultToRight = defaultToRight;
     }
 
     public TeamMarkerAprilTagPipeline() {
@@ -63,7 +82,9 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
         rightRectangle.height = output.rows();
 
         Imgproc.rectangle(output, leftRectangle, LINE_COLOR);
-        Imgproc.rectangle(output, rightRectangle, LINE_COLOR);
+        if(!useOneDivider) {
+            Imgproc.rectangle(output, rightRectangle, LINE_COLOR);
+        }
 
         synchronized (positionLock) {
             List<AprilTagDetection> detections = getDetectionsUpdate();
@@ -77,6 +98,10 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
                     // so we can hopefully pick one up if we're e.g. far back
                     if(numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                         setDecimation(DECIMATION_LOW);
+                    }
+
+                    if(!hasDetected && position == TeamMarkerPosition.UNKNOWN) {
+                        position = TeamMarkerPosition.RIGHT;
                     }
                 } else {
                     numFramesWithoutDetection = 0;
@@ -106,12 +131,22 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
                         if (detection.id == APRILTAG_ID) {
                             Point p = detection.center;
 
-                            if (p.x < leftLineX && p.x < rightLineX) {
-                                position = TeamMarkerPosition.LEFT;
-                            } else if (p.x > leftLineX && p.x < rightLineX) {
-                                position = TeamMarkerPosition.MIDDLE;
+                            if(!useOneDivider) {
+                                if (p.x < leftLineX && p.x < rightLineX) {
+                                    position = TeamMarkerPosition.LEFT;
+                                } else if (p.x > leftLineX && p.x < rightLineX) {
+                                    position = TeamMarkerPosition.MIDDLE;
+                                } else {
+                                    position = TeamMarkerPosition.RIGHT;
+                                }
                             } else {
-                                position = TeamMarkerPosition.RIGHT;
+                                if (p.x < leftLineX) {
+                                    position = TeamMarkerPosition.MIDDLE;
+                                } else if (p.x > leftLineX) {
+                                    position = TeamMarkerPosition.RIGHT;
+                                } else {
+                                    position = TeamMarkerPosition.LEFT;
+                                }
                             }
 
                             corner = detection.corners[3];
@@ -135,6 +170,10 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
         if(telemetry != null) {
             telemetry.addData("Position", position);
             telemetry.update();
+        }
+
+        if(position != TeamMarkerPosition.UNKNOWN) {
+            hasDetected = true;
         }
 
         return output;
