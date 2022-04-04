@@ -17,24 +17,18 @@ abstract class PhobosOpMode : CommonOpMode() {
         private set
     lateinit var boxSub: BoxSubsystem
         private set
-    lateinit var cappingTurretSub: CappingTurretSubsystem
-        private set
-    lateinit var cappingTurretTapeSub: CappingTurretTapeSubsystem
+    lateinit var capArmSub: CapArmSubsystem
         private set
 
     override fun initialize() {
         super.initialize()
 
         mecanumSub.init()
-        intakeSub = IntakeSubsystem(hardware.intakeMotor, hardware.intakeColorSensor)
+        intakeSub = IntakeSubsystem(hardware.intakeMotor, hardware.intakePushServo, hardware.intakeColorSensor)
         carouselSub = CarouselSubsystem(hardware.carouselMotor, telemetry)
         liftSub = LiftSubsystem(hardware.sliderMotor)
         boxSub = BoxSubsystem(hardware.boxServo)
-        cappingTurretSub = CappingTurretSubsystem(
-            hardware.turretYawServo,
-            hardware.turretPitchServo
-        )
-        cappingTurretTapeSub = CappingTurretTapeSubsystem(hardware.turretTapeMotor)
+        capArmSub = CapArmSubsystem(hardware.capArmMotor)
 
         setup()
     }

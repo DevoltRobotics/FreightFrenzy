@@ -16,11 +16,9 @@ class Hardware : SimpleHardware() {
     val sliderMotor by hardware<DcMotor>("sl")
     val boxServo by hardware<Servo>("bx")
 
-    val turretYawServo by hardware<Servo>("ty")
-    val turretPitchServo by hardware<Servo>("tp")
-
-    val turretTapeMotor by hardware<DcMotor>("tt")
-
+    val intakePushServo by hardware<Servo>("ip")
     val intakeColorSensor by hardware<RevColorSensorV3>("ic")
+
+    val capArmMotor by hardware<DcMotor>("cp")
 
 }

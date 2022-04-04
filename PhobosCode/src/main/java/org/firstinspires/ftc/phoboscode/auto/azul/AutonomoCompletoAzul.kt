@@ -59,10 +59,6 @@ abstract class AutonomoCompletoAzul(
         liftSub.stopAndReset()
     }
 
-    override fun update() {
-        lastKnownRobotPose = drive.poseEstimate
-    }
-
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
         drive.trajectorySequenceBuilder(startPosition.startPose).run {
             // put X cube in big wobble

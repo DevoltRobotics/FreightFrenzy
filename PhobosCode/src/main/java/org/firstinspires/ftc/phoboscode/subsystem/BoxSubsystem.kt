@@ -19,5 +19,5 @@ class BoxSubsystem(val boxServo: Servo) : DeltaSubsystem() {
 @Config
 object Box {
     @JvmField var throwPosition = 0.76
-    @JvmField var savePosition = 0.28
+    @JvmField var savePosition = 0.25
 }

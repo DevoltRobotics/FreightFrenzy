@@ -66,10 +66,6 @@ abstract class AutonomoCompletoRojo(
         liftSub.stopAndReset()
     }
 
-    override fun update() {
-        lastKnownRobotPose = drive.poseEstimate
-    }
-
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
         drive.trajectorySequenceBuilder(startPosition.startPose).run {
             // put X cube in big wobble
@@ -107,8 +103,8 @@ abstract class AutonomoCompletoRojo(
                     lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 55.0
-                var minusBigWobblePose = Pose2d(-6.0, 0.4)
+                var currentGrabCubeX = 51.5
+                var minusBigWobblePose = Pose2d(-2.0, 0.4)
 
                 /*
                 Generating repetitive trajectories for each cycle

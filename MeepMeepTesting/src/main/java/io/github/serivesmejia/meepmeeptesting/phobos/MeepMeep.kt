@@ -38,17 +38,23 @@ fun main() {
         .setBackgroundAlpha(1f)
 
     val robotPhobos = DefaultBotBuilder(mm)
-        .setDimensions(12.5, 18.0)
+        .setDimensions(12.25, 18.0)
         .setColorScheme(ColorSchemeRedDark())
         // Set constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 15.0)
         .setStartPose(Pose2d(13.0, 65.0, Math.toRadians(0.0)))
         .followTrajectorySequence { drive: DriveShim ->
             drive.trajectorySequenceBuilder(Pose2d(13.0, 65.0, Math.toRadians(0.0))).run {
-                splineToLinearHeading(
-                    Pose2d(-10.2, 33.6, Math.toRadians(50.0)).minus(Pose2d(-4.8, 2.0)),
-                    Math.toRadians(0.0)
+                lineToLinearHeading(
+                    Pose2d(1.4, 33.6, Math.toRadians(40.0)),
                 )
+
+                lineToSplineHeading(
+                    Pose2d(12.0, 56.0, Math.toRadians(0.0))//,
+                    //Math.toRadians(0.0)
+                )
+
+                splineToSplineHeading(Pose2d(51.0, 64.0, Math.toRadians(0.0)), Math.toRadians(0.0))
             }.build()
         }
 
