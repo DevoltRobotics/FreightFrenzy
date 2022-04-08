@@ -48,7 +48,6 @@ enum class Alliance {
 abstract class AutonomoCompletoRojo(
     val startPosition: StartPosition,
     val parkPosition: ParkPosition = WAREHOUSE,
-    val alliance: Alliance = Alliance.RED,
     val doDucks: Boolean = true,
     val cycles: Int = 4
 ) : AutonomoBase(true, false) {
@@ -124,7 +123,7 @@ abstract class AutonomoCompletoRojo(
                     splineTo(Vector2d(currentGrabCubeX, -61.9), 0.0)
 
                     // out of the warehouse
-                    lineTo(Vector2d(18.0, -61.9))
+                    splineToConstantHeading(Vector2d(18.0, -61.9), Math.toRadians(0.0))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)

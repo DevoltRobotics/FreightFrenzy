@@ -9,6 +9,7 @@ import org.firstinspires.ftc.commoncode.command.MecanumFieldCentricDriveCommand
 import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
+import org.firstinspires.ftc.phoboscode.command.caparm.CapArmMoveCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.*
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
@@ -101,6 +102,12 @@ class PhobosTeleOp : PhobosOpMode() {
         superGamepad2.scheduleOnPress(Button.RIGHT_TRIGGER,
             BoxSaveCmd()
         )
+
+        /*
+        CAP ARM
+         */
+
+        + CapArmMoveCmd { -gamepad2.left_stick_y.toDouble() * 0.5 }
 
         /*
         TELEMETRY LOGGING

@@ -45,16 +45,23 @@ fun main() {
         .setStartPose(Pose2d(13.0, 65.0, Math.toRadians(0.0)))
         .followTrajectorySequence { drive: DriveShim ->
             drive.trajectorySequenceBuilder(Pose2d(13.0, 65.0, Math.toRadians(0.0))).run {
-                lineToLinearHeading(
+                setReversed(true)
+
+                splineToSplineHeading(
                     Pose2d(1.4, 33.6, Math.toRadians(40.0)),
+                    Math.toRadians(270.0)
                 )
 
+                setReversed(false)
+
                 lineToSplineHeading(
-                    Pose2d(12.0, 56.0, Math.toRadians(0.0))//,
+                    Pose2d(5.0, 53.0, Math.toRadians(0.0))//,
                     //Math.toRadians(0.0)
                 )
 
-                splineToSplineHeading(Pose2d(51.0, 64.0, Math.toRadians(0.0)), Math.toRadians(0.0))
+                splineToConstantHeading(Vector2d(41.0, 63.0), Math.toRadians(0.0))
+
+                lineTo(Vector2d(50.0, 63.0))
             }.build()
         }
 

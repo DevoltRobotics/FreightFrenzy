@@ -19,7 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 class IntakeSubsystem(
     val intakeMotor: DcMotor,
     val pushServo: Servo,
-    val colorSensor: RevColorSensorV3
+    val colorSensor: RevColorSensorV3,
+    var disableServoWhenDropping: Boolean = true
 ) : DeltaSubsystem() {
 
     lateinit var liftSub: LiftSubsystem
@@ -47,7 +48,7 @@ class IntakeSubsystem(
 
         if(lastDistance >= intakedDistance) {
             lowDistanceTimer.reset()
-        } else if(lowDistanceTimer.seconds() > 0.5 && !pushing && intakeMotor.power >= 0.0 && liftSub.motorTicks <= Lift.lowPosition / 2.0) {
+        } else if(lowDistanceTimer.seconds() > 0.5 && !pushing && (intakeMotor.power >= 0.0 || !disableServoWhenDropping) && liftSub.motorTicks <= Lift.lowPosition / 2.0) {
             + pushServoSequence()
             pushingAutomatically = true
         } else if((liftSub.motorTicks > Lift.lowPosition / 2.0 || intakeMotor.power < 0.0) && pushingAutomatically) {

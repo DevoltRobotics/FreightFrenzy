@@ -13,7 +13,7 @@ class AutonomoCompletoAzulIzquierdaPato : AutonomoCompletoAzul(
 class AutonomoCompletoAzulIzquierda : AutonomoCompletoAzul(
     startPosition = StartPosition.WAREHOUSE_NEAREST,
     parkPosition = ParkPosition.WAREHOUSE,
-    doDucks = false, cycles = 1
+    doDucks = false, cycles = 2
 )
 
 @Autonomous(name = "A-Cubo Izquierda", group = "Final")

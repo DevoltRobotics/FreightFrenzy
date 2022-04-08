@@ -19,6 +19,8 @@ import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeWithColorSensorCmd
 import org.firstinspires.ftc.phoboscode.command.lift.LiftMoveToPosCmd
 import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
+import org.firstinspires.ftc.phoboscode.rr.drive.DriveConstants
+import org.firstinspires.ftc.phoboscode.rr.drive.SampleMecanumDrive
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 
 enum class StartPosition(
@@ -30,8 +32,8 @@ enum class StartPosition(
         Pose2d(-25.6, 31.5, Math.toRadians(130.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(1.0, 62.0, Math.toRadians(270.0)),
-        Pose2d(-10.2, 33.6, Math.toRadians(50.0))
+        Pose2d(13.0, 65.0, Math.toRadians(270.0)),
+        Pose2d(1.4, 33.6, Math.toRadians(40.0))
     )
 }
 
@@ -46,7 +48,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
-    val bigWobblePose = Pose2d(-10.2, 33.6, Math.toRadians(50.0))
+    val bigWobblePose = Pose2d(1.4, 33.6, Math.toRadians(40.0))
 
     override fun setup() {
         super.setup()
@@ -70,6 +72,8 @@ abstract class AutonomoCompletoAzul(
                         else -> LiftPosition.HIGH
                     }
                 )
+
+                + intakeFallSequence()
             }
             UNSTABLE_addTemporalMarkerOffset(2.5) {
                 + freightDropSequence()
@@ -98,28 +102,33 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 48.0
-                var minusBigWobblePose = Pose2d(-1.0, 2.0)
+                var currentGrabCubeX = 56.0
+                var minusBigWobblePose = Pose2d(0.0, 0.5)
 
                 /*
                 Generating repetitive trajectories for each cycle
                  */
                 repeat(cycles) {
-                    // to the warehouse (Casita de los cubos)
-                    splineToSplineHeading(
-                        Pose2d(21.0, 65.0, Math.toRadians(0.0)),
-                        Math.toRadians((8.0))
+                    // align to wall
+                    lineToSplineHeading(
+                        Pose2d(-1.0, 56.0, Math.toRadians(0.0))//,
+                        //Math.toRadians(0.0)
                     )
 
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeWithColorSensorCmd(1.0)
                     }
 
-                    // grab freight
-                    lineToLinearHeading(Pose2d(currentGrabCubeX, 65.0, Math.toRadians(-5.0)))
+                    // go inside (that's what she said)
+                    splineToConstantHeading(Vector2d(41.0, 66.8), Math.toRadians(0.0))
+
+                    // go even further inside
+                    lineTo(Vector2d(currentGrabCubeX, 65.0))
+
+                    waitSeconds(0.2)
 
                     // out of the warehouse
-                    lineToLinearHeading(Pose2d(5.0, 65.0, Math.toRadians(-0.0)))
+                    lineTo(Vector2d(5.0, 65.0))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
@@ -129,27 +138,32 @@ abstract class AutonomoCompletoAzul(
                         + freightDropSequence()
                     }
                     // put freight in big wobble
-                    lineToLinearHeading(bigWobblePose.minus(minusBigWobblePose))
+                    splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(270.0))
                     waitSeconds(0.9) // wait for the freight to fall
 
                     currentGrabCubeX *= 1.08
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-3.0, -0.3))
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-5.0, -0.3))
                 }
             }
 
             when (parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
-                    // to the warehouse to park (De la casita al parque)
-                    splineToSplineHeading(
-                        Pose2d(21.0, 65.0, Math.toRadians(0.0)),
-                        Math.toRadians((8.0))
+                    // align to wall
+                    lineToSplineHeading(
+                        Pose2d(2.0, 53.0, Math.toRadians(0.0)),
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                     )
 
-                    // park fully
-                    splineTo(Vector2d(44.0, 64.0), Math.toRadians(0.0))
+                    // go inside
+                    splineToConstantHeading(Vector2d(52.0, 65.0), Math.toRadians(0.0),
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                    )
+
                     // in case alliance wants to park too
-                    strafeTo(Vector2d(44.0, 40.0))
+                    splineToSplineHeading(Pose2d(60.0, 39.0, Math.toRadians(90.0)), Math.toRadians(90.0))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
                     lineToSplineHeading(Pose2d(-66.5, 20.0, 0.0))

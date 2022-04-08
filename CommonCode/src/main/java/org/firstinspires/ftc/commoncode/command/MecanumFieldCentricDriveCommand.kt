@@ -20,7 +20,7 @@ class MecanumFieldCentricDriveCommand(
             gamepad.left_trigger
         } else gamepad.right_trigger
 
-        val turbo = 0.7 * if(applyTurboWithTriggers) {
+        val turbo = if(applyTurboWithTriggers) {
             1.0 - (triggerValue * 0.8)
         } else 1.0
 

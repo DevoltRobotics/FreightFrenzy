@@ -12,7 +12,7 @@ class TeamMarkerAprilTagDetector @JvmOverloads constructor(useOneDivider: Boolea
             TeamMarkerPosition.UNKNOWN
         else pipeline.lastPosition
 
-    lateinit var camera: OpenCvCamera
+    lateinit var camera: OpenCvWebcam
         private set
 
     private var openFailed = false
@@ -31,17 +31,6 @@ class TeamMarkerAprilTagDetector @JvmOverloads constructor(useOneDivider: Boolea
         })
     }
 
-    fun initInternalCameraVision(
-            hardwareMap: HardwareMap,
-            cameraDirection: OpenCvInternalCamera2.CameraDirection = OpenCvInternalCamera2.CameraDirection.BACK,
-            cameraOrientation: OpenCvCameraRotation = OpenCvCameraRotation.SIDEWAYS_LEFT
-    ) {
-        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
-        camera = OpenCvCameraFactory.getInstance().createInternalCamera2(cameraDirection, cameraMonitorViewId)
-
-        init(cameraOrientation)
-    }
-
 
     fun initWebcamVision(
         hardwareMap: HardwareMap,
@@ -55,7 +44,9 @@ class TeamMarkerAprilTagDetector @JvmOverloads constructor(useOneDivider: Boolea
     }
 
     fun close() {
-        camera.stopStreaming()
+        if(camera.fps > 0) {
+            camera.stopStreaming()
+        }
     }
 
 }
