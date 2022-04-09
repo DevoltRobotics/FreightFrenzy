@@ -42,10 +42,10 @@ fun main() {
         .setColorScheme(ColorSchemeRedDark())
         // Set constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 15.0)
-        .setStartPose(Pose2d(13.0, 65.0, Math.toRadians(0.0)))
+        .setStartPose(Pose2d(-36.0, -34.3, Math.toRadians(210.0)))
         .followTrajectorySequence { drive: DriveShim ->
-            drive.trajectorySequenceBuilder(Pose2d(13.0, 65.0, Math.toRadians(0.0))).run {
-                setReversed(true)
+            drive.trajectorySequenceBuilder(Pose2d(-36.0, -34.3, Math.toRadians(210.0))).run {
+                /*setReversed(true)
 
                 splineToSplineHeading(
                     Pose2d(1.4, 33.6, Math.toRadians(40.0)),
@@ -61,7 +61,9 @@ fun main() {
 
                 splineToConstantHeading(Vector2d(41.0, 63.0), Math.toRadians(0.0))
 
-                lineTo(Vector2d(50.0, 63.0))
+                lineTo(Vector2d(50.0, 63.0))*/
+
+                splineToSplineHeading(Pose2d(-58.5, -58.5, Math.toRadians(180.0)), Math.toRadians(180.0))
             }.build()
         }
 

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.phoboscode.auto.localizer.ComplementaryVuforiaLocalizer
 import org.firstinspires.ftc.phoboscode.command.carousel.CarouselMoveCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.CarouselStopCmd
 import org.firstinspires.ftc.phoboscode.rr.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.openftc.easyopencv.OpenCvCamera
@@ -37,18 +38,12 @@ abstract class AutonomoBase(
                 "id",
                 hardwareMap.appContext.packageName
             )
-            viewports = OpenCvCameraFactory.getInstance()
-                .splitLayoutForMultipleViewports(
-                    cameraMonitorViewId,
-                    2,
-                    OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY
-                )
 
             webcam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(
                     WebcamName::class.java,
                     "Webcam 1"
-                ), viewports[0]
+                ), cameraMonitorViewId
             )
 
             webcam.openCameraDeviceAsync(object : AsyncCameraOpenListener {
@@ -88,6 +83,7 @@ abstract class AutonomoBase(
     override fun begin() {
         webcam.closeCameraDevice()
 
+        /*
         complementaryVuforiaLocalizer = ComplementaryVuforiaLocalizer(
             drive.localizer,
             hardwareMap,
@@ -97,6 +93,7 @@ abstract class AutonomoBase(
         drive.localizer = complementaryVuforiaLocalizer
 
         FtcDashboard.getInstance().startCameraStream(complementaryVuforiaLocalizer.vuforia, 0.0)
+        */
 
         drive.followTrajectorySequenceAsync(
             sequence(
@@ -108,11 +105,11 @@ abstract class AutonomoBase(
     abstract fun sequence(teamMarkerPosition: TeamMarkerPosition): TrajectorySequence?
 
     fun intakeFallSequence() = deltaSequence {
-        - CarouselMoveCmd(0.5)
+        - CarouselMoveCmd(0.2)
 
         - waitForSeconds(1.0)
 
-        - CarouselMoveCmd(0.0)
+        - CarouselStopCmd()
     }
 
 }

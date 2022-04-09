@@ -77,7 +77,7 @@ class IntakeSubsystem(
 
 @Config
 object Intake {
-    @JvmField var intakedDistance = 2.0
+    @JvmField var intakedDistance = 1.6
 
     @JvmField var pushPosition = 0.7
     @JvmField var savePosition = 1.0

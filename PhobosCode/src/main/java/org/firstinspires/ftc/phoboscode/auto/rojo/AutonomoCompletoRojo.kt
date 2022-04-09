@@ -28,12 +28,12 @@ enum class StartPosition(
     val startWobblePose: Pose2d
 ) {
     DUCKS_NEAREST(
-        Pose2d(-35.0, -62.0, Math.toRadians(90.0)), // start
-        Pose2d(-36.0, -34.3, Math.toRadians(210.0)) // start big wobble pose
+        Pose2d(-37.0, -62.0, Math.toRadians(90.0)), // start
+        Pose2d(-34.0, -34.3, Math.toRadians(210.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(1.0, -62.0, Math.toRadians(90.0)),
-        Pose2d(-10.2, -33.6, Math.toRadians(310.0))
+        Pose2d(13.0, -62.0, Math.toRadians(90.0)),
+        Pose2d(1.4, -34.0, Math.toRadians(320.0))
     )
 }
 
@@ -52,7 +52,7 @@ abstract class AutonomoCompletoRojo(
     val cycles: Int = 4
 ) : AutonomoBase(true, false) {
 
-    val bigWobblePose = Pose2d(-10.2, -33.5, Math.toRadians(298.0))
+    val bigWobblePose = Pose2d(1.4, -34.0, Math.toRadians(320.0))
 
     override fun setup() {
         super.setup()
@@ -85,7 +85,7 @@ abstract class AutonomoCompletoRojo(
 
             if(doDucks) {
                 // duck spinny boi
-                lineToLinearHeading(Pose2d(-66.5, -60.5, Math.toRadians(180.0)))
+                lineToSplineHeading(Pose2d(-57.0, -62.8, Math.toRadians(180.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
                     + ACCarouselRotateForwardCmd()
                 }
@@ -102,42 +102,50 @@ abstract class AutonomoCompletoRojo(
                     lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 51.5
+                var currentGrabCubeX = 20.0
                 var minusBigWobblePose = Pose2d(-2.0, 0.4)
 
                 /*
                 Generating repetitive trajectories for each cycle
                  */
                 repeat(cycles) {
-                    // to the warehouse (Casita de los cubos)
-                    splineToSplineHeading(
-                        Pose2d(25.1, -61.9, Math.toRadians(-5.0)),
-                        Math.toRadians((0.0))
+                    // align to wall
+                    lineToSplineHeading(
+                        Pose2d(-1.0, -56.0, Math.toRadians(0.0))//,
+                        //Math.toRadians(0.0)
                     )
 
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeWithColorSensorCmd(1.0)
                     }
 
-                    // grab freight
-                    splineTo(Vector2d(currentGrabCubeX, -61.9), 0.0)
+                    // go inside (that's what she said)
+                    splineToConstantHeading(Vector2d(41.0, -66.8), Math.toRadians(0.0))
+
+                    // go even further inside
+                    lineTo(Vector2d(currentGrabCubeX, -66.8))
+
+                    waitSeconds(0.2)
 
                     // out of the warehouse
-                    splineToConstantHeading(Vector2d(18.0, -61.9), Math.toRadians(0.0))
+                    lineTo(Vector2d(5.0, -66.8))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
+
+                        drive.poseEstimate = drive.poseEstimate.copy(x = 66.8)
                     }
 
                     UNSTABLE_addTemporalMarkerOffset(1.8) {
                         + freightDropSequence()
                     }
                     // put freight in big wobble
-                    splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians((90.0)))
-                    waitSeconds(0.9) // wait for the freight to fall
+                    splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(90.0))
+
+                    waitSeconds(0.8) // wait for the freight to fall
 
                     currentGrabCubeX *= 1.08
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-7.0, 1.5))
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-5.0, 0.3))
                 }
             }
 
@@ -152,14 +160,14 @@ abstract class AutonomoCompletoRojo(
                     strafeTo(Vector2d(57.0, -40.0))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    lineToSplineHeading(Pose2d(-62.0, -32.0, 0.0))
+                    lineToSplineHeading(Pose2d(-62.0, -52.0, 0.0))
                 }
             }
         }.build()
 
     private fun freightDropSequence() = deltaSequence {
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(3.0)
+        - waitForSeconds(2.0)
         - BoxSaveCmd().dontBlock()
 
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.phoboscode.auto.azul.ParkPosition.*
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.ACCarouselRotateForwardCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.CarouselMoveCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.CarouselStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeWithColorSensorCmd
@@ -33,7 +34,7 @@ enum class StartPosition(
     ),
     WAREHOUSE_NEAREST(
         Pose2d(13.0, 65.0, Math.toRadians(270.0)),
-        Pose2d(1.4, 33.6, Math.toRadians(40.0))
+        Pose2d(1.4, 34.0, Math.toRadians(40.0))
     )
 }
 
@@ -48,7 +49,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
-    val bigWobblePose = Pose2d(1.4, 33.6, Math.toRadians(40.0))
+    val bigWobblePose = Pose2d(1.4, 34.0, Math.toRadians(40.0))
 
     override fun setup() {
         super.setup()
@@ -73,15 +74,16 @@ abstract class AutonomoCompletoAzul(
                     }
                 )
 
-                + intakeFallSequence()
+                + CarouselMoveCmd(0.3)
             }
             UNSTABLE_addTemporalMarkerOffset(2.5) {
                 + freightDropSequence()
+                + CarouselStopCmd()
             }
 
             lineToSplineHeading(startPosition.startWobblePose)
 
-            waitSeconds(2.0)
+            waitSeconds(1.5)
 
             if (doDucks) {
                 // duck spinny boi
@@ -102,7 +104,7 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 56.0
+                var currentGrabCubeX = 52.0
                 var minusBigWobblePose = Pose2d(0.0, 0.5)
 
                 /*
@@ -123,15 +125,17 @@ abstract class AutonomoCompletoAzul(
                     splineToConstantHeading(Vector2d(41.0, 66.8), Math.toRadians(0.0))
 
                     // go even further inside
-                    lineTo(Vector2d(currentGrabCubeX, 65.0))
+                    lineTo(Vector2d(currentGrabCubeX, 66.8))
 
                     waitSeconds(0.2)
 
                     // out of the warehouse
-                    lineTo(Vector2d(5.0, 65.0))
+                    lineTo(Vector2d(5.0, 66.8))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
+
+                        drive.poseEstimate = drive.poseEstimate.copy(x = 66.8)
                     }
 
                     UNSTABLE_addTemporalMarkerOffset(1.8) {
@@ -139,7 +143,8 @@ abstract class AutonomoCompletoAzul(
                     }
                     // put freight in big wobble
                     splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(270.0))
-                    waitSeconds(0.9) // wait for the freight to fall
+
+                    waitSeconds(0.8) // wait for the freight to fall
 
                     currentGrabCubeX *= 1.08
                     minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-5.0, -0.3))
@@ -173,7 +178,7 @@ abstract class AutonomoCompletoAzul(
 
     private fun freightDropSequence() = deltaSequence {
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(3.0)
+        - waitForSeconds(2.0)
         - BoxSaveCmd().dontBlock()
 
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()
