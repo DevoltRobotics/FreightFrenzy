@@ -21,13 +21,10 @@ abstract class AutonomoBase(
     val useOneDivider: Boolean
 ) : PhobosOpMode() {
 
-    lateinit var complementaryVuforiaLocalizer: ComplementaryVuforiaLocalizer
     val drive get() = hardware.drive
 
-    val teamMarkerPipeline = TeamMarkerAprilTagPipeline(useOneDivider)
+    val teamMarkerPipeline = TeamMarkerAprilTagPipeline()
     private lateinit var webcam: OpenCvCamera
-
-    private lateinit var viewports: IntArray
 
     private var openFailed = false
 
@@ -48,21 +45,19 @@ abstract class AutonomoBase(
 
             webcam.openCameraDeviceAsync(object : AsyncCameraOpenListener {
                 override fun onOpened() {
-                    webcam.setPipeline(teamMarkerPipeline)
-
                     // We don't get to choose resolution, unfortunately. The width and height parameters
                     // are entirely ignored when using Vuforia passthrough mode. However, they are left
                     // in the method signature to provide interface compatibility with the other types
                     // of cameras.
-                    webcam.startStreaming(640, 480, OpenCvCameraRotation.SIDEWAYS_LEFT)
+                    webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT)
+
+                    webcam.setPipeline(teamMarkerPipeline)
                 }
 
                 override fun onError(errorCode: Int) {
                     openFailed = true
                 }
             })
-
-            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.385
 
             FtcDashboard.getInstance().startCameraStream(webcam, 0.0)
         }
@@ -81,19 +76,7 @@ abstract class AutonomoBase(
 // yo no
 // chtm
     override fun begin() {
-        webcam.closeCameraDevice()
-
-        /*
-        complementaryVuforiaLocalizer = ComplementaryVuforiaLocalizer(
-            drive.localizer,
-            hardwareMap,
-            "Webcam 1",
-            viewports[1]
-        )
-        drive.localizer = complementaryVuforiaLocalizer
-
-        FtcDashboard.getInstance().startCameraStream(complementaryVuforiaLocalizer.vuforia, 0.0)
-        */
+        webcam.stopStreaming()
 
         drive.followTrajectorySequenceAsync(
             sequence(

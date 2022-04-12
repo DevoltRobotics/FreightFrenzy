@@ -29,11 +29,11 @@ enum class StartPosition(
     val startWobblePose: Pose2d
 ) {
     DUCKS_NEAREST(
-        Pose2d(-35.0, 62.0, Math.toRadians(270.0)), // start
+        Pose2d(-35.0, 62.0, Math.toRadians(90.0)), // start
         Pose2d(-25.6, 31.5, Math.toRadians(130.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(13.0, 65.0, Math.toRadians(270.0)),
+        Pose2d(13.0, 65.0, Math.toRadians(90.0)),
         Pose2d(1.4, 34.0, Math.toRadians(40.0))
     )
 }

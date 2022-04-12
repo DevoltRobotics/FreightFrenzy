@@ -5,8 +5,6 @@ package org.firstinspires.ftc.phoboscode.auto.rojo
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
-import org.firstinspires.ftc.commoncode.util.angleAdd
-import org.firstinspires.ftc.commoncode.vision.TeamMarkerAprilTagPipeline
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition
 import org.firstinspires.ftc.commoncode.vision.TeamMarkerPosition.*
 import org.firstinspires.ftc.phoboscode.auto.AutonomoBase
@@ -14,11 +12,11 @@ import org.firstinspires.ftc.phoboscode.auto.rojo.ParkPosition.*
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.ACCarouselRotateForwardCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.CarouselMoveCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.CarouselStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeStopCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeWithColorSensorCmd
 import org.firstinspires.ftc.phoboscode.command.lift.LiftMoveToPosCmd
-import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
 import org.firstinspires.ftc.phoboscode.rr.drive.DriveConstants
 import org.firstinspires.ftc.phoboscode.rr.drive.SampleMecanumDrive
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
@@ -28,12 +26,12 @@ enum class StartPosition(
     val startWobblePose: Pose2d
 ) {
     DUCKS_NEAREST(
-        Pose2d(-37.0, -62.0, Math.toRadians(90.0)), // start
-        Pose2d(-34.0, -34.3, Math.toRadians(210.0)) // start big wobble pose
+        Pose2d(-37.0, -62.0, Math.toRadians(270.0)), // start
+        Pose2d(-28.0, -34.3, Math.toRadians(220.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(13.0, -62.0, Math.toRadians(90.0)),
-        Pose2d(1.4, -34.0, Math.toRadians(320.0))
+        Pose2d(13.0, -62.0, Math.toRadians(270.0)),
+        Pose2d(1.4, -34.0, Math.toRadians(310.0))
     )
 }
 
@@ -52,14 +50,10 @@ abstract class AutonomoCompletoRojo(
     val cycles: Int = 4
 ) : AutonomoBase(true, false) {
 
-    val bigWobblePose = Pose2d(1.4, -34.0, Math.toRadians(320.0))
+    val bigWobblePose = Pose2d(1.0, -33.6, Math.toRadians(330.0))
 
     override fun setup() {
         super.setup()
-
-        if(startPosition == StartPosition.WAREHOUSE_NEAREST) {
-            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.6
-        }
 
         drive.poseEstimate = startPosition.startPose
         liftSub.stopAndReset()
@@ -75,17 +69,23 @@ abstract class AutonomoCompletoRojo(
                     else -> LiftPosition.HIGH
                 })
             }
-            UNSTABLE_addTemporalMarkerOffset(2.5) {
+
+            UNSTABLE_addTemporalMarkerOffset(1.0) {
+                + CarouselMoveCmd(0.3)
+            }
+
+            UNSTABLE_addTemporalMarkerOffset(2.0) {
                 + freightDropSequence()
+                + CarouselStopCmd()
             }
 
             lineToSplineHeading(startPosition.startWobblePose)
 
-            waitSeconds(2.0)
+            waitSeconds(1.6)
 
             if(doDucks) {
                 // duck spinny boi
-                lineToSplineHeading(Pose2d(-57.0, -62.8, Math.toRadians(180.0)))
+                lineToSplineHeading(Pose2d(-62.0, -59.0, Math.toRadians(180.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
                     + ACCarouselRotateForwardCmd()
                 }
@@ -95,6 +95,8 @@ abstract class AutonomoCompletoRojo(
                 }
             }
 
+            var goInsideY = -67.8
+
             if(cycles >= 1) {
                 if(doDucks) {
                     // to the warehouse
@@ -102,7 +104,7 @@ abstract class AutonomoCompletoRojo(
                     lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 20.0
+                var currentGrabCubeX = 59.0
                 var minusBigWobblePose = Pose2d(-2.0, 0.4)
 
                 /*
@@ -120,47 +122,67 @@ abstract class AutonomoCompletoRojo(
                     }
 
                     // go inside (that's what she said)
-                    splineToConstantHeading(Vector2d(41.0, -66.8), Math.toRadians(0.0))
+                    splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0))
 
                     // go even further inside
-                    lineTo(Vector2d(currentGrabCubeX, -66.8))
+                    lineTo(Vector2d(currentGrabCubeX, goInsideY))
 
                     waitSeconds(0.2)
 
                     // out of the warehouse
-                    lineTo(Vector2d(5.0, -66.8))
+                    lineTo(Vector2d(5.0, goInsideY))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
-
-                        drive.poseEstimate = drive.poseEstimate.copy(x = 66.8)
                     }
 
-                    UNSTABLE_addTemporalMarkerOffset(1.8) {
+                    UNSTABLE_addTemporalMarkerOffset(1.1) {
                         + freightDropSequence()
                     }
                     // put freight in big wobble
                     splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(90.0))
 
-                    waitSeconds(0.8) // wait for the freight to fall
+                    waitSeconds(0.7) // wait for the freight to fall
 
-                    currentGrabCubeX *= 1.08
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-5.0, 0.3))
+                    currentGrabCubeX *= 1.095
+                    goInsideY *= 1.09
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-11.0, -1.2))
                 }
             }
 
             when(parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
-                    // to the warehouse to park (De la casita al parque)
-                    splineToSplineHeading(Pose2d(34.0, -64.0, Math.toRadians(0.0)), 0.0)
+                    goInsideY *= 1.08
+
+                    // align to wall
+                    lineToSplineHeading(
+                        Pose2d(-1.0, -56.0, Math.toRadians(0.0)),
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                    )
+
+                    UNSTABLE_addTemporalMarkerOffset(0.0) {
+                        + IntakeWithColorSensorCmd(1.0)
+                    }
+
+                    // go inside (that's what she said)
+                    splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0),
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                    )
+
                     // park fully
-                    lineTo(Vector2d(57.0, -64.0))
+                    splineToConstantHeading(Vector2d(57.0, goInsideY), Math.toRadians(0.0),
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                    )
+
                     // in case alliance wants to park too
-                    strafeTo(Vector2d(57.0, -40.0))
+                    // splineToSplineHeading(Pose2d(57.0, goInsideY + 8.0, Math.toRadians(270.0)), Math.toRadians(180.0))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    lineToSplineHeading(Pose2d(-62.0, -52.0, 0.0))
+                    lineToSplineHeading(Pose2d(-65.0, -30.0, 0.0))
                 }
             }
         }.build()

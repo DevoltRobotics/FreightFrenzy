@@ -16,8 +16,8 @@ import java.util.List;
 @Config
 public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
-    public static double LEFT_LINE_PERC = 0.32;
-    public static double RIGHT_LINE_PERC = 0.68;
+    public static double LEFT_LINE_PERC = 0.34;
+    public static double RIGHT_LINE_PERC = 0.69;
     public static int APRILTAG_ID = 8;
 
     final float DECIMATION_HIGH = 3;
@@ -131,22 +131,12 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
                         if (detection.id == APRILTAG_ID) {
                             Point p = detection.center;
 
-                            if(!useOneDivider) {
-                                if (p.x < leftLineX && p.x < rightLineX) {
-                                    position = TeamMarkerPosition.LEFT;
-                                } else if (p.x > leftLineX && p.x < rightLineX) {
-                                    position = TeamMarkerPosition.MIDDLE;
-                                } else {
-                                    position = TeamMarkerPosition.RIGHT;
-                                }
+                            if (p.x < leftLineX && p.x < rightLineX) {
+                                position = TeamMarkerPosition.LEFT;
+                            } else if (p.x > leftLineX && p.x < rightLineX) {
+                                position = TeamMarkerPosition.MIDDLE;
                             } else {
-                                if (p.x < leftLineX) {
-                                    position = TeamMarkerPosition.MIDDLE;
-                                } else if (p.x > leftLineX) {
-                                    position = TeamMarkerPosition.RIGHT;
-                                } else {
-                                    position = TeamMarkerPosition.LEFT;
-                                }
+                                position = TeamMarkerPosition.RIGHT;
                             }
 
                             corner = detection.corners[3];
