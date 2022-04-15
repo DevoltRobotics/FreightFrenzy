@@ -25,6 +25,10 @@ class IntakeWithColorSensorCmd(
     var reversed = false
         private set
 
+    override fun init() {
+        intakeSub.disableServoWhenDropping = false
+    }
+
     override fun run() {
         intakeSub.intakeMotor.power = if(liftSub.motorTicks.toDouble() < Lift.lowPosition.toDouble() / 2.0) {
             if (reversed) {
@@ -56,6 +60,10 @@ class IntakeWithColorSensorCmd(
                 - DeltaInstantCmd { reversed = true }
             }
         }
+    }
+
+    override fun end(interrupted: Boolean) {
+        intakeSub.disableServoWhenDropping = true
     }
 
 }

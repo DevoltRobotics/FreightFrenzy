@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.phoboscode.teleop
 
+import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
@@ -19,11 +20,10 @@ import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 import kotlin.math.abs
 
-@TeleOp(name = "TeleOp")
-class PhobosTeleOp : PhobosOpMode() {
+abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
 
     override fun setup() {
-        hardware.drive.poseEstimate = lastKnownRobotPose
+        hardware.drive.poseEstimate = lastKnownRobotPose.plus(Pose2d(0.0, 0.0, plusDriverAngle))
 
         + MecanumFieldCentricDriveCommand(gamepad1, telemetry) // contrar las mecanum con los joysticks del gamepad 1
 
@@ -107,7 +107,7 @@ class PhobosTeleOp : PhobosOpMode() {
         CAP ARM
          */
 
-        + CapArmMoveCmd { -gamepad2.left_stick_y.toDouble() * 0.5 }
+        + CapArmMoveCmd { -gamepad2.left_stick_y.toDouble() * 0.2 }
 
         /*
         TELEMETRY LOGGING
@@ -117,7 +117,6 @@ class PhobosTeleOp : PhobosOpMode() {
             telemetry.addData("carousel power", hardware.carouselMotor.power)
             telemetry.addData("intake distance", intakeSub.lastDistance)
             telemetry.addData("intake pushing", intakeSub.pushing)
-
 
             telemetry.addData("fl", hardware.drive.leftFront.currentPosition)
             telemetry.addData("fr", hardware.drive.rightFront.currentPosition)
@@ -151,3 +150,10 @@ class PhobosTeleOp : PhobosOpMode() {
     }
 
 }
+
+@TeleOp(name = "TeleOp Rojo")
+class TeleOpRojo : PhobosTeleOp(Math.toRadians(-90.0))
+
+
+@TeleOp(name = "TeleOp Azul")
+class TeleOpAzul : PhobosTeleOp(Math.toRadians(90.0))

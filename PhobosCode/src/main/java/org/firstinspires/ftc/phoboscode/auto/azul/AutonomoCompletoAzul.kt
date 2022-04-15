@@ -13,6 +13,7 @@ import org.firstinspires.ftc.phoboscode.auto.AutonomoBase
 import org.firstinspires.ftc.phoboscode.auto.azul.ParkPosition.*
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
+import org.firstinspires.ftc.phoboscode.command.carousel.ACCarouselRotateBackwardsCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.ACCarouselRotateForwardCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.CarouselMoveCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.CarouselStopCmd
@@ -29,12 +30,12 @@ enum class StartPosition(
     val startWobblePose: Pose2d
 ) {
     DUCKS_NEAREST(
-        Pose2d(-35.0, 62.0, Math.toRadians(90.0)), // start
-        Pose2d(-25.6, 31.5, Math.toRadians(130.0)) // start big wobble pose
+        Pose2d(-37.0, 62.0, Math.toRadians(90.0)), // start
+        Pose2d(-28.0, 32.5, Math.toRadians(130.0)) // start big wobble pose
     ),
     WAREHOUSE_NEAREST(
-        Pose2d(13.0, 65.0, Math.toRadians(90.0)),
-        Pose2d(1.4, 34.0, Math.toRadians(40.0))
+        Pose2d(13.0, 62.0, Math.toRadians(90.0)),
+        Pose2d(1.4, 31.5, Math.toRadians(55.0))
     )
 }
 
@@ -49,14 +50,10 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
-    val bigWobblePose = Pose2d(1.4, 34.0, Math.toRadians(40.0))
+    val bigWobblePose = Pose2d(0.6, 32.5, Math.toRadians(55.0))
 
     override fun setup() {
         super.setup()
-
-        if(startPosition == StartPosition.WAREHOUSE_NEAREST) {
-            TeamMarkerAprilTagPipeline.LEFT_LINE_PERC = 0.6
-        }
 
         drive.poseEstimate = startPosition.startPose
         liftSub.stopAndReset()
@@ -64,8 +61,30 @@ abstract class AutonomoCompletoAzul(
 
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
         drive.trajectorySequenceBuilder(startPosition.startPose).run {
+            UNSTABLE_addTemporalMarkerOffset(1.0) {
+                + CarouselMoveCmd(0.7)
+            }
+            UNSTABLE_addTemporalMarkerOffset(1.4) {
+                + CarouselStopCmd()
+            }
+
+            if (doDucks) {
+                // duck spinny boi
+                lineToSplineHeading(Pose2d(-65.0, 62.0, Math.toRadians(55.0)))
+
+                UNSTABLE_addTemporalMarkerOffset(0.0) {
+                    + ACCarouselRotateBackwardsCmd()
+                }
+                waitSeconds(3.0)
+                UNSTABLE_addTemporalMarkerOffset(0.0) {
+                    + CarouselStopCmd()
+                }
+
+                splineToSplineHeading(Pose2d(-66.0, 17.0, Math.toRadians(90.0)), Math.toRadians(0.0))
+            }
+
             // put X cube in big wobble
-            UNSTABLE_addTemporalMarkerOffset(0.0) {
+            UNSTABLE_addTemporalMarkerOffset(0.8) {
                 + LiftMoveToPosCmd(
                     when (teamMarkerPosition) { // mapping barcode position to lift height
                         LEFT -> LiftPosition.LOW
@@ -73,29 +92,21 @@ abstract class AutonomoCompletoAzul(
                         else -> LiftPosition.HIGH
                     }
                 )
-
-                + CarouselMoveCmd(0.3)
             }
-            UNSTABLE_addTemporalMarkerOffset(2.5) {
+            UNSTABLE_addTemporalMarkerOffset(2.0) {
                 + freightDropSequence()
-                + CarouselStopCmd()
             }
 
-            lineToSplineHeading(startPosition.startWobblePose)
-
-            waitSeconds(1.5)
-
-            if (doDucks) {
-                // duck spinny boi
-                lineToLinearHeading(Pose2d(-66.5, 60.0, Math.toRadians(40.0)))
-                UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    + ACCarouselRotateForwardCmd()
-                }
-                waitSeconds(3.0)
-                UNSTABLE_addTemporalMarkerOffset(0.0) {
-                    + CarouselStopCmd()
-                }
+            if(doDucks) {
+                splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
+            } else {
+                lineToSplineHeading(startPosition.startWobblePose)
             }
+
+            waitSeconds(1.4)
+
+            var goInsideY = 67.8
+            var currentGrabCubeX = 60.0
 
             if (cycles >= 1) {
                 if (doDucks) {
@@ -104,7 +115,6 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 52.0
                 var minusBigWobblePose = Pose2d(0.0, 0.5)
 
                 /*
@@ -122,20 +132,18 @@ abstract class AutonomoCompletoAzul(
                     }
 
                     // go inside (that's what she said)
-                    splineToConstantHeading(Vector2d(41.0, 66.8), Math.toRadians(0.0))
+                    splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0))
 
                     // go even further inside
-                    lineTo(Vector2d(currentGrabCubeX, 66.8))
+                    lineTo(Vector2d(currentGrabCubeX, goInsideY))
 
                     waitSeconds(0.2)
 
                     // out of the warehouse
-                    lineTo(Vector2d(5.0, 66.8))
+                    lineTo(Vector2d(5.0, goInsideY))
                     UNSTABLE_addTemporalMarkerOffset(0.0) {
                         + IntakeStopCmd()
                         + LiftMoveToPosCmd(LiftPosition.HIGH)
-
-                        drive.poseEstimate = drive.poseEstimate.copy(x = 66.8)
                     }
 
                     UNSTABLE_addTemporalMarkerOffset(1.8) {
@@ -147,38 +155,41 @@ abstract class AutonomoCompletoAzul(
                     waitSeconds(0.8) // wait for the freight to fall
 
                     currentGrabCubeX *= 1.08
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-5.0, -0.3))
+                    goInsideY *= 1.09
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-12.0, -3.0))
                 }
             }
 
             when (parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
+                    goInsideY *= 1.09
+
                     // align to wall
                     lineToSplineHeading(
-                        Pose2d(2.0, 53.0, Math.toRadians(0.0)),
-                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                        Pose2d(-1.0, 56.0, Math.toRadians(0.0))//,
+                        //Math.toRadians(0.0)
                     )
 
-                    // go inside
-                    splineToConstantHeading(Vector2d(52.0, 65.0), Math.toRadians(0.0),
-                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL * 1.08, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
-                    )
+                    // go inside (that's what she said)
+                    splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0))
 
-                    // in case alliance wants to park too
-                    splineToSplineHeading(Pose2d(60.0, 39.0, Math.toRadians(90.0)), Math.toRadians(90.0))
+                    // go even further inside
+                    lineTo(Vector2d(currentGrabCubeX, goInsideY))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    lineToSplineHeading(Pose2d(-66.5, 20.0, 0.0))
+                    if(doDucks) {
+                        splineToConstantHeading(Vector2d(-67.8, 10.0), Math.toRadians(0.0))
+                    }
+
+                    splineToLinearHeading(Pose2d(-67.8, 39.0, 90.0), Math.toRadians(90.0))
                 }
             }
         }.build()
 
     private fun freightDropSequence() = deltaSequence {
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(2.0)
+        - waitForSeconds(1.7)
         - BoxSaveCmd().dontBlock()
 
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()

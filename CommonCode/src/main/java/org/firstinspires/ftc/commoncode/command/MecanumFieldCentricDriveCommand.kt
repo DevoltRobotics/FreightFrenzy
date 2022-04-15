@@ -21,7 +21,7 @@ class MecanumFieldCentricDriveCommand(
         } else gamepad.right_trigger
 
         val turbo = if(applyTurboWithTriggers) {
-            1.0 - (triggerValue * 0.8)
+            1.0 - (triggerValue * 0.6)
         } else 1.0
 
         val pose = sub.drive.poseEstimate

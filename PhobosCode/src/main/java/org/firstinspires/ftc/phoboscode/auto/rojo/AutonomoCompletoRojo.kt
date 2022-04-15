@@ -50,7 +50,7 @@ abstract class AutonomoCompletoRojo(
     val cycles: Int = 4
 ) : AutonomoBase(true, false) {
 
-    val bigWobblePose = Pose2d(1.0, -33.6, Math.toRadians(330.0))
+    val bigWobblePose = Pose2d(1.0, -33.6, Math.toRadians(337.0))
 
     override fun setup() {
         super.setup()
@@ -85,7 +85,7 @@ abstract class AutonomoCompletoRojo(
 
             if(doDucks) {
                 // duck spinny boi
-                lineToSplineHeading(Pose2d(-62.0, -59.0, Math.toRadians(180.0)))
+                lineToSplineHeading(Pose2d(-63.5, -59.0, Math.toRadians(180.0)))
                 UNSTABLE_addTemporalMarkerOffset(0.0) {
                     + ACCarouselRotateForwardCmd()
                 }
@@ -104,7 +104,7 @@ abstract class AutonomoCompletoRojo(
                     lineToLinearHeading(Pose2d(-24.0, -55.0, Math.toRadians(0.0)))
                 }
 
-                var currentGrabCubeX = 59.0
+                var currentGrabCubeX = 60.0
                 var minusBigWobblePose = Pose2d(-2.0, 0.4)
 
                 /*
@@ -146,7 +146,7 @@ abstract class AutonomoCompletoRojo(
 
                     currentGrabCubeX *= 1.095
                     goInsideY *= 1.09
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-11.0, -1.2))
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-16.0, -2.0, Math.toRadians(-5.0)))
                 }
             }
 
