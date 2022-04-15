@@ -35,7 +35,7 @@ enum class StartPosition(
     ),
     WAREHOUSE_NEAREST(
         Pose2d(13.0, 62.0, Math.toRadians(90.0)),
-        Pose2d(1.4, 31.5, Math.toRadians(55.0))
+        Pose2d(1.4, 29.5, Math.toRadians(55.0))
     )
 }
 
@@ -50,7 +50,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
-    val bigWobblePose = Pose2d(0.6, 32.5, Math.toRadians(55.0))
+    val bigWobblePose = Pose2d(0.6, 29.5, Math.toRadians(55.0))
 
     override fun setup() {
         super.setup()
@@ -80,7 +80,7 @@ abstract class AutonomoCompletoAzul(
                     + CarouselStopCmd()
                 }
 
-                splineToSplineHeading(Pose2d(-66.0, 17.0, Math.toRadians(90.0)), Math.toRadians(0.0))
+                // splineToSplineHeading(Pose2d(-66.0, 17.0, Math.toRadians(90.0)), Math.toRadians(0.0))
             }
 
             // put X cube in big wobble
@@ -93,15 +93,15 @@ abstract class AutonomoCompletoAzul(
                     }
                 )
             }
-            UNSTABLE_addTemporalMarkerOffset(2.0) {
+            UNSTABLE_addTemporalMarkerOffset(1.35) {
                 + freightDropSequence()
             }
 
-            if(doDucks) {
-                splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
-            } else {
+            //if(doDucks) {
+            //    splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
+            // } else {
                 lineToSplineHeading(startPosition.startWobblePose)
-            }
+            //}
 
             waitSeconds(1.4)
 
@@ -115,7 +115,7 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var minusBigWobblePose = Pose2d(0.0, 0.5)
+                var minusBigWobblePose = Pose2d(-5.0, -1.5)
 
                 /*
                 Generating repetitive trajectories for each cycle
@@ -152,18 +152,18 @@ abstract class AutonomoCompletoAzul(
                     // put freight in big wobble
                     splineToSplineHeading(bigWobblePose.minus(minusBigWobblePose), Math.toRadians(270.0))
 
-                    waitSeconds(0.8) // wait for the freight to fall
+                    waitSeconds(1.2) // wait for the freight to fall
 
-                    currentGrabCubeX *= 1.08
+                    currentGrabCubeX *= 1.11
                     goInsideY *= 1.09
-                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-12.0, -3.0))
+                    minusBigWobblePose = minusBigWobblePose.plus(Pose2d(-20.0, -7.0))
                 }
             }
 
             when (parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
-                    goInsideY *= 1.09
+                    goInsideY *= 1.07
 
                     // align to wall
                     lineToSplineHeading(
@@ -178,18 +178,18 @@ abstract class AutonomoCompletoAzul(
                     lineTo(Vector2d(currentGrabCubeX, goInsideY))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    if(doDucks) {
-                        splineToConstantHeading(Vector2d(-67.8, 10.0), Math.toRadians(0.0))
-                    }
+                    //if(doDucks) {
+                        //splineToConstantHeading(Vector2d(-67.8, 10.0), Math.toRadians(0.0))
+                    //}
 
-                    splineToLinearHeading(Pose2d(-67.8, 39.0, 90.0), Math.toRadians(90.0))
+                    lineToSplineHeading(Pose2d(-65.0, 30.0, 0.0))
                 }
             }
         }.build()
 
     private fun freightDropSequence() = deltaSequence {
         - BoxThrowCmd().dontBlock()
-        - waitForSeconds(1.7)
+        - waitForSeconds(2.1)
         - BoxSaveCmd().dontBlock()
 
         - LiftMoveToPosCmd(LiftPosition.ZERO).dontBlock()

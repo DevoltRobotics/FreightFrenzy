@@ -30,6 +30,8 @@ class IntakeSubsystem(
         private set
     private var pushingAutomatically = false
 
+    var disableAutoServo = false
+
     var lastDistance = 0.0
         private set
 
@@ -46,13 +48,15 @@ class IntakeSubsystem(
     override fun loop() {
         lastDistance = colorSensor.getDistance(DistanceUnit.INCH)
 
-        if(lastDistance >= intakedDistance) {
-            lowDistanceTimer.reset()
-        } else if(lowDistanceTimer.seconds() > 0.5 && !pushing && (intakeMotor.power >= 0.0 || !disableServoWhenDropping) && liftSub.motorTicks <= Lift.lowPosition / 2.0) {
-            + pushServoSequence()
-            pushingAutomatically = true
-        } else if((liftSub.motorTicks > Lift.lowPosition / 2.0 || intakeMotor.power < 0.0) && pushingAutomatically) {
-            pushServo.position = savePosition
+        if(!disableAutoServo) {
+            if (lastDistance >= intakedDistance) {
+                lowDistanceTimer.reset()
+            } else if (lowDistanceTimer.seconds() > 0.5 && !pushing && (intakeMotor.power >= 0.0 || !disableServoWhenDropping) && liftSub.motorTicks <= Lift.lowPosition / 2.0) {
+                +pushServoSequence()
+                pushingAutomatically = true
+            } else if ((liftSub.motorTicks > Lift.lowPosition / 2.0 || intakeMotor.power < 0.0) && pushingAutomatically) {
+                pushServo.position = savePosition
+            }
         }
     }
 

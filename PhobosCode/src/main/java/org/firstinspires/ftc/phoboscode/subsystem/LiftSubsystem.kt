@@ -53,6 +53,6 @@ object Lift {
 
     @JvmField var zeroPosition = 0
     @JvmField var lowPosition = 330
-    @JvmField var middlePosition = 565
-    @JvmField var highPosition = 1040
+    @JvmField var middlePosition = 580
+    @JvmField var highPosition = 1180
 }
