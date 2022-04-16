@@ -163,7 +163,7 @@ abstract class AutonomoCompletoAzul(
             when (parkPosition) {
                 NONE -> this
                 WAREHOUSE -> {
-                    goInsideY *= 1.07
+                    goInsideY *= 0.8
 
                     // align to wall
                     lineToSplineHeading(
