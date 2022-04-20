@@ -22,12 +22,12 @@ public class SUAzul extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
-                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
                         liftPos = Hardwareñ.MID_LIFT_POS;
-                    } else {
-                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
                     }
                 })
 
@@ -41,7 +41,7 @@ public class SUAzul extends AutonomoBase {
                 .waitSeconds(1.5)
 
                 // ir a hacer patos
-                .lineToSplineHeading(new Pose2d(-67.0, 59.0, Math.toRadians(210.0)))
+                .lineToSplineHeading(new Pose2d(-69.0, 59.0, Math.toRadians(210.0)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Garra.setPosition(0);
@@ -49,7 +49,7 @@ public class SUAzul extends AutonomoBase {
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    hardware.Pato.setPower(-0.7);
+                    hardware.Pato.setPower(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(5, () -> {
                     hardware.Pato.setPower(0);

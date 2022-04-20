@@ -22,17 +22,17 @@ public class DWHRojo extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
-                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
                         liftPos = Hardwareñ.MID_LIFT_POS;
-                    } else {
-                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
                     }
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(-29, -6.8, Math.toRadians(270)))
+                .lineToSplineHeading(new Pose2d(-29, -11.8, Math.toRadians(270)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     hardware.Garra.setPosition(0.7);
@@ -40,7 +40,7 @@ public class DWHRojo extends AutonomoBase {
                 .waitSeconds(1.5)
 
                 //Ir a Pato
-                .lineToSplineHeading(new Pose2d(-66.5, -60.0, Math.toRadians(330)))
+                .lineToSplineHeading(new Pose2d(-69.5, -61.0, Math.toRadians(330)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     hardware.Garra.setPosition(0);
@@ -56,8 +56,10 @@ public class DWHRojo extends AutonomoBase {
                 .waitSeconds(12)
 
                 // estacionarse
+
+
                 .lineToSplineHeading(new Pose2d(7.0, -60.0, Math.toRadians(0)))
-                .lineToSplineHeading(new Pose2d(46.0, -64.0, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(46.0, -66.0, Math.toRadians(0)))
 
                 .build();
 

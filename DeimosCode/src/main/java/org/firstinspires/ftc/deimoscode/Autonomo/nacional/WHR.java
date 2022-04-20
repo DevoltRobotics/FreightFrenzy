@@ -22,17 +22,19 @@ public class WHR extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
-                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
                         liftPos = Hardwareñ.MID_LIFT_POS;
-                    } else {
-                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
                     }
                 })
 
                 // ir a poner cubo
-                .lineToSplineHeading(new Pose2d(-3.8, -6.5, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-2.5
+
+                        , -14.0, Math.toRadians(90)))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     hardware.Garra.setPosition(0.7);

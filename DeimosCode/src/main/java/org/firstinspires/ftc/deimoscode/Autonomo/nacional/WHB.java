@@ -22,12 +22,12 @@ public class WHB extends AutonomoBase {
 
         TrajectorySequence sequence = hardware.drive.trajectorySequenceBuilder(startPóse)
                 .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
-                    if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
-                        liftPos = Hardwareñ.HIGH_LIFT_POS;
+                    if(detector.getPosition() == TeamMarkerPosition.LEFT) {
+                        liftPos = Hardwareñ.LOW_LIFT_POS;
                     } else if(detector.getPosition() == TeamMarkerPosition.MIDDLE) {
                         liftPos = Hardwareñ.MID_LIFT_POS;
-                    } else {
-                        liftPos = Hardwareñ.LOW_LIFT_POS;
+                    } else if(detector.getPosition() == TeamMarkerPosition.RIGHT) {
+                        liftPos = Hardwareñ.HIGH_LIFT_POS;
                     }
                 })
 
@@ -49,7 +49,7 @@ public class WHB extends AutonomoBase {
                 //Entrar a Warehouse
                 .lineToSplineHeading(new Pose2d(40.0, 64.0, Math.toRadians(180.0)))
                 //Estacionarse
-                .lineToSplineHeading(new Pose2d(70.0, 30.0, Math.toRadians(90.0)))
+                .lineToSplineHeading(new Pose2d(70.0, 22.0, Math.toRadians(90.0)))
                 .build();
 
         while(!isStarted() && !isStopRequested()) {

@@ -94,13 +94,13 @@ public class Tsuru_Tuneado extends LinearOpMode {
             hdw.jokeis.setPower(-Extend);
 
             if (gamepad2.y) {
-                hdw.Pato.setPower(0.85);
+                hdw.Pato.setPower(0.95);
             } else {
                 hdw.Pato.setPower(0);
             }
 
             if (gamepad1.y) {
-                hdw.Pato.setPower(-1);
+                hdw.Pato.setPower(-.95);
             } else {
                 hdw.Pato.setPower(0);
             }

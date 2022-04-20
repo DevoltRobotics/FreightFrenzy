@@ -29,8 +29,7 @@ fun main() {
                     println("poner cubo")
                 }
                 .lineToSplineHeading(Pose2d(-60.0, 60.0, Math.toRadians(210.0)))
-                .strafeTo(Vector2d(-58.0, 35.0))
-                .turn(Math.toRadians(0.0))
+                .lineToSplineHeading(Pose2d(40.0, 64.0, Math.toRadians(180.0)))
                 .build();
         }
 
