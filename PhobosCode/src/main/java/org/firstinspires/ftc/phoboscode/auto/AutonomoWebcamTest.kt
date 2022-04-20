@@ -9,7 +9,7 @@ class AutonomoWebcamTest : LinearOpMode() {
 
     override fun runOpMode() {
         val vision = TeamMarkerAprilTagDetector()
-        vision.initInternalCameraVision(hardwareMap)
+        //vision.initInternalCameraVision(hardwareMap)
 
         while(!isStopRequested) {
             telemetry.addData("Position", vision.position)

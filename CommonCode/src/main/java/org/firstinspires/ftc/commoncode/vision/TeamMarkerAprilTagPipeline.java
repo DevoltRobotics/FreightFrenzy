@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.commoncode.vision;
 
-//import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Mat;
@@ -13,11 +13,11 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.List;
 
-//@Config
+@Config
 public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
-    public static double LEFT_LINE_PERC = 0.32;
-    public static double RIGHT_LINE_PERC = 0.68;
+    public static double LEFT_LINE_PERC = 0.34;
+    public static double RIGHT_LINE_PERC = 0.69;
     public static int APRILTAG_ID = 8;
 
     final float DECIMATION_HIGH = 3;
@@ -37,8 +37,12 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
     int numFramesWithoutDetection = 0;
 
+    boolean hasDetected = false;
+
     Telemetry telemetry;
     boolean useOneDivider = false;
+
+    boolean defaultToRight = false;
 
     public TeamMarkerAprilTagPipeline(Telemetry telemetry, boolean useOneDivider) {
         this.telemetry = telemetry;
@@ -51,6 +55,11 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
 
     public TeamMarkerAprilTagPipeline(boolean useOneDivider) {
         this(null, useOneDivider);
+    }
+
+    public TeamMarkerAprilTagPipeline(boolean useOneDivider, boolean defaultToRight) {
+        this(null, useOneDivider);
+        this.defaultToRight = defaultToRight;
     }
 
     public TeamMarkerAprilTagPipeline() {
@@ -91,7 +100,9 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
                         setDecimation(DECIMATION_LOW);
                     }
 
-                    position = TeamMarkerPosition.RIGHT;
+                    if(!hasDetected && position == TeamMarkerPosition.UNKNOWN) {
+                        position = TeamMarkerPosition.RIGHT;
+                    }
                 } else {
                     numFramesWithoutDetection = 0;
 
@@ -149,6 +160,10 @@ public class TeamMarkerAprilTagPipeline extends AprilTagDetectionPipeline {
         if(telemetry != null) {
             telemetry.addData("Position", position);
             telemetry.update();
+        }
+
+        if(position != TeamMarkerPosition.UNKNOWN) {
+            hasDetected = true;
         }
 
         return output;

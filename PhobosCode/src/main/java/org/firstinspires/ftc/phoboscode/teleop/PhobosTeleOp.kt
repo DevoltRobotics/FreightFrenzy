@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.phoboscode.teleop
 
+import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.command.DeltaRunCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltaevent.gamepad.button.Button
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.commoncode.command.MecanumFieldCentricDriveCommand
+import org.firstinspires.ftc.phoboscode.PhobosOpMode
 import org.firstinspires.ftc.phoboscode.command.box.BoxSaveCmd
 import org.firstinspires.ftc.phoboscode.command.box.BoxThrowCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretIncrementalMoveCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorExtendCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorSaveCmd
-import org.firstinspires.ftc.phoboscode.command.capturret.CapTurretTapeMotorStopCmd
+import org.firstinspires.ftc.phoboscode.command.caparm.CapArmMoveCmd
 import org.firstinspires.ftc.phoboscode.command.carousel.*
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeInCmd
 import org.firstinspires.ftc.phoboscode.command.intake.IntakeOutCmd
@@ -22,11 +20,10 @@ import org.firstinspires.ftc.phoboscode.lastKnownRobotPose
 import org.firstinspires.ftc.phoboscode.subsystem.LiftPosition
 import kotlin.math.abs
 
-@TeleOp(name = "TeleOp")
-class PhobosTeleOp : PhobosOpMode() {
+abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
 
     override fun setup() {
-        hardware.drive.poseEstimate = lastKnownRobotPose
+        hardware.drive.poseEstimate = lastKnownRobotPose.plus(Pose2d(0.0, 0.0, plusDriverAngle))
 
         + MecanumFieldCentricDriveCommand(gamepad1, telemetry) // contrar las mecanum con los joysticks del gamepad 1
 
@@ -37,64 +34,54 @@ class PhobosTeleOp : PhobosOpMode() {
         )
 
         /*
-        CAPPING TURRET
-         */
-
-        CapTurretIncrementalMoveCmd(
-            { gamepad2.left_stick_x.toDouble() * 0.01 }, // yaw servo
-            { -gamepad2.left_stick_y.toDouble() * 0.01 }, // pitch servo
-        ).schedule(false)
-
-        superGamepad2.scheduleOn(Button.X,
-            CapTurretTapeMotorExtendCmd(),
-            CapTurretTapeMotorStopCmd()
-        )
-
-        superGamepad2.scheduleOn(Button.Y,
-            CapTurretTapeMotorSaveCmd(),
-            CapTurretTapeMotorStopCmd()
-        )
-
-        /*
         CAROUSEL
          */
-        superGamepad1.scheduleOn(Button.X,
-                ACCarouselRotateBackwardsCmd(),
-                ACCarouselStopCmd()
+        superGamepad1.scheduleOn(
+            Button.X,
+            ACCarouselRotateBackwardsCmd(),
+            ACCarouselStopCmd()
         )
 
-        superGamepad1.scheduleOn(Button.Y,
-                ACCarouselRotateForwardCmd(),
-                ACCarouselStopCmd()
+        superGamepad1.scheduleOn(
+            Button.Y,
+            ACCarouselRotateForwardCmd(),
+            ACCarouselStopCmd()
         )
 
         /*
         INTAKE
          */
 
-        superGamepad2.scheduleOn(Button.A,
-                IntakeInCmd(), // encender el intake cuando se presiona A
-                IntakeStopCmd() // apagar el intake cuando se deja de presionar A
+        superGamepad2.scheduleOn(
+            Button.A,
+            IntakeInCmd(), // encender el intake cuando se presiona A
+            IntakeStopCmd() // apagar el intake cuando se deja de presionar A
         )
-        superGamepad2.scheduleOn(Button.B,
-                IntakeOutCmd(), // encender el intake en reversa cuando se presiona B
-                IntakeStopCmd() // apagar el intake cuando se deja de presionar B
+        superGamepad2.scheduleOn(
+            Button.B,
+            IntakeOutCmd(), // encender el intake en reversa cuando se presiona B
+            IntakeStopCmd() // apagar el intake cuando se deja de presionar B
         )
+
+        superGamepad2.scheduleOn(Button.X, intakeSub.pushServoSequence())
 
         /*
         LIFT
          */
 
-        superGamepad2.scheduleOnPress(Button.DPAD_UP,
-                liftSequence( LiftPosition.HIGH )
+        superGamepad2.scheduleOnPress(
+            Button.DPAD_UP,
+            liftSequence(LiftPosition.HIGH)
         ) { !liftSub.isBusy } // only schedule command if lift is currently not busy from going to another position
 
-        superGamepad2.scheduleOnPress(Button.DPAD_RIGHT,
-                liftSequence( LiftPosition.MID )
+        superGamepad2.scheduleOnPress(
+            Button.DPAD_RIGHT,
+            liftSequence(LiftPosition.MID)
         ) { !liftSub.isBusy }
 
-        superGamepad2.scheduleOnPress(Button.DPAD_DOWN,
-                liftSequence( LiftPosition.LOW ),
+        superGamepad2.scheduleOnPress(
+            Button.DPAD_DOWN,
+            liftSequence(LiftPosition.LOW),
         ) { !liftSub.isBusy }
 
         // controlling the lift with either of the joysticks when it isn't executing the "lift sequence"
@@ -109,12 +96,18 @@ class PhobosTeleOp : PhobosOpMode() {
         BOX
          */
         superGamepad2.scheduleOnPress(Button.LEFT_TRIGGER,
-                BoxThrowCmd()
+            BoxThrowCmd()
         )
 
         superGamepad2.scheduleOnPress(Button.RIGHT_TRIGGER,
-                BoxSaveCmd()
+            BoxSaveCmd()
         )
+
+        /*
+        CAP ARM
+         */
+
+        + CapArmMoveCmd { -gamepad2.left_stick_y.toDouble() * 0.2 }
 
         /*
         TELEMETRY LOGGING
@@ -122,6 +115,14 @@ class PhobosTeleOp : PhobosOpMode() {
         + DeltaRunCmd {
             telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
             telemetry.addData("carousel power", hardware.carouselMotor.power)
+            telemetry.addData("intake distance", intakeSub.lastDistance)
+            telemetry.addData("intake pushing", intakeSub.pushing)
+
+            telemetry.addData("fl", hardware.drive.leftFront.currentPosition)
+            telemetry.addData("fr", hardware.drive.rightFront.currentPosition)
+            telemetry.addData("bl", hardware.drive.leftRear.currentPosition)
+            telemetry.addData("br", hardware.drive.rightRear.currentPosition)
+
             telemetry.update()
         }
     }
@@ -149,3 +150,10 @@ class PhobosTeleOp : PhobosOpMode() {
     }
 
 }
+
+@TeleOp(name = "TeleOp Rojo")
+class TeleOpRojo : PhobosTeleOp(Math.toRadians(-90.0))
+
+
+@TeleOp(name = "TeleOp Azul")
+class TeleOpAzul : PhobosTeleOp(Math.toRadians(90.0))

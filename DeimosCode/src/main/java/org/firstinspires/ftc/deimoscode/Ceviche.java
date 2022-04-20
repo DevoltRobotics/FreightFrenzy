@@ -22,7 +22,6 @@ public class Ceviche extends LinearOpMode {
         while (opModeIsActive()) {
             motorleft.setPower(-gamepad1.left_stick_y);
             motorright.setPower(-gamepad1.right_stick_y);
-            idle();
         }
     }
 }

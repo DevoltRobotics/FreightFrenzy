@@ -26,7 +26,7 @@ open class ACCarouselMoveCmd(val targetPower: Double) : DeltaCommand() {
     }
 
     override fun end(interrupted: Boolean) {
-        carSub.carouselMotor.power = 0.0
+        carSub.power = 0.0
     }
 
 }
@@ -38,6 +38,6 @@ fun ACCarouselStopCmd() = deltaSequence {
     val carSub = subsystem<CarouselSubsystem>()
 
     - CarouselMoveCmd(-carSub.lastMovingPower)
-    - waitForSeconds(1.5)
+    - waitForSeconds(0.5)
     - CarouselStopCmd()
 }

@@ -4,6 +4,7 @@ import com.github.serivesmejia.deltacommander.DeltaCommand
 import com.github.serivesmejia.deltacommander.command.DeltaInstantCmd
 import com.github.serivesmejia.deltacommander.dsl.deltaSequence
 import com.github.serivesmejia.deltacommander.subsystem
+import org.firstinspires.ftc.phoboscode.subsystem.Intake
 import org.firstinspires.ftc.phoboscode.subsystem.IntakeSubsystem
 import org.firstinspires.ftc.phoboscode.subsystem.Lift
 import org.firstinspires.ftc.phoboscode.subsystem.LiftSubsystem
@@ -25,9 +26,16 @@ class IntakeWithColorSensorCmd(
     var reversed = false
         private set
 
+    override fun init() {
+        intakeSub.disableServoWhenDropping = false
+    }
+
     override fun run() {
         intakeSub.intakeMotor.power = if(liftSub.motorTicks.toDouble() < Lift.lowPosition.toDouble() / 2.0) {
             if (reversed) {
+                intakeSub.pushServo.position = Intake.pushPosition
+                intakeSub.disableAutoServo = true
+
                 -power
             } else power
         } else {
@@ -52,10 +60,15 @@ class IntakeWithColorSensorCmd(
             hasIntaked = true
 
             + deltaSequence {
-                - waitForSeconds(0.45)
+                - waitForSeconds(0.65)
                 - DeltaInstantCmd { reversed = true }
             }
         }
+    }
+
+    override fun end(interrupted: Boolean) {
+        intakeSub.disableServoWhenDropping = true
+        intakeSub.disableAutoServo = false
     }
 
 }

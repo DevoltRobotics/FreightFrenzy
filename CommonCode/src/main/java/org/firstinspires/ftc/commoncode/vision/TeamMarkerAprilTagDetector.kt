@@ -4,16 +4,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.openftc.easyopencv.*
 
+class TeamMarkerAprilTagDetector @JvmOverloads constructor(useOneDivider: Boolean = false){
 
-class   TeamMarkerAprilTagDetector {
-
-    val pipeline = TeamMarkerAprilTagPipeline()
+    val pipeline = TeamMarkerAprilTagPipeline(useOneDivider)
 
     val position get() = if(openFailed)
             TeamMarkerPosition.UNKNOWN
         else pipeline.lastPosition
 
-    lateinit var camera: OpenCvCamera
+    lateinit var camera: OpenCvWebcam
         private set
 
     private var openFailed = false
@@ -32,17 +31,6 @@ class   TeamMarkerAprilTagDetector {
         })
     }
 
-    fun initInternalCameraVision(
-            hardwareMap: HardwareMap,
-            cameraDirection: OpenCvInternalCamera2.CameraDirection = OpenCvInternalCamera2.CameraDirection.BACK,
-            cameraOrientation: OpenCvCameraRotation = OpenCvCameraRotation.SIDEWAYS_LEFT
-    ) {
-        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
-        camera = OpenCvCameraFactory.getInstance().createInternalCamera2(cameraDirection, cameraMonitorViewId)
-
-        init(cameraOrientation)
-    }
-
 
     fun initWebcamVision(
         hardwareMap: HardwareMap,
@@ -56,7 +44,9 @@ class   TeamMarkerAprilTagDetector {
     }
 
     fun close() {
-        camera.stopStreaming()
+        if(camera.fps > 0) {
+            camera.stopStreaming()
+        }
     }
 
 }
