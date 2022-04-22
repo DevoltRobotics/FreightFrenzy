@@ -50,7 +50,7 @@ abstract class AutonomoCompletoRojo(
     val cycles: Int = 4
 ) : AutonomoBase(true, false) {
 
-    val bigWobblePose = Pose2d(1.0, -33.6, Math.toRadians(337.0))
+    val bigWobblePose = Pose2d(0.5, -33.6, Math.toRadians(337.0))
 
     override fun setup() {
         super.setup()
@@ -61,21 +61,12 @@ abstract class AutonomoCompletoRojo(
 
     override fun sequence(teamMarkerPosition: TeamMarkerPosition) =
         drive.trajectorySequenceBuilder(startPosition.startPose).run {
-            // put X cube in big wobble
-            UNSTABLE_addTemporalMarkerOffset(0.0) {
-                + LiftMoveToPosCmd(when(teamMarkerPosition) { // mapping barcode position to lift height
-                    LEFT -> LiftPosition.LOW
-                    MIDDLE -> LiftPosition.MID
-                    else -> LiftPosition.HIGH
-                })
-            }
 
             UNSTABLE_addTemporalMarkerOffset(1.0) {
                 + CarouselMoveCmd(0.3)
             }
 
             UNSTABLE_addTemporalMarkerOffset(2.0) {
-                + freightDropSequence()
                 + CarouselStopCmd()
             }
 
@@ -95,7 +86,30 @@ abstract class AutonomoCompletoRojo(
                 }
             }
 
-            var goInsideY = -67.8
+            // put X cube in big wobble
+            UNSTABLE_addTemporalMarkerOffset(0.8) {
+                + LiftMoveToPosCmd(
+                    when (teamMarkerPosition) { // mapping barcode position to lift height
+                        LEFT -> LiftPosition.LOW
+                        MIDDLE -> LiftPosition.MID
+                        else -> LiftPosition.HIGH
+                    }
+                )
+            }
+            UNSTABLE_addTemporalMarkerOffset(1.35) {
+                + freightDropSequence()
+            }
+
+            //if(doDucks) {
+            //    splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
+            // } else {
+            lineToSplineHeading(startPosition.startWobblePose)
+            //}
+
+            waitSeconds(1.4)
+
+            var goInsideY = -70.8
+
 
             if(cycles >= 1) {
                 if(doDucks) {
@@ -105,7 +119,7 @@ abstract class AutonomoCompletoRojo(
                 }
 
                 var currentGrabCubeX = 60.0
-                var minusBigWobblePose = Pose2d(-2.0, 0.4)
+                var minusBigWobblePose = Pose2d(2.0, 0.4)
 
                 /*
                 Generating repetitive trajectories for each cycle
@@ -121,7 +135,7 @@ abstract class AutonomoCompletoRojo(
                         + IntakeWithColorSensorCmd(1.0)
                     }
 
-                    // go inside (that's what she said)
+                    // go inside
                     splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0))
 
                     // go even further inside

@@ -50,7 +50,7 @@ abstract class AutonomoCompletoAzul(
         val cycles: Int = 4
 ) : AutonomoBase(useOneDivider = startPosition == StartPosition.WAREHOUSE_NEAREST) {
 
-    val bigWobblePose = Pose2d(0.6, 29.5, Math.toRadians(55.0))
+    val bigWobblePose = Pose2d(0.2, 32.3, Math.toRadians(55.0))
 
     override fun setup() {
         super.setup()
@@ -80,7 +80,8 @@ abstract class AutonomoCompletoAzul(
                     + CarouselStopCmd()
                 }
 
-                // splineToSplineHeading(Pose2d(-66.0, 17.0, Math.toRadians(90.0)), Math.toRadians(0.0))
+                //|
+            splineToSplineHeading(Pose2d(-66.0, 17.0, Math.toRadians(90.0)), Math.toRadians(0.0))
             }
 
             // put X cube in big wobble
@@ -97,16 +98,16 @@ abstract class AutonomoCompletoAzul(
                 + freightDropSequence()
             }
 
-            //if(doDucks) {
-            //    splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
-            // } else {
+            if(doDucks) {
+                splineToSplineHeading(Pose2d(-33.0, 10.0, Math.toRadians(230.0)), Math.toRadians(90.0))
+             } else {
                 lineToSplineHeading(startPosition.startWobblePose)
-            //}
+            }
 
             waitSeconds(1.4)
 
-            var goInsideY = 67.8
-            var currentGrabCubeX = 60.0
+            var goInsideY = 68.8
+            var currentGrabCubeX = 60.7
 
             if (cycles >= 1) {
                 if (doDucks) {
@@ -115,7 +116,7 @@ abstract class AutonomoCompletoAzul(
                     lineToLinearHeading(Pose2d(-24.0, 55.0, Math.toRadians(0.0)))
                 }
 
-                var minusBigWobblePose = Pose2d(-5.0, -1.5)
+                var minusBigWobblePose = Pose2d(-10.0, -1.5)
 
                 /*
                 Generating repetitive trajectories for each cycle
@@ -123,7 +124,7 @@ abstract class AutonomoCompletoAzul(
                 repeat(cycles) {
                     // align to wall
                     lineToSplineHeading(
-                        Pose2d(-1.0, 56.0, Math.toRadians(0.0))//,
+                        Pose2d(-1.0, 60.0, Math.toRadians(0.0))//,
                         //Math.toRadians(0.0)
                     )
 
@@ -131,7 +132,7 @@ abstract class AutonomoCompletoAzul(
                         + IntakeWithColorSensorCmd(1.0)
                     }
 
-                    // go inside (that's what she said)
+                    // go inside
                     splineToConstantHeading(Vector2d(41.0, goInsideY), Math.toRadians(0.0))
 
                     // go even further inside
@@ -178,11 +179,11 @@ abstract class AutonomoCompletoAzul(
                     lineTo(Vector2d(currentGrabCubeX, goInsideY))
                 }// mechrams el que lo copie
                 STORAGE_UNIT -> {
-                    //if(doDucks) {
+                    if(doDucks) {
                         //splineToConstantHeading(Vector2d(-67.8, 10.0), Math.toRadians(0.0))
-                    //}
+                    }
 
-                    lineToSplineHeading(Pose2d(-65.0, 30.0, 0.0))
+                    lineToSplineHeading(Pose2d(-69.0, 40.0, 0.0))
                 }
             }
         }.build()

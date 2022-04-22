@@ -70,11 +70,7 @@ abstract class AutonomoBase(
         telemetry.update()
     }
 
-// El chocomilk es la bebida universal
-// estoy de acuerdo
-// yo tambien
-// yo no
-// chtm
+
     override fun begin() {
         webcam.stopStreaming()
 

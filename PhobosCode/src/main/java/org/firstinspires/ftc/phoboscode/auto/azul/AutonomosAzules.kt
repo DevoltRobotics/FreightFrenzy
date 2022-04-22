@@ -27,7 +27,7 @@ class AutonomoCuboAzulIzquierda : AutonomoCompletoAzul(
 
 @Autonomous(name = "A-Derecha Pato", group = "FinalA", preselectTeleOp = "TeleOp Azul")
 class AutonomoCompletoAzulDerechaPato : AutonomoCompletoAzul(
-    startPosition = StartPosition.DUCKS_NEAREST,
+    startPosition = StartPosition.WAREHOUSE_NEAREST,
     parkPosition = ParkPosition.STORAGE_UNIT,
     doDucks = true, cycles = 0
 )

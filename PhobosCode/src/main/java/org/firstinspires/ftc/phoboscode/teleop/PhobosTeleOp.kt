@@ -36,14 +36,14 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
         /*
         CAROUSEL
          */
-        superGamepad1.scheduleOn(
-            Button.X,
+        superGamepad2.scheduleOn(
+            Button.RIGHT_BUMPER,
             ACCarouselRotateBackwardsCmd(),
             ACCarouselStopCmd()
         )
 
-        superGamepad1.scheduleOn(
-            Button.Y,
+        superGamepad2.scheduleOn(
+            Button.LEFT_BUMPER,
             ACCarouselRotateForwardCmd(),
             ACCarouselStopCmd()
         )
@@ -53,6 +53,7 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
          */
 
         superGamepad2.scheduleOn(
+
             Button.A,
             IntakeInCmd(), // encender el intake cuando se presiona A
             IntakeStopCmd() // apagar el intake cuando se deja de presionar A
@@ -89,8 +90,6 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
             -gamepad2.right_stick_y.toDouble()
         }
 
-        // Sobas le gana
-        // no
 
         /*
         BOX
@@ -138,7 +137,7 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
         val liftCmd = LiftMoveToPosCmd(liftPosition, telemetry)
 
         - liftCmd.dontBlock()
-        - waitFor { gamepad2.right_trigger > 0.5f }
+        - waitFor { gamepad2.right_trigger > 0.2f }
 
         - BoxThrowCmd().dontBlock()
 
