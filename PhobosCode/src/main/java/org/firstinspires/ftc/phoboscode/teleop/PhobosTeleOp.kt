@@ -112,7 +112,32 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
         TELEMETRY LOGGING
          */
         + DeltaRunCmd {
-            telemetry.addData("lift pos", hardware.sliderMotor.currentPosition)
+            try {
+                val liftEncoderPos = hardware.sliderMotor.currentPosition
+                val liftPositions = LiftPosition.values()
+                var liftHeight = LiftPosition.HIGH
+            
+                for(val (i, position) in liftPositions.withIndex()) {
+                    if(i == 0) {
+                        if(position.position() <= liftEncoderPos) {
+                            liftHeight = position
+                            break
+                        }
+                    } else {
+                        val beforePosition = liftPositions[i]
+                    
+                        if(beforePosition.position() > liftEncoderPos && liftposition.position() <= liftEncoderPos) {
+                            liftHeight = position
+                            break
+                        }
+                    }
+                }
+            
+                telemetry.addData("lift height", liftHeight)
+            } catch(e: Exception) {}
+            
+            telemetry.addData("lift pos", liftEncoderPos)
+            
             telemetry.addData("carousel power", hardware.carouselMotor.power)
             telemetry.addData("intake distance", intakeSub.lastDistance)
             telemetry.addData("intake pushing", intakeSub.pushing)
