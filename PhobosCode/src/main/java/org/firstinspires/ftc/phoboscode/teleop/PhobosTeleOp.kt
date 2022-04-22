@@ -112,8 +112,9 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
         TELEMETRY LOGGING
          */
         + DeltaRunCmd {
+            val liftEncoderPos = hardware.sliderMotor.currentPosition
+            
             try {
-                val liftEncoderPos = hardware.sliderMotor.currentPosition
                 val liftPositions = LiftPosition.values()
                 var liftHeight = LiftPosition.HIGH
             
@@ -126,7 +127,7 @@ abstract class PhobosTeleOp(val plusDriverAngle: Double) : PhobosOpMode() {
                     } else {
                         val beforePosition = liftPositions[i]
                     
-                        if(beforePosition.position() > liftEncoderPos && liftposition.position() <= liftEncoderPos) {
+                        if(beforePosition.position() > liftEncoderPos && position.position() <= liftEncoderPos) {
                             liftHeight = position
                             break
                         }
